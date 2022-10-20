@@ -225,44 +225,35 @@ void MasterAnalyzer::generateTree(Context &context) const {
 void MasterAnalyzer::decompile(Context &context) const {
     context.logToken().info(tr("Decompiling."));
 
+    // 취소 명령이 들어왔는지 확인
+    // context.cancellationToken().poll();
+
+    // 프로그램 생성
     createProgram(context);
-    context.cancellationToken().poll();
-
+    // 함수 생성
     createFunctions(context);
-    context.cancellationToken().poll();
-
+    // 후크 생성
     createHooks(context);
-    context.cancellationToken().poll();
-
+    // call 변환
     detectCallingConventions(context);
-    context.cancellationToken().poll();
-
+    // 데이터 흐름 분석 1
     dataflowAnalysis(context);
-    context.cancellationToken().poll();
-
+    // 실행 흐름 분석
     livenessAnalysis(context);
-    context.cancellationToken().poll();
-
+    // 시그니처 재작성
     reconstructSignatures(context);
-    context.cancellationToken().poll();
-
+    // 데이터 흐름 분석 2
     dataflowAnalysis(context);
-    context.cancellationToken().poll();
-
+    // 변수 재작성
     reconstructVariables(context);
-    context.cancellationToken().poll();
-
+    // 구조체 분석
     structuralAnalysis(context);
-    context.cancellationToken().poll();
-
+    // 실행흐름 분석
     livenessAnalysis(context);
-    context.cancellationToken().poll();
-
+    // 타입 재작성
     reconstructTypes(context);
-    context.cancellationToken().poll();
-
+    // 트리 작성
     generateTree(context);
-    context.cancellationToken().poll();
 
     context.logToken().info(tr("Decompilation completed."));
 }
