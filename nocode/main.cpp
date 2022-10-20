@@ -172,9 +172,11 @@ void help() {
 }
 
 int main(int argc, char *argv[]) {
+    // 프로그램 시작
     QCoreApplication app(argc, argv);
 
     try {
+        // 사용하는 변수 선언
         QString sectionsFile;
         QString symbolsFile;
         QString instructionsFile;
@@ -191,10 +193,12 @@ int main(int argc, char *argv[]) {
         std::vector<nc::ByteAddr> functionAddresses;
         std::vector<nc::ByteAddr> callAddresses;
 
+        // 디컴파일 대상 경로
         QStringList files;
 
         auto args = QCoreApplication::arguments();
 
+        // 인자로 들어온 옵션 파싱
         for (int i = 1; i < args.size(); ++i) {
             QString arg = args[i];
             if (arg == "--help" || arg == "-h") {
@@ -238,12 +242,13 @@ int main(int argc, char *argv[]) {
             } else {
                 files.append(args[i]);
             }
-        }
+        } // 인자로 들어온 옵션 파싱
 
         if (autoDefault) {
             cxxFile = "-";
         }
 
+        // 파일이 없으면 종료
         if (files.empty()) {
             throw nc::Exception("no input files");
         }
@@ -254,9 +259,12 @@ int main(int argc, char *argv[]) {
             context.setLogToken(nc::LogToken(std::make_shared<nc::StreamLogger>(qerr)));
         }
 
+        // 모든 파일에 대해 실행
         foreach (const QString &filename, files) {
             try {
+                // Driver로 파싱 진행, 오류가 발생하면 출력
                 nc::core::Driver::parse(context, filename);
+
             } catch (const nc::Exception &e) {
                 throw nc::Exception(filename + ":" + e.unicodeWhat());
             } catch (const std::exception &e) {
@@ -264,22 +272,32 @@ int main(int argc, char *argv[]) {
             }
         }
 
+        // 섹션정보와 심볼정보에 대해 특정 파일에 출력한다, 파일 경로가 주엊지 않았으면 콘솔에출력
+        // 어떤 함수를 출력하는지는 위의 함수에서 확인가능
+        // 람다문의 out은 출력하는 스트림, 파일경로가 있으면 해당 파일에 출력한다.
+        // 파싱한 context에서 섹션과 심볼을 출력한다.
         openFileForWritingAndCall(sectionsFile, [&](QTextStream &out) { printSections(context, out); });
         openFileForWritingAndCall(symbolsFile, [&](QTextStream &out) { printSymbols(context, out); });
 
+        // 위에서는 섹션과 심볼정보만 출력하고, 아래에서 디스어셈블을 하는것을 보면 위의 Driver::parse에서는 섹션정보와 심볼만을 분석하는듯하다.
+
         if (!instructionsFile.isEmpty() || !cfgFile.isEmpty() || !irFile.isEmpty() || !regionsFile.isEmpty() || !cxxFile.isEmpty()) {
+            // 시작주소와 끝주소가 설정되어있으면 해당 범위를 가진 섹션만 디스어셈블한다.
             if(from_addr && to_addr)
             {
                 foreach (const nc::core::image::Section *section, context.image()->sections())
                     if( from_addr >= section->addr() && to_addr <= section->endAddr() )
                         nc::core::Driver::disassemble(context, section, from_addr, to_addr);
             }
+            // 아니면 전체를 디스어셈블한다.
             else
                 nc::core::Driver::disassemble(context);
 
+            // 디스어셈블된 인스트럭션 출력
             openFileForWritingAndCall(instructionsFile, [&](QTextStream &out) { context.instructions()->print(out); });
 
             if (!cfgFile.isEmpty() || !irFile.isEmpty() || !regionsFile.isEmpty() || !cxxFile.isEmpty()) {
+                // 디컴파일 실행
                 nc::core::Driver::decompile(context);
 
                 openFileForWritingAndCall(cfgFile,     [&](QTextStream &out) { context.program()->print(out); });
