@@ -31,152 +31,132 @@ namespace nc {
 namespace core {
 
 namespace ir {
-    class Function;
+class Function;
 
-    namespace calling {
-        class CalleeId;
-    }
+namespace calling {
+class CalleeId;
 }
+} // namespace ir
 
 class Context;
 
 /**
- * Class capable of performing various kinds of analysis in the right order.
+ * 여러 종류의 분석을 알맞은 순서로 수행하는 클래스
  *
- * If an architecture requires to do some analysis differently,
- * you can derive from this class, reimplement certain virtual functions,
- * and register it by calling Architecture::setMasterAnalyzer().
- * 
- * Methods of this class can be executed concurrently.
- * (Though, only on different context currently.)
- * Therefore, they all are const.
+ * 아키텍쳐별로 다른 분석이 필요하면 해당 함수를 조작하여 기능 순서를 바꿀 수 있으며,
+ * Architecture::setMasterAnalyzer()를 통해 등록할 수 있다.
+ *
+ * 메소드는 병렬적으로 실행될 수 있습니다. (현재는 한번에 하나만 실행을 하고 있다.)
+ * 병렬적으로 수행하기 위해 모든 메소드는 정적 메소드입니다.
  */
 class MasterAnalyzer {
     Q_DECLARE_TR_FUNCTIONS(MasterAnalyzer)
 
 public:
-    /**
-     * Virtual destructor.
-     */
     virtual ~MasterAnalyzer();
 
     /**
-     * Builds an intermediate representation of a program from a set of instructions.
-     *
-     * \param context Context.
+     * 인스트럭션에서 중간 분석 프로그램을 생성한다.
      */
     virtual void createProgram(Context &context) const;
 
     /**
-     * Isolates functions in the program.
-     *
-     * \param context Context.
+     * 프로그램에서 함수들을 생성한다.
      */
     virtual void createFunctions(Context &context) const;
 
     /**
-     * Creates the hooks manager.
-     *
-     * \param context Context.
+     * 후크를 생성한다.
      */
     virtual void createHooks(Context &context) const;
 
     virtual void detectCallingConventions(Context &context) const;
 
     /**
-     * Detects and sets the calling convention of a function.
+     * 함수의 호출 규약 감지
      *
-     * \param context Context.
-     * \param calleeId Id of the function.
+     * \param calleeId 함수의 ID
+     * @note fastcall이나 cdecl와 같은 함수 호출 규약을 감지한다.
      */
     virtual void detectCallingConvention(Context &context, const ir::calling::CalleeId &calleeId) const;
 
     /**
-     * Performs dataflow analysis of all functions.
+     * 모든 함수에 대한 흐름분석을 실행한다.
      *
-     * \param context Context.
+     * @note 어떤 함수는 어떤 함수와 엮여있는지 등을 분석하는 것으로 추정된다.
      */
     virtual void dataflowAnalysis(Context &context) const;
 
     /**
-     * Performs dataflow analysis of the given function.
+     * 해당 함수에 대한 흐름분석을 실행한다.
      *
-     * \param context Context.
-     * \param function Valid pointer to the function.
+     * \param function 함수의 포인터
+     * @note 해당 함수는 어떤 블록으로 진행되는지, 어떤 함수를 호출하는지 등을 분석하는 것으로 추정된다.
      */
     virtual void dataflowAnalysis(Context &context, ir::Function *function) const;
 
     /**
-     * Reconstructs signatures of functions.
+     * 함수의 이름을 재생성한다.
      *
-     * \param context Context.
+     * @note 함수의 인자 등을 분석하는 것으로 추정된다.
      */
     virtual void reconstructSignatures(Context &context) const;
 
     /**
-     * Reconstructs local and global variables.
+     * 로컬 및 전역변수를 생성한다.
      *
-     * \param context Context.
+     * @note 사용되는 메모리를 기반으로 어느 메모리는 변수인지 등을 지정하는 것으로 추정된다.
      */
     virtual void reconstructVariables(Context &context) const;
 
     /**
-     * Performs liveness analysis on all functions.
-     *
-     * \param context Context.
+     * 모든 함수에 대한 활성 분석을 실행한다.
      */
     virtual void livenessAnalysis(Context &context) const;
 
     /**
-     * Performs liveness analysis on the given function.
+     * 해당 함수에 대한 활성 분석을 실행한다.
      *
-     * \param context Context.
-     * \param function Valid pointer to the function.
+     * \param function 함수의 포인터
      */
     virtual void livenessAnalysis(Context &context, const ir::Function *function) const;
 
     /**
-     * Performs structural analysis of all functions.
-     *
-     * \param context Context.
+     * 모든 함수에 대해 구조적 분석을 실행한다.
      */
     virtual void structuralAnalysis(Context &context) const;
 
     /**
-     * Performs structural analysis of a function.
+     * 함수의 구조적 분석을 실행한다.
      *
-     * \param context Context.
-     * \param function Valid pointer to the function.
+     * \param function 함수의 포인터
      */
     virtual void structuralAnalysis(Context &context, const ir::Function *function) const;
 
     /**
-     * Computes information about types.
+     * 타입에 대한 정보를 연산한다.
      *
-     * \param context Context.
+     * @note 해당 함수 부분에서 타입의 크기를 연산해 지정하는것으로 추정된다.
      */
     virtual void reconstructTypes(Context &context) const;
 
     /**
-     * Generates LikeC tree for the context.
+     * C프로그램같은 실행 흐름도를 작성한다.
      *
-     * \param context Context.
+     * @note C프로그램처럼 for문이나 while문등을 작성하는것으로 추정된다.
      */
     virtual void generateTree(Context &context) const;
 
     /**
-     * Decompiles the assembler program.
-     *
-     * \param context Context.
+     * 어셈블리 프로그램을 디컴파일하는 전체 과정을 실행한다.
      */
     virtual void decompile(Context &context) const;
 
 protected:
     /**
-     * \param context Context.
-     * \param function Valid pointer to a function.
+     * \param function 함수의 포인터
      *
-     * \return Name of the function that can be shown to the user.
+     * \return 사용자에게 보여질 함수 이름
      */
     virtual QString getFunctionName(Context &context, const ir::Function *function) const;
 };
