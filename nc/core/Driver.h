@@ -20,7 +20,7 @@ namespace image {
 class Context;
 
 /**
- * Relatively high-level interface for running analyses in the right order.
+ * 올바른 순서로 분석을 하기 위한 고수준의 인터페이스.
  */
 class Driver {
     Q_DECLARE_TR_FUNCTIONS(Driver)

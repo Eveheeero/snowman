@@ -75,17 +75,17 @@ namespace likec {
 }
 
 /**
- * This class stores all the information that is required and produced during decompilation.
+ * 디컴파일 과정중에 필요한 모든 정보를 저장하고 있는 클래스
  */
 class Context: public QObject {
     Q_OBJECT
 
-    std::shared_ptr<image::Image> image_; ///< Executable image being decompiled.
-    std::shared_ptr<const arch::Instructions> instructions_; ///< Instructions being decompiled.
-    std::unique_ptr<ir::Program> program_; ///< Program.
-    std::unique_ptr<ir::Functions> functions_; ///< Functions.
+    std::shared_ptr<image::Image> image_; ///< 디컴파일할 실행 프로그램
+    std::shared_ptr<const arch::Instructions> instructions_; ///< 디컴파일된 인스트럭션
+    std::unique_ptr<ir::Program> program_; ///< 분석에 사용되는 Program.
+    std::unique_ptr<ir::Functions> functions_; ///< 분석에 사용되는 Functions.
     std::unique_ptr<ir::calling::Conventions> conventions_; ///< Assigned calling conventions.
-    std::unique_ptr<ir::calling::Hooks> hooks_; ///< Hooks manager.
+    std::unique_ptr<ir::calling::Hooks> hooks_; ///< 분석에 사용되는 후크 매니저.
     std::unique_ptr<ir::calling::Signatures> signatures_; ///< Signatures.
     std::unique_ptr<ir::dflow::Dataflows> dataflows_; ///< Dataflows.
     std::unique_ptr<ir::vars::Variables> variables_; ///< Reconstructed variables.
