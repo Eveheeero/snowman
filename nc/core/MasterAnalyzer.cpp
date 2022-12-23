@@ -67,6 +67,7 @@ void MasterAnalyzer::createProgram(Context &context) const {
 
     std::unique_ptr<ir::Program> program(new ir::Program());
 
+    /* 프로그램 소스코드를 받아와서  */
     core::irgen::IRGenerator(context.image().get(), context.instructions().get(), program.get(),
         context.cancellationToken(), context.logToken())
     .generate();

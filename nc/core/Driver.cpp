@@ -5,8 +5,8 @@
 
 #include <QFile>
 
-#include <nc/common/Foreach.h>
 #include <nc/common/Exception.h>
+#include <nc/common/Foreach.h>
 
 #include <nc/core/arch/Architecture.h>
 #include <nc/core/arch/Disassembler.h>
@@ -35,14 +35,17 @@ void Driver::parse(Context &context, const QString &filename) {
 
     const input::Parser *suitableParser = nullptr;
 
-    foreach(const input::Parser *parser, input::ParserRepository::instance()->parsers()) {
+    /* 여러 아키텍쳐에 맞는 파서를 불러와서, 해당 파서로 파싱할 수 있는지 파악한다. */
+    foreach (const input::Parser *parser, input::ParserRepository::instance()->parsers()) {
         context.logToken().info(tr("Trying %1 parser...").arg(parser->name()));
         if (parser->canParse(&source)) {
             suitableParser = parser;
             break;
         }
     }
+    // PE파일이면 PE파일에 대한 파서 생성 완료
 
+    /* 파서를 찾을 수 없으면 오류 출력 */
     if (!suitableParser) {
         context.logToken().error(tr("No suitable parser found."));
         throw nc::Exception(tr("File %1 has unknown format.").arg(filename));
@@ -50,6 +53,7 @@ void Driver::parse(Context &context, const QString &filename) {
 
     context.logToken().info(tr("Parsing using %1 parser...").arg(suitableParser->name()));
 
+    /* 파서로 파싱 진행, 이때 context의 데이터베이스에 데이터가 들어가는듯하다. */
     suitableParser->parse(&source, context.image().get(), context.logToken());
 
     context.logToken().info(tr("Parsing completed."));
@@ -82,11 +86,8 @@ void Driver::disassemble(Context &context, const image::ByteSource *source, Byte
         auto newInstructions = std::make_shared<arch::Instructions>(*context.instructions());
 
         context.image()->platform().architecture()->createDisassembler()->disassemble(
-            context.image().get(),
-            source,
-            begin,
-            end,
-            [&](std::shared_ptr<arch::Instruction> instr){ newInstructions->add(std::move(instr)); },
+            context.image().get(), source, begin, end,
+            [&](std::shared_ptr<arch::Instruction> instr) { newInstructions->add(std::move(instr)); },
             context.cancellationToken());
 
         context.setInstructions(newInstructions);

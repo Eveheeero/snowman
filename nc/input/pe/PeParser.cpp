@@ -522,10 +522,12 @@ PeParser::PeParser():
 {}
 
 bool PeParser::doCanParse(QIODevice *source) const {
+    /* PE파일인지는이곳에서 확인한다. */
     return seekFileHeader(source);
 }
 
 void PeParser::doParse(QIODevice *source, core::image::Image *image, const LogToken &log) const {
+    /* PE파일은 이곳에서 파싱한다. */
     if (!seekFileHeader(source)) {
         throw ParseError(tr("PE signature doesn't match."));
     }
