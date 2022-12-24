@@ -49,9 +49,9 @@ namespace pe {
 
 namespace {
 
-using nc::core::input::read;
 using nc::core::input::getAsciizString;
 using nc::core::input::ParseError;
+using nc::core::input::read;
 
 const ByteOrder peByteOrder = ByteOrder::LittleEndian;
 
@@ -105,7 +105,7 @@ union IMPORT_LOOKUP_TABLE_ENTRY64 {
 static_assert(sizeof(IMPORT_LOOKUP_TABLE_ENTRY32) == sizeof(uint32_t), "");
 static_assert(sizeof(IMPORT_LOOKUP_TABLE_ENTRY64) == sizeof(uint64_t), "");
 
-template<class IMAGE_OPTIONAL_HEADER, class IMPORT_LOOKUP_TABLE_ENTRY>
+template <class IMAGE_OPTIONAL_HEADER, class IMPORT_LOOKUP_TABLE_ENTRY>
 class PeParserImpl {
     Q_DECLARE_TR_FUNCTIONS(PeParserImpl)
 
@@ -118,13 +118,15 @@ class PeParserImpl {
     IMAGE_OPTIONAL_HEADER optionalHeader_;
 
 public:
-    PeParserImpl(QIODevice *source, core::image::Image *image, const LogToken &log, IMAGE_FILE_HEADER &fileHeader):
-        source_(source), image_(image), log_(log), fileHeader_(fileHeader)
-    {}
+    PeParserImpl(QIODevice *source, core::image::Image *image, const LogToken &log, IMAGE_FILE_HEADER &fileHeader)
+        : source_(source), image_(image), log_(log), fileHeader_(fileHeader) {}
 
     void parse() {
+        // 전체 프로그램 분석은 다음과 같은 순서로 진행
+
         optionalHeaderOffset_ = source_->pos() - sizeof(optionalHeader_.Magic);
 
+        /* 파일 헤더에더에서 심볼, import, relocs, exports, entrypoint 파싱 */
         parseFileHeader();
         parseOptionalHeader();
         parseSections();
@@ -201,7 +203,9 @@ private:
             if (sectionHeader.SizeOfRawData == 0) {
                 log_.debug(tr("Section %1 has no raw data.").arg(section->name()));
             } else {
-                log_.debug(tr("Reading contents of section %1 (size of raw data = 0x%2).").arg(section->name()).arg(sectionHeader.SizeOfRawData));
+                log_.debug(tr("Reading contents of section %1 (size of raw data = 0x%2).")
+                               .arg(section->name())
+                               .arg(sectionHeader.SizeOfRawData));
 
                 QByteArray bytes;
 
@@ -318,10 +322,11 @@ private:
         auto reader = core::image::Reader(image_);
 
         IMAGE_IMPORT_DESCRIPTOR descriptor;
-        for (auto descriptorAddress = optionalHeader_.ImageBase + optionalHeader_.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
-             image_->readBytes(descriptorAddress, reinterpret_cast<char *>(&descriptor), sizeof(descriptor)) == sizeof(descriptor);
-             descriptorAddress += sizeof(descriptor))
-        {
+        for (auto descriptorAddress =
+                 optionalHeader_.ImageBase + optionalHeader_.DataDirectory[IMAGE_DIRECTORY_ENTRY_IMPORT].VirtualAddress;
+             image_->readBytes(descriptorAddress, reinterpret_cast<char *>(&descriptor), sizeof(descriptor)) ==
+             sizeof(descriptor);
+             descriptorAddress += sizeof(descriptor)) {
             if (descriptor.Characteristics == 0) {
                 break;
             }
@@ -343,8 +348,7 @@ private:
         IMPORT_LOOKUP_TABLE_ENTRY entry;
         for (auto entryAddress = virtualAddress;
              image_->readBytes(entryAddress, reinterpret_cast<char *>(&entry), sizeof(entry)) == sizeof(entry);
-             entryAddress += sizeof(entry))
-        {
+             entryAddress += sizeof(entry)) {
             if (entry.RawValue == 0) {
                 break;
             }
@@ -366,8 +370,9 @@ private:
                 log_.debug(tr("Found an import by name: %1").arg(name));
 
                 image_->addRelocation(std::make_unique<core::image::Relocation>(
-                    entryAddress, image_->addSymbol(std::make_unique<core::image::Symbol>(
-                                      core::image::SymbolType::FUNCTION, std::move(name), boost::none)),
+                    entryAddress,
+                    image_->addSymbol(std::make_unique<core::image::Symbol>(core::image::SymbolType::FUNCTION,
+                                                                            std::move(name), boost::none)),
                     sizeof(IMPORT_LOOKUP_TABLE_ENTRY)));
             }
         }
@@ -383,7 +388,8 @@ private:
         auto directoryAddress =
             optionalHeader_.ImageBase + optionalHeader_.DataDirectory[IMAGE_DIRECTORY_ENTRY_EXPORT].VirtualAddress;
 
-        if (image_->readBytes(directoryAddress, reinterpret_cast<char *>(&directory), sizeof(directory)) != sizeof(directory)) {
+        if (image_->readBytes(directoryAddress, reinterpret_cast<char *>(&directory), sizeof(directory)) !=
+            sizeof(directory)) {
             log_.warning(tr("Cannot read the image export directory."));
             return;
         }
@@ -454,7 +460,8 @@ private:
 
         while (headerAddress < end) {
             IMAGE_BASE_RELOC_BLOCK_HEADER header;
-            if (section->readBytes(headerAddress, reinterpret_cast<char *>(&header), sizeof(header)) != sizeof(header)) {
+            if (section->readBytes(headerAddress, reinterpret_cast<char *>(&header), sizeof(header)) !=
+                sizeof(header)) {
                 log_.warning(tr("Cannot read the image base reloc header."));
                 return;
             }
@@ -462,50 +469,48 @@ private:
             peByteOrder.convertFrom(header.Size);
 
             int num = (header.Size - 8) / 2;
-            for (int i = 0; i < num; i++ ) {
+            for (int i = 0; i < num; i++) {
                 WORD reloc;
-                if (section->readBytes(headerAddress + 8 + i * sizeof(reloc),
-                                       reinterpret_cast<char *>(&reloc), sizeof(reloc)) != sizeof(reloc)) {
+                if (section->readBytes(headerAddress + 8 + i * sizeof(reloc), reinterpret_cast<char *>(&reloc),
+                                       sizeof(reloc)) != sizeof(reloc)) {
                     log_.warning(tr("Cannot read the base reloc number %1.").arg(i));
                     return;
                 }
                 peByteOrder.convertFrom(reloc);
                 WORD type = reloc >> 12;
-                WORD offset = reloc & ((1<<12) - 1);
+                WORD offset = reloc & ((1 << 12) - 1);
                 DWORD address = header.PageRVA + offset + optionalHeader_.ImageBase;
                 ByteSize addend;
                 int size;
 
                 switch (type) {
-                    case IMAGE_REL_BASED_HIGHLOW:
-                        {
-                            size = 4;
-                            DWORD currentValue;
-                            if (image_->readBytes(address,
-                                                  reinterpret_cast<char *>(&currentValue), sizeof(currentValue)) != sizeof(currentValue)) {
-                                log_.warning(tr("Cannot read reloc at %1.").arg(address));
-                                continue;
-                            }
-                            addend = currentValue - optionalHeader_.ImageBase;
-                            break;
-                        }
-                    case IMAGE_REL_BASED_DIR64:
-                        {
-                            size = 8;
-                            ByteAddr currentValue;
-                            if (image_->readBytes(address,
-                                                  reinterpret_cast<char *>(&currentValue), sizeof(currentValue)) != sizeof(currentValue)) {
-                                log_.warning(tr("Cannot read reloc at %1.").arg(address));
-                                continue;
-                            }
-                            addend = currentValue - optionalHeader_.ImageBase;
-                            break;
-                        }
-                    case IMAGE_REL_BASED_ABSOLUTE:
+                case IMAGE_REL_BASED_HIGHLOW: {
+                    size = 4;
+                    DWORD currentValue;
+                    if (image_->readBytes(address, reinterpret_cast<char *>(&currentValue), sizeof(currentValue)) !=
+                        sizeof(currentValue)) {
+                        log_.warning(tr("Cannot read reloc at %1.").arg(address));
                         continue;
-                    default:
-                        log_.warning(tr("Unknown base reloc type %1.").arg(type));
+                    }
+                    addend = currentValue - optionalHeader_.ImageBase;
+                    break;
+                }
+                case IMAGE_REL_BASED_DIR64: {
+                    size = 8;
+                    ByteAddr currentValue;
+                    if (image_->readBytes(address, reinterpret_cast<char *>(&currentValue), sizeof(currentValue)) !=
+                        sizeof(currentValue)) {
+                        log_.warning(tr("Cannot read reloc at %1.").arg(address));
                         continue;
+                    }
+                    addend = currentValue - optionalHeader_.ImageBase;
+                    break;
+                }
+                case IMAGE_REL_BASED_ABSOLUTE:
+                    continue;
+                default:
+                    log_.warning(tr("Unknown base reloc type %1.").arg(type));
+                    continue;
                 }
 
                 image_->addRelocation(std::make_unique<core::image::Relocation>(address, baseSymbol, size, addend));
@@ -517,62 +522,76 @@ private:
 
 } // anonymous namespace
 
-PeParser::PeParser():
-    core::input::Parser(QLatin1String("PE"))
-{}
+PeParser::PeParser() : core::input::Parser(QLatin1String("PE")) {}
 
 bool PeParser::doCanParse(QIODevice *source) const {
     /* PE파일인지는이곳에서 확인한다. */
     return seekFileHeader(source);
 }
 
+/**
+ * @brief 소스코드를 기반으로 cpu타입이나 32비트 64비트인지를 파악한다. 이후 해당 소스코드 내부의 parse함수를 타게된다.
+ * 
+ * @param source 원본 소스코드 클래스?
+ * @param image cpu타입과 32 / 64비트인지 정보가 저장되는 클래스
+ * @param log 로거
+ */
 void PeParser::doParse(QIODevice *source, core::image::Image *image, const LogToken &log) const {
     /* PE파일은 이곳에서 파싱한다. */
     if (!seekFileHeader(source)) {
         throw ParseError(tr("PE signature doesn't match."));
     }
 
+    /* 헤더 파싱 */
     IMAGE_FILE_HEADER fileHeader;
     if (!read(source, fileHeader)) {
         throw ParseError(tr("Cannot read the file header."));
     }
 
+    /* 빅엔디안인지 리틀엔디안인지를 기반으로 값 알맞게 변경  */
     peByteOrder.convertFrom(fileHeader.Machine);
+    /* 머신코드를 기반으로 아키텍쳐 지정 */
     switch (fileHeader.Machine) {
-        case IMAGE_FILE_MACHINE_I386:
-            image->platform().setArchitecture(QLatin1String("i386"));
-            break;
-        case IMAGE_FILE_MACHINE_AMD64:
-            image->platform().setArchitecture(QLatin1String("x86-64"));
-            break;
-        case IMAGE_FILE_MACHINE_ARM: /* FALLTHROUGH */
-        case IMAGE_FILE_MACHINE_THUMB:
-            image->platform().setArchitecture(QLatin1String("arm-le"));
-            break;
-        default:
-            throw ParseError(tr("Unknown machine id: 0x%1.").arg(fileHeader.Machine, 0, 16));
+    case IMAGE_FILE_MACHINE_I386:
+        image->platform().setArchitecture(QLatin1String("i386"));
+        break;
+    case IMAGE_FILE_MACHINE_AMD64:
+        image->platform().setArchitecture(QLatin1String("x86-64"));
+        break;
+    case IMAGE_FILE_MACHINE_ARM: /* FALLTHROUGH */
+    case IMAGE_FILE_MACHINE_THUMB:
+        image->platform().setArchitecture(QLatin1String("arm-le"));
+        break;
+    default:
+        throw ParseError(tr("Unknown machine id: 0x%1.").arg(fileHeader.Machine, 0, 16));
     }
 
-    /* Just a guess. */
+    /* 분석 타겟 데이터에 운영체제 설정 */
     image->platform().setOperatingSystem(core::image::Platform::Windows);
 
+    /* 추가 헤더 작성 */
+    /* source.read(optionalHeaderMagic) */
     WORD optionalHeaderMagic;
     if (!read(source, optionalHeaderMagic)) {
         throw ParseError(tr("Cannot read magic of the optional header."));
     }
 
+    /* 추가 헤더 엔디안에 따라 알맞게 변경 */
     peByteOrder.convertFrom(optionalHeaderMagic);
+    /* 32비트인지 64비트인지 판별 */
     switch (optionalHeaderMagic) {
-        case IMAGE_NT_OPTIONAL_HDR32_MAGIC:
-            log.debug(tr("Parsing as a PE32 file."));
-            PeParserImpl<IMAGE_OPTIONAL_HEADER32, IMPORT_LOOKUP_TABLE_ENTRY32>(source, image, log, fileHeader).parse();
-            break;
-        case IMAGE_NT_OPTIONAL_HDR64_MAGIC:
-            log.debug(("Parsing as a PE32+ file."));
-            PeParserImpl<IMAGE_OPTIONAL_HEADER64, IMPORT_LOOKUP_TABLE_ENTRY64>(source, image, log, fileHeader).parse();
-            break;
-        default:
-            throw ParseError(tr("Unknown optional header magic: 0x%1").arg(optionalHeaderMagic, 0, 16));
+    case IMAGE_NT_OPTIONAL_HDR32_MAGIC:
+        log.debug(tr("Parsing as a PE32 file."));
+        /* 분석 시작 */
+        PeParserImpl<IMAGE_OPTIONAL_HEADER32, IMPORT_LOOKUP_TABLE_ENTRY32>(source, image, log, fileHeader).parse();
+        break;
+    case IMAGE_NT_OPTIONAL_HDR64_MAGIC:
+        log.debug(("Parsing as a PE32+ file."));
+        /* 분석 시작 */
+        PeParserImpl<IMAGE_OPTIONAL_HEADER64, IMPORT_LOOKUP_TABLE_ENTRY64>(source, image, log, fileHeader).parse();
+        break;
+    default:
+        throw ParseError(tr("Unknown optional header magic: 0x%1").arg(optionalHeaderMagic, 0, 16));
     }
 }
 
