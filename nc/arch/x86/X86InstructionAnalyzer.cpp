@@ -106,6 +106,7 @@ public:
     }
 
     void createStatements(const X86Instruction *instr, core::ir::Program *program) {
+        // operand(0)이나 operand(1)등은 명령어의 첫번째, 두번째 값을 가져옴
         assert(instr != nullptr);
         assert(program != nullptr);
 
@@ -119,6 +120,7 @@ public:
 
         core::ir::BasicBlock *cachedDirectSuccessor = nullptr;
         auto directSuccessor = [&]() -> core::ir::BasicBlock * {
+            // 분기문을 만났을 때, 현재 주소를 기준으로 블록을 만들고, 바로 다음 주소를 가져옴
             if (!cachedDirectSuccessor) {
                 cachedDirectSuccessor = program->createBasicBlock(instr->endAddr());
             }
