@@ -18,8 +18,8 @@
 #include <nc/core/ir/Terms.h>
 #include <nc/core/ir/dflow/Dataflows.h>
 #include <nc/core/ir/dflow/Uses.h>
-#include <nc/core/ir/dflow/Value.h>
 #include <nc/core/ir/dflow/Utils.h>
+#include <nc/core/ir/dflow/Value.h>
 #include <nc/core/ir/liveness/Livenesses.h>
 
 #include "CallHook.h"
@@ -39,8 +39,7 @@ SignatureAnalyzer::SignatureAnalyzer(Signatures &signatures, const dflow::Datafl
                                      const liveness::Livenesses &livenesses, const CancellationToken &canceled,
                                      const LogToken &log)
     : signatures_(signatures), dataflows_(dataflows), hooks_(hooks), livenesses_(livenesses), canceled_(canceled),
-      log_(log) {
-}
+      log_(log) {}
 
 SignatureAnalyzer::~SignatureAnalyzer() {}
 
@@ -76,7 +75,8 @@ void SignatureAnalyzer::computeMappings() {
                         id2referrers_[id].returns.push_back(jump);
                         function2returns_[function].push_back(jump);
 
-                        foreach (const auto &locationAndTerm, hooks_.getReturnHook(jump)->speculativeReturnValueTerms()) {
+                        foreach (const auto &locationAndTerm,
+                                 hooks_.getReturnHook(jump)->speculativeReturnValueTerms()) {
                             speculativeReturnValueTerm2calleeId_[locationAndTerm.second] = id;
                         }
                     }
@@ -109,7 +109,8 @@ void SignatureAnalyzer::computeArgumentsAndReturnValues() {
         }
 
         if (++niterations > 3) {
-            log_.warning(tr("Fixpoint was not reached after %1 iterations while reconstructing arguments. Giving up.").arg(niterations));
+            log_.warning(tr("Fixpoint was not reached after %1 iterations while reconstructing arguments. Giving up.")
+                             .arg(niterations));
             break;
         }
 
@@ -119,7 +120,7 @@ void SignatureAnalyzer::computeArgumentsAndReturnValues() {
 
 namespace {
 
-template<class Container>
+template <class Container>
 bool isHomogeneous(const Container &container) {
     if (container.empty()) {
         return true;
@@ -205,9 +206,7 @@ bool SignatureAnalyzer::computeArguments(const CalleeId &calleeId) {
         callArguments = convention->sortArguments(std::move(callArguments));
         callArguments.erase(
             std::remove_if(callArguments.begin(), callArguments.end(),
-                [&](const MemoryLocation &location) {
-                    return !nc::contains(arguments, location);
-                }),
+                           [&](const MemoryLocation &location) { return !nc::contains(arguments, location); }),
             callArguments.end());
     }
 
@@ -244,7 +243,7 @@ bool SignatureAnalyzer::computeReturnValue(const CalleeId &calleeId) {
         MemoryLocation location;
         std::size_t votes;
 
-        Placement(): votes(0) {}
+        Placement() : votes(0) {}
     };
 
     boost::unordered_map<MemoryLocation, Placement> placements;
@@ -272,10 +271,11 @@ bool SignatureAnalyzer::computeReturnValue(const CalleeId &calleeId) {
     MemoryLocation returnValueLocation;
 
     if (!placements.empty()) {
-        auto it = std::max_element(placements.begin(), placements.end(),
-            [](const std::pair<MemoryLocation, Placement> &a, const std::pair<MemoryLocation, Placement> &b){
+        auto it = std::max_element(
+            placements.begin(), placements.end(),
+            [](const std::pair<MemoryLocation, Placement> &a, const std::pair<MemoryLocation, Placement> &b) {
                 return a.second.votes < b.second.votes;
-        });
+            });
 
         returnValueLocation = it->second.location;
     }
@@ -347,7 +347,8 @@ std::vector<MemoryLocation> SignatureAnalyzer::getUndefinedUses(const Function *
         auto term = termAndLocation.first;
         const auto &memoryLocation = termAndLocation.second;
 
-        if (memoryLocation && term->isRead() && dataflow.getDefinitions(term).empty() && intersect(term, memoryLocation)) {
+        if (memoryLocation && term->isRead() && dataflow.getDefinitions(term).empty() &&
+            intersect(term, memoryLocation)) {
             result.push_back(memoryLocation);
         }
     }
@@ -457,8 +458,7 @@ std::vector<MemoryLocation> SignatureAnalyzer::getUnusedReturnValueLocations(con
                     bool used = false;
                     foreach (const auto &use, uses.getUses(definition)) {
                         if (use.term() != locationAndTerm.second && intersect(use.term(), use.location()) &&
-                            liveness.isLive(use.term()))
-                        {
+                            liveness.isLive(use.term())) {
                             used = true;
                             break;
                         }
@@ -500,8 +500,8 @@ namespace {
 
 class ArgumentFactory {
     MemoryLocation stackPointer_;
-public:
 
+public:
     ArgumentFactory(const Convention *convention) {
         if (convention) {
             stackPointer_ = convention->stackPointer();
@@ -513,15 +513,11 @@ public:
             if (stackPointer_) {
                 return std::make_shared<Dereference>(
                     std::make_unique<BinaryOperator>(
-                        BinaryOperator::ADD,
-                        std::make_unique<MemoryLocationAccess>(stackPointer_),
-                        std::make_unique<Constant>(SizedValue(
-                            stackPointer_.size<SmallBitSize>(),
-                            memoryLocation.addr() / CHAR_BIT)),
+                        BinaryOperator::ADD, std::make_unique<MemoryLocationAccess>(stackPointer_),
+                        std::make_unique<Constant>(
+                            SizedValue(stackPointer_.size<SmallBitSize>(), memoryLocation.addr() / CHAR_BIT)),
                         stackPointer_.size<SmallBitSize>()),
-                    MemoryDomain::MEMORY,
-                    memoryLocation.size<SmallBitSize>()
-                );
+                    MemoryDomain::MEMORY, memoryLocation.size<SmallBitSize>());
             } else {
                 return nullptr;
             }

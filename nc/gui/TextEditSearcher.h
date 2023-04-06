@@ -34,12 +34,13 @@ QT_BEGIN_NAMESPACE
 class QPlainTextEdit;
 QT_END_NAMESPACE
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * Search controller for QPlainTextEdit.
  */
-class TextEditSearcher: public QObject, public Searcher {
+class TextEditSearcher : public QObject, public Searcher {
     Q_OBJECT
 
     /** Controlled widget. */
@@ -54,8 +55,7 @@ class TextEditSearcher: public QObject, public Searcher {
     /** Remembered vertical scrollbar position. */
     int vvalue_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -63,13 +63,12 @@ class TextEditSearcher: public QObject, public Searcher {
      */
     explicit TextEditSearcher(QPlainTextEdit *textEdit);
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     virtual void rememberViewport() override;
     virtual void restoreViewport() override;
 
-    public:
-
+public:
     virtual void startTrackingViewport() override;
     virtual void stopTrackingViewport() override;
 
@@ -77,6 +76,7 @@ class TextEditSearcher: public QObject, public Searcher {
     virtual bool find(const QString &expression, FindFlags flags) override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

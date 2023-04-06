@@ -78,7 +78,8 @@ public:
      * \param[in] signature Pointer to the call's signature. Can be nullptr.
      * \param[in] stackArgumentsSize Size of arguments passed on the stack.
      */
-    CallHook(const Convention *convention, const CallSignature *signature, const boost::optional<ByteSize> &stackArgumentsSize);
+    CallHook(const Convention *convention, const CallSignature *signature,
+             const boost::optional<ByteSize> &stackArgumentsSize);
 
     /**
      * Destructor.
@@ -140,7 +141,9 @@ public:
      * \return Mapping of the memory locations that can contain return values
      *         to terms representing writes to these locations.
      */
-    const std::vector<std::pair<MemoryLocation, const Term *>> &speculativeReturnValueTerms() const { return speculativeReturnValueTerms_; }
+    const std::vector<std::pair<MemoryLocation, const Term *>> &speculativeReturnValueTerms() const {
+        return speculativeReturnValueTerms_;
+    }
 };
 
 } // namespace calling

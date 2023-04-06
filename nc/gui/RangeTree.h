@@ -12,10 +12,12 @@
 
 namespace nc {
 
-namespace core { namespace likec {
-    class TreeNode;
-    class Tree;
-}}
+namespace core {
+namespace likec {
+class TreeNode;
+class Tree;
+} // namespace likec
+} // namespace core
 
 namespace gui {
 
@@ -38,6 +40,7 @@ public:
     std::vector<const RangeNode *> handleInsertion(int position, int nchars);
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

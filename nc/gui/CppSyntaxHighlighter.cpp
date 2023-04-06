@@ -28,9 +28,10 @@
 
 #include <nc/common/Foreach.h>
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-CxxFormatting::CxxFormatting(QWidget *parent): QWidget(parent) {
+CxxFormatting::CxxFormatting(QWidget *parent) : QWidget(parent) {
     setTextColor(Qt::black);
     setSingleLineCommentColor(Qt::darkGreen);
     setMultiLineCommentColor(Qt::darkGreen);
@@ -48,79 +49,30 @@ namespace {
 /**
  * Array of all C++ keywords.
  */
-const char *cppKeywords[] = {
-    "asm",
-    "auto",
-    "bool", 
-    "break", 
-    "case", 
-    "catch", 
-    "char", 
-    "class", 
-    "const", 
-    "const_cast", 
-    "continue", 
-    "default", 
-    "delete", 
-    "do", 
-    "double", 
-    "dynamic_cast",
-    "else", 
-    "enum", 
-    "explicit", 
-    "export", 
-    "extern", 
-    "false", 
-    "float", 
-    "for", 
-    "friend", 
-    "goto", 
-    "if", 
-    "inline",
-    "int",
-    "long", 
-    "mutable", 
-    "namespace", 
-    "new", 
-    "operator", 
-    "private", 
-    "protected", 
-    "public", 
-    "register", 
-    "reinterpret_cast", 
-    "return", 
-    "short", 
-    "signed", 
-    "sizeof", 
-    "static", 
-    "static_cast", 
-    "struct", 
-    "switch", 
-    "template", 
-    "this", 
-    "throw", 
-    "true", 
-    "try", 
-    "typedef", 
-    "typeid", 
-    "typename", 
-    "union", 
-    "unsigned", 
-    "using", 
-    "virtual", 
-    "void", 
-    "volatile", 
-    "wchar_t", 
-    "while",
-    "int8_t",
-    "uint8_t",
-    "int16_t",
-    "uint16_t",
-    "int32_t",
-    "uint32_t",
-    "int64_t",
-    "uint64_t"
-};
+const char *cppKeywords[] = {"asm",          "auto",      "bool",
+                             "break",        "case",      "catch",
+                             "char",         "class",     "const",
+                             "const_cast",   "continue",  "default",
+                             "delete",       "do",        "double",
+                             "dynamic_cast", "else",      "enum",
+                             "explicit",     "export",    "extern",
+                             "false",        "float",     "for",
+                             "friend",       "goto",      "if",
+                             "inline",       "int",       "long",
+                             "mutable",      "namespace", "new",
+                             "operator",     "private",   "protected",
+                             "public",       "register",  "reinterpret_cast",
+                             "return",       "short",     "signed",
+                             "sizeof",       "static",    "static_cast",
+                             "struct",       "switch",    "template",
+                             "this",         "throw",     "true",
+                             "try",          "typedef",   "typeid",
+                             "typename",     "union",     "unsigned",
+                             "using",        "virtual",   "void",
+                             "volatile",     "wchar_t",   "while",
+                             "int8_t",       "uint8_t",   "int16_t",
+                             "uint16_t",     "int32_t",   "uint32_t",
+                             "int64_t",      "uint64_t"};
 
 /* Highlighter state. */
 enum State {
@@ -131,28 +83,25 @@ enum State {
     IN_SINGLE_STRING = 0x10
 };
 
-} // namespace `anonymous-namespace`
+} // namespace
 
-
-CppSyntaxHighlighter::CppSyntaxHighlighter(QObject *parent, const CxxFormatting *formatting):
-    QSyntaxHighlighter(parent),
-    formatting_(formatting)
-{
+CppSyntaxHighlighter::CppSyntaxHighlighter(QObject *parent, const CxxFormatting *formatting)
+    : QSyntaxHighlighter(parent), formatting_(formatting) {
     assert(formatting);
 
     /* Init keywords. */
-    foreach(const char *cppKeyword, cppKeywords)
+    foreach (const char *cppKeyword, cppKeywords)
         mKeywords.insert(cppKeyword);
 
     /* Init regexps. */
-    mNumberRegexp   = QRegExp("\\b([0-9]+|0[xX][0-9a-fA-F]+|0[0-7]+)(\\.[0-9]+)?([eE][0-9]+)?\\b");
+    mNumberRegexp = QRegExp("\\b([0-9]+|0[xX][0-9a-fA-F]+|0[0-7]+)(\\.[0-9]+)?([eE][0-9]+)?\\b");
     mOperatorRegexp = QRegExp("[\\(\\)\\[\\]{}\\:;,\\.!\\?/\\*\\-+<>%^&\\|=~]");
-    mTextRegexp     = QRegExp("\\b[a-zA-Z_][a-zA-Z0-9_]+\\b");
+    mTextRegexp = QRegExp("\\b[a-zA-Z_][a-zA-Z0-9_]+\\b");
 
-    mIncludeRegexp  = QRegExp("^\\s*#\\s*include\\s*(<.+>|\\\".+\\\")");
-    mMacroRegexp    = QRegExp("^\\s*#.*$"); 
-    mMultilineMacroRegexp = QRegExp("^\\s*#\\s*(define|if|elif|pragma|warning|error)"); 
-    mSpecialRegexp  = QRegExp("//|\\\"|'|/\\*");
+    mIncludeRegexp = QRegExp("^\\s*#\\s*include\\s*(<.+>|\\\".+\\\")");
+    mMacroRegexp = QRegExp("^\\s*#.*$");
+    mMultilineMacroRegexp = QRegExp("^\\s*#\\s*(define|if|elif|pragma|warning|error)");
+    mSpecialRegexp = QRegExp("//|\\\"|'|/\\*");
 }
 
 CppSyntaxHighlighter::~CppSyntaxHighlighter() {
@@ -169,7 +118,7 @@ void CppSyntaxHighlighter::highlightBlock(const QString &text) {
         return;
 
     endPos = startPos;
-        
+
     /* Handle preprocessor directives. */
     if (processPreprocessor(text))
         processRegexps(text, startPos);
@@ -189,7 +138,7 @@ void CppSyntaxHighlighter::highlightBlock(const QString &text) {
             return;
         } else if ((cap == "\"") || (cap == "'")) {
             endPos = findStringEnd(text, startPos + 1, cap.at(0));
-                
+
             /* Handle unicode string. */
             if ((startPos > 0) && text.at(startPos - 1) == QChar('L'))
                 --startPos;
@@ -197,7 +146,7 @@ void CppSyntaxHighlighter::highlightBlock(const QString &text) {
             if (endPos == -1) {
                 setFormat(startPos, text.length() - startPos, formatting_->getFormat(CxxFormatting::STRING));
                 processEscapeChar(text, startPos, text.length() - startPos);
-                setCurrentBlockState(cap.at(0) == QChar('"')? IN_STRING: IN_SINGLE_STRING);
+                setCurrentBlockState(cap.at(0) == QChar('"') ? IN_STRING : IN_SINGLE_STRING);
                 return;
             } else {
                 endPos += 1;
@@ -208,7 +157,8 @@ void CppSyntaxHighlighter::highlightBlock(const QString &text) {
         } else if (cap == "/*") {
             endPos = findMultilineCommentEnd(text, startPos + 2);
             if (endPos == -1) {
-                setFormat(startPos, text.length() - startPos, formatting_->getFormat(CxxFormatting::MULTI_LINE_COMMENT));
+                setFormat(startPos, text.length() - startPos,
+                          formatting_->getFormat(CxxFormatting::MULTI_LINE_COMMENT));
                 setCurrentBlockState(IN_MULTILINE_COMMENT);
                 return;
             } else {
@@ -229,7 +179,7 @@ bool CppSyntaxHighlighter::processState(const QString &text, int *const startPos
         prevState = 0;
 
     if ((prevState & IN_STRING) || (prevState & IN_SINGLE_STRING)) {
-        *endPos = findStringEnd(text, *startPos, (prevState & IN_SINGLE_STRING)? '\'':'"');
+        *endPos = findStringEnd(text, *startPos, (prevState & IN_SINGLE_STRING) ? '\'' : '"');
         if (*endPos == -1) {
             setFormat(0, text.size(), formatting_->getFormat(CxxFormatting::STRING));
             setCurrentBlockState(previousBlockState());
@@ -260,20 +210,21 @@ bool CppSyntaxHighlighter::processState(const QString &text, int *const startPos
         if (text.endsWith("\\"))
             setCurrentBlockState(IN_MACRO);
         /* Think:
-         * 
+         *
          * #define macro \ *
-         *               multiline comment 
+         *               multiline comment
          *               * / blablabla
          */
     }
     return false;
 }
 
-void CppSyntaxHighlighter::processRegexp(QRegExp &regexp, CxxFormatting::Element element, const QString &text, int startPos) {
+void CppSyntaxHighlighter::processRegexp(QRegExp &regexp, CxxFormatting::Element element, const QString &text,
+                                         int startPos) {
     int index = 0;
     int start = startPos;
 
-    while(true) {
+    while (true) {
         index = text.indexOf(regexp, start);
         if (index == -1)
             break;
@@ -300,9 +251,7 @@ void CppSyntaxHighlighter::processEscapeChar(const QString &text, int start, int
         if (text.at(pos) == QChar('\\')) {
             int endPos = pos;
             for (int i = 1; i <= 3; i++) {
-                if ((pos + i < text.length()) && 
-                    (text.at(pos + i) >= QChar('0')) &&
-                    (text.at(pos + i) <= QChar('7')) )
+                if ((pos + i < text.length()) && (text.at(pos + i) >= QChar('0')) && (text.at(pos + i) <= QChar('7')))
                     endPos = pos + i;
                 else
                     break;
@@ -325,7 +274,7 @@ void CppSyntaxHighlighter::processEscapeChar(const QString &text, int start, int
         }
     }
 }
-        
+
 bool CppSyntaxHighlighter::processPreprocessor(const QString &text) {
     if (text.indexOf(mMultilineMacroRegexp) != -1) {
         setFormat(0, text.length(), formatting_->getFormat(CxxFormatting::MACRO));
@@ -361,6 +310,7 @@ int CppSyntaxHighlighter::findMultilineCommentEnd(const QString &text, int start
     return text.indexOf("*/", startPos);
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

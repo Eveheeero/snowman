@@ -42,11 +42,9 @@ void ReachingDefinitions::addDefinition(const MemoryLocation &mloc, const Term *
     assert(mloc);
 
     killDefinitions(mloc);
-    
+
     auto i = std::lower_bound(chunks_.begin(), chunks_.end(), mloc,
-        [](const Chunk &a, const MemoryLocation &b) -> bool {
-            return a.location() < b;
-        });
+                              [](const Chunk &a, const MemoryLocation &b) -> bool { return a.location() < b; });
 
     chunks_.insert(i, Chunk(mloc, std::vector<const Term *>(1, term)));
 
@@ -79,9 +77,9 @@ void ReachingDefinitions::killDefinitions(const MemoryLocation &mloc) {
                 }
             }
             if (mloc.endAddr() < chunk.location().endAddr()) {
-                result.push_back(Chunk(
-                    MemoryLocation(mloc.domain(), mloc.endAddr(), chunk.location().endAddr() - mloc.endAddr()),
-                    std::move(chunk.definitions())));
+                result.push_back(
+                    Chunk(MemoryLocation(mloc.domain(), mloc.endAddr(), chunk.location().endAddr() - mloc.endAddr()),
+                          std::move(chunk.definitions())));
             }
         }
     }
@@ -102,9 +100,8 @@ void ReachingDefinitions::project(const MemoryLocation &mloc, ReachingDefinition
             auto endAddr = std::min(chunk.location().endAddr(), mloc.endAddr());
 
             if (addr < endAddr) {
-                result.chunks_.push_back(Chunk(
-                    MemoryLocation(mloc.domain(), addr, endAddr - addr),
-                    chunk.definitions()));
+                result.chunks_.push_back(
+                    Chunk(MemoryLocation(mloc.domain(), addr, endAddr - addr), chunk.definitions()));
             }
         }
     }
@@ -176,7 +173,8 @@ void ReachingDefinitions::merge(const ReachingDefinitions &those) {
         } else {
             std::vector<const Term *> merged;
             merged.reserve(i->definitions().size() + j->definitions().size());
-            std::set_union(i->definitions().begin(), i->definitions().end(), j->definitions().begin(), j->definitions().end(), std::back_inserter(merged));
+            std::set_union(i->definitions().begin(), i->definitions().end(), j->definitions().begin(),
+                           j->definitions().end(), std::back_inserter(merged));
 
             if (a.size() < b.size()) {
                 result.push_back(Chunk(a, std::move(merged)));

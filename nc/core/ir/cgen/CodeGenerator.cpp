@@ -130,7 +130,8 @@ const likec::StructType *CodeGenerator::makeStructuralType(const types::Type *ty
         return nullptr;
     }
 
-    auto typeDeclaration = std::make_unique<likec::StructTypeDeclaration>(QString("s%1").arg(traits2structType_.size()));
+    auto typeDeclaration =
+        std::make_unique<likec::StructTypeDeclaration>(QString("s%1").arg(traits2structType_.size()));
 
     likec::StructType *type = typeDeclaration->type();
     traits2structType_[typeTraits] = type;
@@ -146,8 +147,8 @@ const likec::StructType *CodeGenerator::makeStructuralType(const types::Type *ty
         if (offsetValue >= 0 && offsetType->pointee() && offsetType->pointee()->size()) {
             if (offsetValue > type->size() / CHAR_BIT) {
                 typeDeclaration->type()->addMember(std::make_unique<likec::MemberDeclaration>(
-                    QString("pad%1").arg(offsetValue),
-                    tree_.makeArrayType(tree_.makeIntegerType(CHAR_BIT, false), offsetValue - type->size() / CHAR_BIT)));
+                    QString("pad%1").arg(offsetValue), tree_.makeArrayType(tree_.makeIntegerType(CHAR_BIT, false),
+                                                                           offsetValue - type->size() / CHAR_BIT)));
             }
             typeDeclaration->type()->addMember(std::make_unique<likec::MemberDeclaration>(
                 QString("f%1").arg(offsetValue, 0, 16), makeType(offsetType->pointee())));
@@ -183,10 +184,8 @@ likec::VariableDeclaration *CodeGenerator::makeGlobalVariableDeclaration(const v
         auto initialValue = makeInitialValue(variable->memoryLocation(), type);
         auto nameAndComment = nameGenerator().getGlobalVariableName(variable->memoryLocation());
 
-        auto declaration = std::make_unique<likec::VariableDeclaration>(
-            std::move(nameAndComment.name()),
-            type,
-            std::move(initialValue));
+        auto declaration = std::make_unique<likec::VariableDeclaration>(std::move(nameAndComment.name()), type,
+                                                                        std::move(initialValue));
         declaration->setComment(std::move(nameAndComment.comment()));
 
         result = declaration.get();
@@ -197,15 +196,13 @@ likec::VariableDeclaration *CodeGenerator::makeGlobalVariableDeclaration(const v
     }
 }
 
-std::unique_ptr<likec::Expression> CodeGenerator::makeInitialValue(const MemoryLocation &memoryLocation, const likec::Type *type) {
+std::unique_ptr<likec::Expression> CodeGenerator::makeInitialValue(const MemoryLocation &memoryLocation,
+                                                                   const likec::Type *type) {
     assert(memoryLocation);
     assert(type != nullptr);
 
-    if (memoryLocation.domain() == MemoryDomain::MEMORY &&
-        memoryLocation.addr() % CHAR_BIT == 0 &&
-        memoryLocation.size() % CHAR_BIT == 0 &&
-        type->isScalar())
-    {
+    if (memoryLocation.domain() == MemoryDomain::MEMORY && memoryLocation.addr() % CHAR_BIT == 0 &&
+        memoryLocation.size() % CHAR_BIT == 0 && type->isScalar()) {
         ByteAddr addr = memoryLocation.addr() / CHAR_BIT;
         ByteSize size = memoryLocation.size() / CHAR_BIT;
 
@@ -215,8 +212,7 @@ std::unique_ptr<likec::Expression> CodeGenerator::makeInitialValue(const MemoryL
                 return std::make_unique<likec::IntegerConstant>(*value, integerType);
             } else {
                 return std::make_unique<likec::Typecast>(
-                    likec::Typecast::REINTERPRET_CAST,
-                    type,
+                    likec::Typecast::REINTERPRET_CAST, type,
                     std::make_unique<likec::IntegerConstant>(*value, tree().makeIntegerType(type->size(), true)));
             }
         }
@@ -246,7 +242,8 @@ likec::FunctionDefinition *CodeGenerator::makeFunctionDefinition(const Function 
     return generator.definition();
 }
 
-void CodeGenerator::setFunctionDeclaration(const calling::FunctionSignature *signature, likec::FunctionDeclaration *declaration) {
+void CodeGenerator::setFunctionDeclaration(const calling::FunctionSignature *signature,
+                                           likec::FunctionDeclaration *declaration) {
     assert(signature != nullptr);
     assert(declaration != nullptr);
 

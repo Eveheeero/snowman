@@ -30,18 +30,18 @@
 namespace nc {
 namespace core {
 namespace arch {
-    class Architecture;
+class Architecture;
 }
 namespace ir {
 
 class Function;
 
 namespace calling {
-    class Hooks;
+class Hooks;
 }
 
 namespace dflow {
-    class Dataflows;
+class Dataflows;
 }
 
 namespace vars {
@@ -52,8 +52,8 @@ class Variables;
  * Class performing reconstruction of local and global variables.
  */
 class VariableAnalyzer {
-    Variables &variables_; ///< Mapping of terms to variables.
-    const dflow::Dataflows &dataflows_; ///< Dataflow information for each function.
+    Variables &variables_;                   ///< Mapping of terms to variables.
+    const dflow::Dataflows &dataflows_;      ///< Dataflow information for each function.
     const arch::Architecture *architecture_; ///< Architecture.
 
 public:
@@ -64,9 +64,8 @@ public:
      * \param[in] dataflows Dataflow information for each function.
      * \param[in] architecture Valid pointer to the architecture.
      */
-    VariableAnalyzer(Variables &variables, const dflow::Dataflows &dataflows, const arch::Architecture *architecture):
-        variables_(variables), dataflows_(dataflows), architecture_(architecture)
-    {
+    VariableAnalyzer(Variables &variables, const dflow::Dataflows &dataflows, const arch::Architecture *architecture)
+        : variables_(variables), dataflows_(dataflows), architecture_(architecture) {
         assert(architecture != nullptr);
     }
 

@@ -36,17 +36,16 @@
 
 #include <algorithm>
 
-#include <nc/common/make_unique.h>
 #include <nc/common/Foreach.h>
+#include <nc/common/make_unique.h>
 
 #include "SearchWidget.h"
 #include "TreeViewSearcher.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-TreeView::TreeView(const QString &title, QWidget *parent):
-    QDockWidget(title, parent)
-{
+TreeView::TreeView(const QString &title, QWidget *parent) : QDockWidget(title, parent) {
     treeView_ = new QTreeView(this);
 
     treeView_->setContextMenuPolicy(Qt::CustomContextMenu);
@@ -201,11 +200,11 @@ bool TreeView::eventFilter(QObject *watched, QEvent *event) {
             auto wheelEvent = static_cast<QWheelEvent *>(event);
 
             int delta;
-            #if QT_VERSION >= 0x050000
-                delta = wheelEvent->angleDelta().y();
-            #else
-                delta = wheelEvent->orientation() == Qt::Vertical ? wheelEvent->delta() : 0;
-            #endif
+#if QT_VERSION >= 0x050000
+            delta = wheelEvent->angleDelta().y();
+#else
+            delta = wheelEvent->orientation() == Qt::Vertical ? wheelEvent->delta() : 0;
+#endif
 
             if (wheelEvent->modifiers() & Qt::ControlModifier) {
                 if (delta > 0) {
@@ -220,6 +219,7 @@ bool TreeView::eventFilter(QObject *watched, QEvent *event) {
     return QDockWidget::eventFilter(watched, event);
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

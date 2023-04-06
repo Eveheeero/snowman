@@ -32,9 +32,9 @@
 
 #include "BasicBlock.h"
 #include "CFG.h"
-#include "Jump.h"
 #include "Function.h"
 #include "Functions.h"
+#include "Jump.h"
 #include "Program.h"
 #include "Statements.h"
 
@@ -46,12 +46,8 @@ namespace ir {
 
 namespace {
 
-void dfs(
-    const CFG &cfg,
-    const BasicBlock *basicBlock,
-    boost::unordered_set<const BasicBlock *> &visited,
-    std::vector<const BasicBlock *> &trace)
-{
+void dfs(const CFG &cfg, const BasicBlock *basicBlock, boost::unordered_set<const BasicBlock *> &visited,
+         std::vector<const BasicBlock *> &trace) {
     visited.insert(basicBlock);
     trace.push_back(basicBlock);
 
@@ -80,11 +76,9 @@ void FunctionsGenerator::makeFunctions(const Program &program, Functions &functi
          * entry's address to the first meaningful instruction, unless somebody
          * calls it using current address.
          */
-        if (function->entry() && function->entry()->address() &&
-            function->entry()->statements().front() &&
+        if (function->entry() && function->entry()->address() && function->entry()->statements().front() &&
             function->entry()->statements().front()->instruction() &&
-            *function->entry()->address() != function->entry()->statements().front()->instruction()->addr())
-        {
+            *function->entry()->address() != function->entry()->statements().front()->instruction()->addr()) {
             assert(*function->entry()->address() < function->entry()->statements().front()->instruction()->addr());
             if (!program.isCalledAddress(*function->entry()->address())) {
                 function->entry()->setAddress(function->entry()->statements().front()->instruction()->addr());
@@ -127,7 +121,8 @@ void FunctionsGenerator::makeFunctions(const Program &program, Functions &functi
     }
 }
 
-std::unique_ptr<Function> FunctionsGenerator::makeFunction(const std::vector<const BasicBlock *> &basicBlocks, const BasicBlock *entry) const {
+std::unique_ptr<Function> FunctionsGenerator::makeFunction(const std::vector<const BasicBlock *> &basicBlocks,
+                                                           const BasicBlock *entry) const {
     assert(!basicBlocks.empty());
 
     /* Create a new function. */

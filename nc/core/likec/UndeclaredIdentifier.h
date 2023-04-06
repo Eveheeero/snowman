@@ -20,7 +20,7 @@ namespace likec {
  * An identifier not declared anywhere.
  * Useful for representing intrinsic functions.
  */
-class UndeclaredIdentifier: public Expression {
+class UndeclaredIdentifier : public Expression {
     QLatin1String name_;
     std::unique_ptr<Type> type_;
 

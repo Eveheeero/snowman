@@ -38,7 +38,7 @@ namespace nc {
  * \return Value of type T with bits [0..nbits-1] set.
  * In case T is narrower than nbits, returned value has all bits set.
  */
-template<class T, class U>
+template <class T, class U>
 T bitMask(U nbits) {
     if (nbits < checked_cast<U>(sizeof(T) * CHAR_BIT)) {
         return (T(1) << nbits) - 1;
@@ -53,7 +53,7 @@ T bitMask(U nbits) {
  *
  * \return Value shifted to the left by the given number of bits.
  */
-template<class T, class U>
+template <class T, class U>
 T shiftLeft(T value, U nbits) {
     if (nbits < checked_cast<U>(sizeof(T) * CHAR_BIT)) {
         return value << nbits;
@@ -68,7 +68,7 @@ T shiftLeft(T value, U nbits) {
  *
  * \return Value shifted to the right by the given number of bits.
  */
-template<class T, class U>
+template <class T, class U>
 T shiftRight(T value, U nbits) {
     if (nbits < checked_cast<U>(sizeof(T) * CHAR_BIT)) {
         return value >> nbits;
@@ -85,7 +85,7 @@ T shiftRight(T value, U nbits) {
  * If the number of bits is positive, the shift is to the left.
  * If the number of bits is negative, the shift is to the right.
  */
-template<class T, class I>
+template <class T, class I>
 T bitShift(T value, I nbits) {
     if (nbits > 0) {
         return shiftLeft(value, nbits);
@@ -103,7 +103,7 @@ T bitShift(T value, I nbits) {
  *
  * \return The input value truncated to the lowest size bits.
  */
-template<class T>
+template <class T>
 T bitTruncate(T value, unsigned nbits) {
     return value & bitMask<T>(nbits);
 }
@@ -115,7 +115,7 @@ T bitTruncate(T value, unsigned nbits) {
  *
  * \return Negation of the value of the integer represented by bits [0..nbits-1] of value.
  */
-template<class T>
+template <class T>
 T bitNegate(T value, unsigned nbits) {
     assert((value & bitMask<T>(nbits)) == value);
 
@@ -129,7 +129,7 @@ T bitNegate(T value, unsigned nbits) {
  *
  * \return Absolute value of the integer represented by bits [0..nbits-1] of value.
  */
-template<class T>
+template <class T>
 T bitAbs(T value, unsigned nbits) {
     assert((value & bitMask<T>(nbits)) == value);
 
@@ -147,7 +147,7 @@ T bitAbs(T value, unsigned nbits) {
  *
  * \return Signed extension of the integer represented by bits [0..nbits-1] of value.
  */
-template<class T>
+template <class T>
 T signExtend(T value, unsigned nbits) {
     assert((value & bitMask<T>(nbits)) == value);
 

@@ -43,10 +43,10 @@ class Region;
 /**
  * Control flow graph data structure suitable for performing structural analysis on it.
  */
-class Graph: public PrintableBase<Graph> {
+class Graph : public PrintableBase<Graph> {
     std::vector<std::unique_ptr<Node>> nodes_; ///< All nodes of the graph.
     std::vector<std::unique_ptr<Edge>> edges_; ///< All edges of the graph.
-    Region *root_; ///< Root region.
+    Region *root_;                             ///< Root region.
 
 public:
     Graph();
@@ -72,7 +72,9 @@ public:
     /**
      * \return Nodes of the graph.
      */
-    const std::vector<const Node *> &nodes() const { return reinterpret_cast<const std::vector<const Node *> &>(nodes_); }
+    const std::vector<const Node *> &nodes() const {
+        return reinterpret_cast<const std::vector<const Node *> &>(nodes_);
+    }
 
     /**
      * Adds a node into the graph.
@@ -81,7 +83,7 @@ public:
      *
      * \return Given pointer to the node.
      */
-    template<class T>
+    template <class T>
     T *addNode(std::unique_ptr<T> node) {
         auto result = node.get();
         nodes_.push_back(std::move(node));

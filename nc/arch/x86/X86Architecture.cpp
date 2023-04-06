@@ -24,13 +24,13 @@ X86Architecture::X86Architecture(Mode mode) {
 
     setRegisters(X86Registers::instance());
 
-    switch(mode) {
+    switch (mode) {
     case REAL_MODE:
         setName("8086");
         setBitness(16);
         mInstructionPointer = X86Registers::ip();
         mStackPointer = X86Registers::sp();
-        mBasePointer  = X86Registers::bp();
+        mBasePointer = X86Registers::bp();
         addCallingConvention(std::make_unique<Cdecl16CallingConvention>(this));
         break;
     case PROTECTED_MODE:
@@ -38,7 +38,7 @@ X86Architecture::X86Architecture(Mode mode) {
         setBitness(32);
         mInstructionPointer = X86Registers::eip();
         mStackPointer = X86Registers::esp();
-        mBasePointer  = X86Registers::ebp();
+        mBasePointer = X86Registers::ebp();
         addCallingConvention(std::make_unique<Cdecl32CallingConvention>(this));
         addCallingConvention(std::make_unique<Stdcall32CallingConvention>(this));
         break;
@@ -47,7 +47,7 @@ X86Architecture::X86Architecture(Mode mode) {
         setBitness(64);
         mInstructionPointer = X86Registers::rip();
         mStackPointer = X86Registers::rsp();
-        mBasePointer  = X86Registers::rbp();
+        mBasePointer = X86Registers::rbp();
         addCallingConvention(std::make_unique<AMD64CallingConvention>(this));
         addCallingConvention(std::make_unique<Microsoft64CallingConvention>(this));
         break;

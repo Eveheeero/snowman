@@ -32,10 +32,9 @@ namespace nc {
  *
  * \tparam T Type of objects passed to the callback.
  */
-template<class T>
+template <class T>
 class PrintCallback {
-    public:
-
+public:
     /**
      * Callback function called when something starts being printed.
      *

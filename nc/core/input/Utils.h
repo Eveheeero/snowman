@@ -35,6 +35,8 @@ inline QString getAsciizString(const QByteArray &bytes, std::size_t offset = 0) 
         return QString();
     }
 }
-}}} // namespace nc::core::input
+} // namespace input
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

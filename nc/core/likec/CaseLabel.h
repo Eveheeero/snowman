@@ -39,7 +39,7 @@ class Expression;
 /**
  * Case label.
  */
-class CaseLabel: public Statement {
+class CaseLabel : public Statement {
     /** Case expression. */
     std::unique_ptr<Expression> expression_;
 
@@ -49,9 +49,8 @@ public:
      *
      * \param[in] expression Valid pointer to the case expression.
      */
-    explicit CaseLabel(std::unique_ptr<Expression> expression):
-        Statement(CASE_LABEL), expression_(std::move(expression))
-    {
+    explicit CaseLabel(std::unique_ptr<Expression> expression)
+        : Statement(CASE_LABEL), expression_(std::move(expression)) {
         assert(expression_);
     }
 

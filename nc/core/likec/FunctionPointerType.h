@@ -36,10 +36,10 @@ namespace likec {
 /**
  * Function type.
  */
-class FunctionPointerType: public Type {
-    const Type *returnType_; ///< Function return type.
+class FunctionPointerType : public Type {
+    const Type *returnType_;                  ///< Function return type.
     std::vector<const Type *> argumentTypes_; ///< Types of function arguments.
-    bool variadic_; ///< True, if function has variable number of arguments.
+    bool variadic_;                           ///< True, if function has variable number of arguments.
 
 public:
     /**
@@ -49,9 +49,8 @@ public:
      * \param[in] returnType Function return type.
      * \param[in] variadic Whether function has variable number of arguments.
      */
-    FunctionPointerType(BitSize size, const Type *returnType = nullptr, bool variadic = false):
-        Type(size, FUNCTION_POINTER), returnType_(returnType), variadic_(variadic)
-    {}
+    FunctionPointerType(BitSize size, const Type *returnType = nullptr, bool variadic = false)
+        : Type(size, FUNCTION_POINTER), returnType_(returnType), variadic_(variadic) {}
 
     /**
      * \return Function return type.

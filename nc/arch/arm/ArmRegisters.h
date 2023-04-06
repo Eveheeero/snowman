@@ -7,12 +7,14 @@
 
 #include <nc/core/arch/Registers.h>
 
-namespace nc { namespace arch { namespace arm {
+namespace nc {
+namespace arch {
+namespace arm {
 
 /**
  * Container class for ARM registers.
  */
-class ArmRegisters: public core::arch::StaticRegisters<ArmRegisters> {
+class ArmRegisters : public core::arch::StaticRegisters<ArmRegisters> {
 public:
     ArmRegisters();
 
@@ -20,6 +22,8 @@ public:
 #include <nc/core/arch/Registers.i>
 };
 
-}}} // namespace nc::arch::arm
+} // namespace arm
+} // namespace arch
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

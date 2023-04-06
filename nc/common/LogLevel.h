@@ -7,8 +7,6 @@
 
 #include <QString>
 
-namespace nc {
-
-} // namespace nc
+namespace nc {} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

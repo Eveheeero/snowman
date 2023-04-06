@@ -45,7 +45,7 @@ namespace vars {
 namespace {
 
 class TermSet;
-class TermSet: public DisjointSet<TermSet> {};
+class TermSet : public DisjointSet<TermSet> {};
 
 } // anonymous namespace
 
@@ -118,9 +118,9 @@ void VariableAnalyzer::analyze() {
      */
     if (!globalMemoryAccesses.empty()) {
         std::sort(globalMemoryAccesses.begin(), globalMemoryAccesses.end(),
-            [](const Variable::TermAndLocation &a, const Variable::TermAndLocation &b) {
-                return a.location < b.location;
-            });
+                  [](const Variable::TermAndLocation &a, const Variable::TermAndLocation &b) {
+                      return a.location < b.location;
+                  });
 
         auto begin = globalMemoryAccesses.begin();
         auto end = globalMemoryAccesses.end();
@@ -129,8 +129,8 @@ void VariableAnalyzer::analyze() {
 
         for (auto i = std::next(begin); i != end; ++i) {
             if (!variableLocation.overlaps(i->location)) {
-                variables_.addVariable(std::make_unique<Variable>(Variable::GLOBAL,
-                    std::vector<Variable::TermAndLocation>(begin, i), variableLocation));
+                variables_.addVariable(std::make_unique<Variable>(
+                    Variable::GLOBAL, std::vector<Variable::TermAndLocation>(begin, i), variableLocation));
                 begin = i;
                 variableLocation = i->location;
             } else {
@@ -138,8 +138,8 @@ void VariableAnalyzer::analyze() {
             }
         }
 
-        variables_.addVariable(std::make_unique<Variable>(Variable::GLOBAL,
-            std::vector<Variable::TermAndLocation>(begin, end), variableLocation));
+        variables_.addVariable(std::make_unique<Variable>(
+            Variable::GLOBAL, std::vector<Variable::TermAndLocation>(begin, end), variableLocation));
     }
 }
 

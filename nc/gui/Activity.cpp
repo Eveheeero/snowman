@@ -32,6 +32,7 @@ void Activity::run() {
     Q_EMIT finished();
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

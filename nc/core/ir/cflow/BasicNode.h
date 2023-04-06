@@ -38,16 +38,14 @@ namespace cflow {
 /**
  * Node representing a basic block.
  */
-class BasicNode: public Node {
+class BasicNode : public Node {
     const ir::BasicBlock *basicBlock_; ///< Basic block.
 
 public:
     /**
      * \param basicBlock Valid pointer to a basic block.
      */
-    BasicNode(const ir::BasicBlock *basicBlock):
-        Node(BASIC), basicBlock_(basicBlock)
-    {
+    BasicNode(const ir::BasicBlock *basicBlock) : Node(BASIC), basicBlock_(basicBlock) {
         assert(basicBlock_ != nullptr);
     }
 

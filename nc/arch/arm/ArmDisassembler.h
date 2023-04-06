@@ -21,7 +21,7 @@ class ArmArchitecture;
  *
  * TODO: Support for THUMB instructions.
  */
-class ArmDisassembler: public core::arch::Disassembler {
+class ArmDisassembler : public core::arch::Disassembler {
     std::unique_ptr<core::arch::Capstone> capstone_;
     int mode_;
 
@@ -30,9 +30,12 @@ public:
 
     virtual ~ArmDisassembler();
 
-    std::shared_ptr<core::arch::Instruction> disassembleSingleInstruction(ByteAddr pc, const void *buffer, ByteSize size) override;
+    std::shared_ptr<core::arch::Instruction> disassembleSingleInstruction(ByteAddr pc, const void *buffer,
+                                                                          ByteSize size) override;
 };
 
-}}} // namespace nc::arch::arm
+} // namespace arm
+} // namespace arch
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

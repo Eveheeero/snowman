@@ -36,7 +36,7 @@ namespace nc {
 /**
  * Exception thrown when cancellation was requested.
  */
-class CancellationException: public nc::Exception {
+class CancellationException : public nc::Exception {
     Q_DECLARE_TR_FUNCTIONS(CancellationException)
 
 public:
@@ -57,9 +57,7 @@ public:
     /**
      * Creates a not canceled token.
      */
-    CancellationToken():
-        cancellationRequested_(std::make_shared<bool>(false))
-    {}
+    CancellationToken() : cancellationRequested_(std::make_shared<bool>(false)) {}
 
     /**
      * Sets the cancellation flag for the token and all its copies.
@@ -71,9 +69,11 @@ public:
      */
     bool cancellationRequested() const
 #ifdef NC_USE_THREADS
-    { return *cancellationRequested_; }
+    {
+        return *cancellationRequested_;
+    }
 #else
-    ;
+        ;
 #endif
 
     /**

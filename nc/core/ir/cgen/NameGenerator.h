@@ -14,9 +14,9 @@ namespace nc {
 namespace core {
 
 namespace image {
-    class Image;
-    class Symbol;
-}
+class Image;
+class Symbol;
+} // namespace image
 
 namespace ir {
 
@@ -25,7 +25,7 @@ class MemoryLocation;
 class Term;
 
 namespace calling {
-    class CalleeId;
+class CalleeId;
 }
 
 namespace cgen {
@@ -35,9 +35,8 @@ class NameAndComment {
     QString comment_;
 
 public:
-    NameAndComment(QString name = QString(), QString comment = QString()):
-        name_(std::move(name)), comment_(std::move(comment))
-    {}
+    NameAndComment(QString name = QString(), QString comment = QString())
+        : name_(std::move(name)), comment_(std::move(comment)) {}
 
     QString &name() { return name_; }
     const QString &name() const { return name_; }
@@ -45,15 +44,16 @@ public:
     QString &comment() { return comment_; }
     const QString &comment() const { return comment_; }
 
-    operator const void*() const { return name_.isEmpty() ? nullptr : this; }
+    operator const void *() const { return name_.isEmpty() ? nullptr : this; }
 };
 
 class NameGenerator {
     Q_DECLARE_TR_FUNCTIONS(NameGenerator)
 
     const image::Image &image_;
+
 public:
-    NameGenerator(const image::Image &image): image_(image) {}
+    NameGenerator(const image::Image &image) : image_(image) {}
 
     NameAndComment getFunctionName(const calling::CalleeId &calleeId) const;
     NameAndComment getFunctionName(const Function *function) const;
@@ -71,6 +71,9 @@ public:
     static QString cleanName(const QString &name);
 };
 
-}}}} // namespace nc::core::ir::cgen
+} // namespace cgen
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

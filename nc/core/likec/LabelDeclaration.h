@@ -34,7 +34,7 @@ namespace likec {
 /**
  * Label in function code.
  */
-class LabelDeclaration: public Declaration {
+class LabelDeclaration : public Declaration {
     int referenceCount_; ///< Number of references to this label in the code.
 
 public:
@@ -43,9 +43,8 @@ public:
      *
      * \param[in] identifier Name of the label.
      */
-    explicit LabelDeclaration(QString identifier):
-        Declaration(LABEL_DECLARATION, std::move(identifier)), referenceCount_(0)
-    {}
+    explicit LabelDeclaration(QString identifier)
+        : Declaration(LABEL_DECLARATION, std::move(identifier)), referenceCount_(0) {}
 
     /**
      * Increments reference count by the given delta.
@@ -62,6 +61,7 @@ public:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::LabelDeclaration, nc::core::likec::Declaration::LABEL_DECLARATION)
+NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::LabelDeclaration,
+            nc::core::likec::Declaration::LABEL_DECLARATION)
 
 /* vim:set et sts=4 sw=4: */

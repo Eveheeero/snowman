@@ -23,20 +23,22 @@
 
 #pragma once
 
-#include <nc/config.h>
-#include <cassert>
-#include <boost/noncopyable.hpp>
 #include <QString>
+#include <boost/noncopyable.hpp>
+#include <cassert>
+#include <nc/config.h>
 #include <nc/core/ir/MemoryLocation.h>
 
-namespace nc { namespace core { namespace arch {
+namespace nc {
+namespace core {
+namespace arch {
 
 /**
  * Register.
- * 
+ *
  * Registers are immutable.
  */
-class Register: public boost::noncopyable {
+class Register : public boost::noncopyable {
 public:
     /**
      * Constructor.
@@ -45,15 +47,12 @@ public:
      * \param[in] name                 Register name.
      * \param[in] memoryLocation       Corresponding abstract memory location of the register.
      */
-    Register(int number, const QString &name, const ir::MemoryLocation &memoryLocation):
-        number_(number),
-        lowercaseName_(name.toLower()),
-        uppercaseName_(name.toUpper()),
-        memoryLocation_(memoryLocation)
-    {
+    Register(int number, const QString &name, const ir::MemoryLocation &memoryLocation)
+        : number_(number), lowercaseName_(name.toLower()), uppercaseName_(name.toUpper()),
+          memoryLocation_(memoryLocation) {
         assert(number >= 0);
     }
-    
+
     /**
      * \returns                        Register number.
      */
@@ -80,10 +79,12 @@ public:
     SmallBitSize size() const { return memoryLocation().size<SmallBitSize>(); }
 
 private:
-    int number_; ///< Register number.
-    QString lowercaseName_; ///< Lowercase register name.
-    QString uppercaseName_; ///< Uppercase register name.
+    int number_;                        ///< Register number.
+    QString lowercaseName_;             ///< Lowercase register name.
+    QString uppercaseName_;             ///< Uppercase register name.
     ir::MemoryLocation memoryLocation_; ///< Corresponding abstract memory location of the register.
 };
 
-}}} // namespace nc::core::arch
+} // namespace arch
+} // namespace core
+} // namespace nc

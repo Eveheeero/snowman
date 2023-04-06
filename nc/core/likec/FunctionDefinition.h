@@ -25,8 +25,8 @@
 
 #include <nc/config.h>
 
-#include <vector>
 #include <memory> /* unique_ptr */
+#include <vector>
 
 #include "Block.h"
 #include "FunctionDeclaration.h"
@@ -39,8 +39,8 @@ namespace likec {
 /**
  * Function definition = function declaration + function body (block).
  */
-class FunctionDefinition: public FunctionDeclaration {
-    std::unique_ptr<Block> block_; ///< Block of the function.
+class FunctionDefinition : public FunctionDeclaration {
+    std::unique_ptr<Block> block_;                          ///< Block of the function.
     std::vector<std::unique_ptr<LabelDeclaration>> labels_; ///< Label declarations.
 
 public:
@@ -52,10 +52,9 @@ public:
      * \param[in] returnType Function return type.
      * \param[in] variadic Whether function has variable number of arguments.
      */
-    FunctionDefinition(Tree &tree, QString identifier, const Type *returnType, bool variadic = false):
-        FunctionDeclaration(tree, FUNCTION_DEFINITION, std::move(identifier), returnType, variadic),
-        block_(new Block())
-    {}
+    FunctionDefinition(Tree &tree, QString identifier, const Type *returnType, bool variadic = false)
+        : FunctionDeclaration(tree, FUNCTION_DEFINITION, std::move(identifier), returnType, variadic),
+          block_(new Block()) {}
 
     /**
      * \return Block of the function.
@@ -87,6 +86,7 @@ protected:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::FunctionDefinition, nc::core::likec::Declaration::FUNCTION_DEFINITION)
+NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::FunctionDefinition,
+            nc::core::likec::Declaration::FUNCTION_DEFINITION)
 
 /* vim:set et sts=4 sw=4: */

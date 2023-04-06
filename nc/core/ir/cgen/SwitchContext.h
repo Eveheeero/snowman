@@ -31,7 +31,7 @@ namespace nc {
 namespace core {
 
 namespace likec {
-    class IntegerType;
+class IntegerType;
 }
 
 namespace ir {
@@ -58,7 +58,7 @@ public:
     /**
      * Default constructor.
      */
-    SwitchContext(): valueType_(nullptr), defaultBasicBlock_(nullptr) {}
+    SwitchContext() : valueType_(nullptr), defaultBasicBlock_(nullptr) {}
 
     /**
      * \return Pointer to the type of the value switched upon. Can be nullptr, if not set.
@@ -95,27 +95,21 @@ public:
      * \param[in] address Address the value corresponds to.
      * \param[in] value   Case value.
      */
-    void addCaseValue(ByteAddr address, ConstantValue value) {
-        caseValuesMap_[address].push_back(value);
-    }
+    void addCaseValue(ByteAddr address, ConstantValue value) { caseValuesMap_[address].push_back(value); }
 
     /**
      * \param[in] address An address.
      *
      * \return Vector of case values for this address.
      */
-    const std::vector<ConstantValue> getCaseValues(ByteAddr address) {
-        return nc::find(caseValuesMap_, address);
-    }
+    const std::vector<ConstantValue> getCaseValues(ByteAddr address) { return nc::find(caseValuesMap_, address); }
 
     /**
      * Forgets the case values for the given address.
      *
      * \param[in] address An address.
      */
-    void eraseCaseValues(ByteAddr address) {
-        caseValuesMap_.erase(address);
-    }
+    void eraseCaseValues(ByteAddr address) { caseValuesMap_.erase(address); }
 };
 
 } // namespace cgen

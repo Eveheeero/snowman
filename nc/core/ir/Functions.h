@@ -42,7 +42,7 @@ class Function;
 /**
  * Functions in intermediate representation.
  */
-class Functions: public PrintableBase<Functions>, boost::noncopyable {
+class Functions : public PrintableBase<Functions>, boost::noncopyable {
 public:
     typedef nc::ilist<Function> FunctionList;
 

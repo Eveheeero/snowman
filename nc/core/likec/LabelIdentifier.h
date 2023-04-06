@@ -36,7 +36,7 @@ class LabelDeclaration;
 /**
  * Label identifier.
  */
-class LabelIdentifier: public Expression {
+class LabelIdentifier : public Expression {
     LabelDeclaration *declaration_; ///< Label declaration.
 
 public:
@@ -62,6 +62,7 @@ public:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::LabelIdentifier, nc::core::likec::Expression::LABEL_IDENTIFIER)
+NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::LabelIdentifier,
+            nc::core::likec::Expression::LABEL_IDENTIFIER)
 
 /* vim:set et sts=4 sw=4: */

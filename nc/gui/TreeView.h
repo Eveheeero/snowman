@@ -34,12 +34,13 @@ class QMenu;
 class QTreeView;
 QT_END_NAMESPACE
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * Dock widget for showing trees or lists.
  */
-class TreeView: public QDockWidget {
+class TreeView : public QDockWidget {
     Q_OBJECT
 
     QTreeView *treeView_;
@@ -128,6 +129,7 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

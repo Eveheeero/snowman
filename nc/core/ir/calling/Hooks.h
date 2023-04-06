@@ -31,7 +31,7 @@
  * templates. Therefore, we fallback to std::map when keys are tuples.
  */
 #include <functional>
-#include <map> 
+#include <map>
 #include <tuple>
 #include <vector>
 
@@ -52,7 +52,7 @@ class Jump;
 class Statement;
 
 namespace dflow {
-    class Dataflow;
+class Dataflow;
 }
 
 namespace calling {
@@ -97,19 +97,23 @@ private:
     boost::unordered_map<Jump *, Statement *> jump2callback_;
 
     /** All entry hooks ever created. */
-    std::map<std::tuple<const Function *, const Convention *, const FunctionSignature *>, std::unique_ptr<EntryHook>> entryHooks_;
+    std::map<std::tuple<const Function *, const Convention *, const FunctionSignature *>, std::unique_ptr<EntryHook>>
+        entryHooks_;
 
     /** Mapping from a function to the last entry hook used for instrumenting it. */
     boost::unordered_map<const Function *, EntryHook *> lastEntryHooks_;
 
     /** All call hooks ever created. */
-    std::map<std::tuple<const Call *, const Convention *, const CallSignature *, boost::optional<ByteSize>>, std::unique_ptr<CallHook>> callHooks_;
+    std::map<std::tuple<const Call *, const Convention *, const CallSignature *, boost::optional<ByteSize>>,
+             std::unique_ptr<CallHook>>
+        callHooks_;
 
     /** Mapping from a call to the last call hook used for instrumenting it. */
     boost::unordered_map<const Call *, CallHook *> lastCallHooks_;
 
     /** All return hooks ever created. */
-    std::map<std::tuple<const Jump *, const Convention *, const FunctionSignature *>, std::unique_ptr<ReturnHook>> returnHooks_;
+    std::map<std::tuple<const Jump *, const Convention *, const FunctionSignature *>, std::unique_ptr<ReturnHook>>
+        returnHooks_;
 
     /** Mapping from a return jump to the last return hook used for instrumenting it. */
     boost::unordered_map<const Jump *, ReturnHook *> lastReturnHooks_;
@@ -141,9 +145,7 @@ public:
      *
      * \param detector Calling convention detector.
      */
-    void setConventionDetector(ConventionDetector detector) {
-        conventionDetector_ = std::move(detector);
-    }
+    void setConventionDetector(ConventionDetector detector) { conventionDetector_ = std::move(detector); }
 
     /**
      * \param calleeId Callee id.

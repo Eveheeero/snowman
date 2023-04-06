@@ -39,7 +39,7 @@ class Term;
 /**
  * Jump to an address and/or basic block.
  */
-class Jump: public Statement {
+class Jump : public Statement {
     /** Jump condition. */
     std::unique_ptr<Term> condition_;
 

@@ -46,7 +46,7 @@ class Activity;
 /**
  * Base class for commands, as in Command Pattern.
  */
-class Command: public QObject {
+class Command : public QObject {
     Q_OBJECT
 
 #ifdef NC_USE_THREADS
@@ -63,8 +63,7 @@ class Command: public QObject {
     /** The command does not prevent the user from doing something else. */
     bool isBackground_;
 
-    public:
-
+public:
     /**
      * Constructor.
      */
@@ -90,7 +89,10 @@ class Command: public QObject {
      *
      * \param threadPool Valid pointer to the thread pool.
      */
-    void setThreadPool(QThreadPool *threadPool) { assert(threadPool); threadPool_ = threadPool; }
+    void setThreadPool(QThreadPool *threadPool) {
+        assert(threadPool);
+        threadPool_ = threadPool;
+    }
 #endif
 
     /**
@@ -119,15 +121,14 @@ class Command: public QObject {
      */
     bool isBackground() const { return isBackground_; }
 
-    Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * Signal emitted when the execution of this command and all its activities is finished.
      */
     void finished();
 
-    protected:
-
+protected:
     /**
      * This function does the real work.
      * Override it in subclasses.
@@ -154,7 +155,7 @@ class Command: public QObject {
      */
     void setBackground(bool value) { isBackground_ = value; }
 
-    private Q_SLOTS:
+private Q_SLOTS:
 
     /**
      * This slot is called when an activity is finished.
@@ -162,6 +163,7 @@ class Command: public QObject {
     void activityFinished();
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

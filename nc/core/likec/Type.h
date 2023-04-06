@@ -36,27 +36,27 @@ namespace likec {
 /**
  * Base class for LikeC types.
  *
- * Type objects are usually created and owned by Tree (notable exception is FunctionDeclaration which creates and owns FunctionPointerType).
+ * Type objects are usually created and owned by Tree (notable exception is FunctionDeclaration which creates and owns
+ * FunctionPointerType).
  */
-class Type: public Printable {
+class Type : public Printable {
     NC_BASE_CLASS(Type, kind)
 
     BitSize size_; ///< Type size in bits.
 
-    public:
-
+public:
     /**
      * Type kind.
      */
     enum {
-        ERRONEOUS,          ///< Erroneous type.
-        FLOAT,              ///< Floating point type.
-        FUNCTION_POINTER,   ///< Function pointer type.
-        INTEGER,            ///< Integer type.
-        POINTER,            ///< Pointer type.
-        STRUCT_TYPE,        ///< Structural type.
-        VOID,               ///< Void type.
-        USER_TYPE = 1000    ///< Base for user-defined types.
+        ERRONEOUS,        ///< Erroneous type.
+        FLOAT,            ///< Floating point type.
+        FUNCTION_POINTER, ///< Function pointer type.
+        INTEGER,          ///< Integer type.
+        POINTER,          ///< Pointer type.
+        STRUCT_TYPE,      ///< Structural type.
+        VOID,             ///< Void type.
+        USER_TYPE = 1000  ///< Base for user-defined types.
     };
 
     /**
@@ -65,7 +65,7 @@ class Type: public Printable {
      * \param[in] size Type size in bits.
      * \param[in] kind Type kind.
      */
-    Type(BitSize size, int kind): kind_(kind), size_(size) {}
+    Type(BitSize size, int kind) : kind_(kind), size_(size) {}
 
     /**
      * Virtual destructor.

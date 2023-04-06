@@ -33,15 +33,12 @@ namespace cflow {
 class Node;
 
 class Edge {
-    public:
-
-    private:
-
+public:
+private:
     Node *tail_; ///< Edge tail.
     Node *head_; ///< Edge head.
 
-    public:
-
+public:
     /**
      * Class constructor.
      *

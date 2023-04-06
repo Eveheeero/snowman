@@ -32,9 +32,9 @@
 namespace nc {
 namespace gui {
 
-Disassembly::Disassembly(const std::shared_ptr<core::Context> &context, const core::image::ByteSource *source, ByteAddr begin, ByteAddr end):
-    context_(context), source_(source), begin_(begin), end_(end)
-{
+Disassembly::Disassembly(const std::shared_ptr<core::Context> &context, const core::image::ByteSource *source,
+                         ByteAddr begin, ByteAddr end)
+    : context_(context), source_(source), begin_(begin), end_(end) {
     assert(context);
     assert(source);
 }
@@ -49,6 +49,7 @@ void Disassembly::work() {
     }
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

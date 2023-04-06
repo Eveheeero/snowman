@@ -50,9 +50,7 @@ public:
      *
      * \param[out] map  Mapping from a node to its parent.
      */
-    ParentTracker(boost::unordered_map<const core::likec::TreeNode *, const core::likec::TreeNode *> &map):
-        map_(map)
-    {
+    ParentTracker(boost::unordered_map<const core::likec::TreeNode *, const core::likec::TreeNode *> &map) : map_(map) {
         stack_.push_back(nullptr);
     }
 

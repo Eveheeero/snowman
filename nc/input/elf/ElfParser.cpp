@@ -48,8 +48,8 @@ namespace elf {
 
 namespace {
 
-using nc::core::input::read;
 using nc::core::input::ParseError;
+using nc::core::input::read;
 
 class Elf32 {
 public:
@@ -81,7 +81,7 @@ public:
     static Elf64_Addr r_sym(Elf64_Addr offset) { return ELF64_R_SYM(offset); }
 };
 
-template<class Elf>
+template <class Elf>
 class RelWithoutAddend {
 public:
     typedef typename Elf::Rel Rel;
@@ -92,7 +92,7 @@ public:
     static ByteSize addend(const Rel &) { return 0; }
 };
 
-template<class Elf>
+template <class Elf>
 class RelWithAddend {
 public:
     typedef typename Elf::Rela Rel;
@@ -104,7 +104,7 @@ public:
     static ByteSize addend(const Rel &rel) { return rel.r_addend; }
 };
 
-template<class Elf>
+template <class Elf>
 class ElfParserImpl {
     Q_DECLARE_TR_FUNCTIONS(ElfParserImpl)
 
@@ -120,9 +120,8 @@ class ElfParserImpl {
     boost::unordered_map<std::size_t, std::vector<std::unique_ptr<core::image::Relocation>>> relocationTables_;
 
 public:
-    ElfParserImpl(QIODevice *source, core::image::Image *image, const LogToken &log):
-        source_(source), image_(image), log_(log), byteOrder_(ByteOrder::Current)
-    {}
+    ElfParserImpl(QIODevice *source, core::image::Image *image, const LogToken &log)
+        : source_(source), image_(image), log_(log), byteOrder_(ByteOrder::Current) {}
 
     void parse() {
         parseElfHeader();
@@ -169,7 +168,8 @@ private:
         } else if (ehdr_.e_ident[EI_DATA] == ELFDATA2MSB) {
             byteOrder_ = ByteOrder::BigEndian;
         } else {
-            log_.warning(tr("Invalid byte order in ELF file: %1. Assuming host byte order.").arg(ehdr_.e_ident[EI_DATA]));
+            log_.warning(
+                tr("Invalid byte order in ELF file: %1. Assuming host byte order.").arg(ehdr_.e_ident[EI_DATA]));
         }
 
         byteOrder_.convertFrom(ehdr_.e_machine);
@@ -181,21 +181,21 @@ private:
         byteOrder_.convertFrom(ehdr_.e_entry);
 
         switch (ehdr_.e_machine) {
-            case EM_386:
-                image_->platform().setArchitecture(QLatin1String("i386"));
-                break;
-            case EM_X86_64:
-                image_->platform().setArchitecture(QLatin1String("x86-64"));
-                break;
-            case EM_ARM:
-                if (byteOrder_ == ByteOrder::LittleEndian) {
-                    image_->platform().setArchitecture(QLatin1String("arm-le"));
-                } else {
-                    image_->platform().setArchitecture(QLatin1String("arm-be"));
-                }
-                break;
-            default:
-                throw ParseError(tr("Unknown machine id: %1.").arg(ehdr_.e_machine));
+        case EM_386:
+            image_->platform().setArchitecture(QLatin1String("i386"));
+            break;
+        case EM_X86_64:
+            image_->platform().setArchitecture(QLatin1String("x86-64"));
+            break;
+        case EM_ARM:
+            if (byteOrder_ == ByteOrder::LittleEndian) {
+                image_->platform().setArchitecture(QLatin1String("arm-le"));
+            } else {
+                image_->platform().setArchitecture(QLatin1String("arm-be"));
+            }
+            break;
+        default:
+            throw ParseError(tr("Unknown machine id: %1.").arg(ehdr_.e_machine));
         }
     }
 
@@ -340,7 +340,9 @@ private:
 
         auto strtabIndex = shdrs_[symtabIndex].sh_link;
         if (strtabIndex >= shdrs_.size()) {
-            log_.warning(tr("Symbol table (section number %1) has invalid string table section number %2.").arg(symtabIndex).arg(strtabIndex));
+            log_.warning(tr("Symbol table (section number %1) has invalid string table section number %2.")
+                             .arg(symtabIndex)
+                             .arg(strtabIndex));
             return;
         }
 
@@ -367,18 +369,18 @@ private:
 
             SymbolType type;
             switch (Elf::st_type(sym.st_info)) {
-                case STT_OBJECT:
-                    type = SymbolType::OBJECT;
-                    break;
-                case STT_FUNC:
-                    type = SymbolType::FUNCTION;
-                    break;
-                case STT_SECTION:
-                    type = SymbolType::SECTION;
-                    break;
-                default:
-                    type = SymbolType::NOTYPE;
-                    break;
+            case STT_OBJECT:
+                type = SymbolType::OBJECT;
+                break;
+            case STT_FUNC:
+                type = SymbolType::FUNCTION;
+                break;
+            case STT_SECTION:
+                type = SymbolType::SECTION;
+                break;
+            default:
+                type = SymbolType::NOTYPE;
+                break;
             }
 
             const core::image::Section *section = nullptr;
@@ -403,7 +405,7 @@ private:
         }
     }
 
-    template<class Relocation>
+    template <class Relocation>
     void parseRelocations(std::size_t reltabIndex) {
         assert(reltabIndex < sections_.size());
 
@@ -437,7 +439,9 @@ private:
                 result.push_back(std::make_unique<core::image::Relocation>(
                     rel.r_offset, symbolTable[symbolIndex].get(), sizeof(typename Elf::Addr), Relocation::addend(rel)));
             } else {
-                log_.warning(tr("Symbol index %1 is out of range: symbol table has only %2 elements.").arg(symbolIndex).arg(symbolTable.size()));
+                log_.warning(tr("Symbol index %1 is out of range: symbol table has only %2 elements.")
+                                 .arg(symbolIndex)
+                                 .arg(symbolTable.size()));
             }
         }
     }
@@ -445,9 +449,7 @@ private:
 
 } // anonymous namespace
 
-ElfParser::ElfParser():
-    core::input::Parser(QLatin1String("ELF"))
-{}
+ElfParser::ElfParser() : core::input::Parser(QLatin1String("ELF")) {}
 
 bool ElfParser::doCanParse(QIODevice *source) const {
     Elf32_Ehdr ehdr;
@@ -462,17 +464,17 @@ void ElfParser::doParse(QIODevice *source, core::image::Image *image, const LogT
     }
 
     switch (ehdr.e_ident[EI_CLASS]) {
-        case ELFCLASS32: {
-            ElfParserImpl<Elf32>(source, image, log).parse();
-            break;
-        }
-        case ELFCLASS64: {
-            ElfParserImpl<Elf64>(source, image, log).parse();
-            break;
-        }
-        default: {
-            throw ParseError(tr("Unknown ELF class: %1.").arg(ehdr.e_ident[EI_CLASS]));
-        }
+    case ELFCLASS32: {
+        ElfParserImpl<Elf32>(source, image, log).parse();
+        break;
+    }
+    case ELFCLASS64: {
+        ElfParserImpl<Elf64>(source, image, log).parse();
+        break;
+    }
+    default: {
+        throw ParseError(tr("Unknown ELF class: %1.").arg(ehdr.e_ident[EI_CLASS]));
+    }
     }
 }
 

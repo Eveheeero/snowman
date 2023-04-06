@@ -34,21 +34,21 @@
 namespace nc {
 
 namespace core {
-    namespace arch {
-        class Instruction;
-    }
-
-    namespace ir {
-        class Statement;
-        class Term;
-    }
-
-    namespace likec {
-        class Declaration;
-        class FunctionDefinition;
-        class TreeNode;
-    }
+namespace arch {
+class Instruction;
 }
+
+namespace ir {
+class Statement;
+class Term;
+} // namespace ir
+
+namespace likec {
+class Declaration;
+class FunctionDefinition;
+class TreeNode;
+} // namespace likec
+} // namespace core
 
 namespace gui {
 
@@ -58,7 +58,7 @@ class CppSyntaxHighlighter;
 /**
  * Dock widget for showing C++ code.
  */
-class CxxView: public TextView {
+class CxxView : public TextView {
     Q_OBJECT
 
     /** Syntax highlighter for C++ code. */
@@ -138,7 +138,8 @@ public:
     const core::likec::Declaration *getDeclarationOfIdentifierUnderCursor() const;
 
     /**
-     * \return Pointer to the declaration of the function whose identifier or declaration is under cursor. Can be nullptr.
+     * \return Pointer to the declaration of the function whose identifier or declaration is under cursor. Can be
+     * nullptr.
      */
     const core::likec::FunctionDefinition *getDefinitionOfFunctionUnderCursor() const;
 
@@ -164,7 +165,8 @@ public Q_SLOTS:
      * \param instructions  Instructions to be highlighted.
      * \param ensureVisible Ensure that changes in highlighting are visible.
      */
-    void highlightInstructions(const std::vector<const core::arch::Instruction *> &instructions, bool ensureVisible = true);
+    void highlightInstructions(const std::vector<const core::arch::Instruction *> &instructions,
+                               bool ensureVisible = true);
 
 Q_SIGNALS:
     /**
@@ -234,11 +236,12 @@ private:
      * \return Generated tooltip text.
      */
     QString getDeclarationTooltip(int position) const;
-    
+
 protected:
     virtual bool eventFilter(QObject *watched, QEvent *event) override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

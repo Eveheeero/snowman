@@ -30,8 +30,8 @@
 #include <memory> /* std::shared_ptr */
 
 #include <nc/common/Branding.h>
-#include <nc/common/Types.h>
 #include <nc/common/LogToken.h>
+#include <nc/common/Types.h>
 
 QT_BEGIN_NAMESPACE
 class QAction;
@@ -44,7 +44,7 @@ QT_END_NAMESPACE
 namespace nc {
 
 namespace core {
-    class Context;
+class Context;
 }
 
 namespace gui {
@@ -61,38 +61,38 @@ class SymbolsView;
 /**
  * Main window of the decompiler.
  */
-class MainWindow: public QMainWindow {
+class MainWindow : public QMainWindow {
     Q_OBJECT
 
     Branding branding_;
 
-    InstructionsView *instructionsView_; ///< Instructions view.
-    CxxView *cxxView_; ///< C++ view.
-    SectionsView *sectionsView_; ///< Sections view.
-    SymbolsView *symbolsView_; ///< Symbols view.
-    InspectorView *inspectorView_; ///< Inspector view.
-    LogView *logView_; ///< Log window.
+    InstructionsView *instructionsView_;   ///< Instructions view.
+    CxxView *cxxView_;                     ///< C++ view.
+    SectionsView *sectionsView_;           ///< Sections view.
+    SymbolsView *symbolsView_;             ///< Symbols view.
+    InspectorView *inspectorView_;         ///< Inspector view.
+    LogView *logView_;                     ///< Log window.
     DisassemblyDialog *disassemblyDialog_; ///< Disassembly dialog.
-    QProgressDialog *progressDialog_; ///< Progress dialog.
-    QLabel *statusLabel_; ///< Label in the status bar.
-    QProgressBar *statusProgressBar_; ///< Progress bar in the status bar.
+    QProgressDialog *progressDialog_;      ///< Progress dialog.
+    QLabel *statusLabel_;                  ///< Label in the status bar.
+    QProgressBar *statusProgressBar_;      ///< Progress bar in the status bar.
 
-    QAction *openAction_; ///< Action for opening a file.
-    QAction *exportCfgAction_; ///< Action for exporting CFG in DOT format.
-    QAction *loadStyleSheetAction_; ///< Action for loading a Qt style sheet.
-    QAction *quitAction_; ///< Action for closing the main window.
-    QAction *disassembleAction_; ///< Action for opening disassembly dialog.
-    QAction *decompileAction_; ///< Action for starting decompilation.
-    QAction *cancelAllAction_; ///< Action for cancelling all scheduled commands.
-    QAction *decompileAutomaticallyAction_; ///< Action for toggling automatic decompilation.
-    QAction *instructionsViewAction_; ///< Action for showing/hiding the instructions window.
-    QAction *sectionsViewAction_; ///< Action for showing/hiding the sections window.
-    QAction *symbolsViewAction_; ///< Action for showing/hiding the symbols window.
-    QAction *inspectorViewAction_; ///< Action for showing/hiding the tree inspector.
-    QAction *logViewAction_; ///< Action for showing/hiding the log window.
-    QAction *aboutAction_; ///< Action for showing 'About Application' dialog.
-    QAction *aboutQtAction_; ///< Action for showing 'About Qt' dialog.
-    QAction *deleteSelectedInstructionsAction_; ///< Action for deleting selected instructions.
+    QAction *openAction_;                          ///< Action for opening a file.
+    QAction *exportCfgAction_;                     ///< Action for exporting CFG in DOT format.
+    QAction *loadStyleSheetAction_;                ///< Action for loading a Qt style sheet.
+    QAction *quitAction_;                          ///< Action for closing the main window.
+    QAction *disassembleAction_;                   ///< Action for opening disassembly dialog.
+    QAction *decompileAction_;                     ///< Action for starting decompilation.
+    QAction *cancelAllAction_;                     ///< Action for cancelling all scheduled commands.
+    QAction *decompileAutomaticallyAction_;        ///< Action for toggling automatic decompilation.
+    QAction *instructionsViewAction_;              ///< Action for showing/hiding the instructions window.
+    QAction *sectionsViewAction_;                  ///< Action for showing/hiding the sections window.
+    QAction *symbolsViewAction_;                   ///< Action for showing/hiding the symbols window.
+    QAction *inspectorViewAction_;                 ///< Action for showing/hiding the tree inspector.
+    QAction *logViewAction_;                       ///< Action for showing/hiding the log window.
+    QAction *aboutAction_;                         ///< Action for showing 'About Application' dialog.
+    QAction *aboutQtAction_;                       ///< Action for showing 'About Qt' dialog.
+    QAction *deleteSelectedInstructionsAction_;    ///< Action for deleting selected instructions.
     QAction *decompileSelectedInstructionsAction_; ///< Action for decompiling selected instructions.
 
     QSettings *settings_; ///< Application settings.
@@ -168,7 +168,7 @@ public Q_SLOTS:
      */
     void open(const QStringList &filenames);
 
-public: 
+public:
     /**
      * Opens a project.
      *
@@ -381,6 +381,7 @@ private Q_SLOTS:
     void about();
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

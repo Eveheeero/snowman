@@ -41,18 +41,18 @@ QT_END_NAMESPACE
 namespace nc {
 
 namespace core {
-    namespace image {
-        class Section;
-        class Image;
-    }
-}
+namespace image {
+class Section;
+class Image;
+} // namespace image
+} // namespace core
 
 namespace gui {
 
 /**
  * Dialog letting to choose a section and a range of addresses to disassemble.
  */
-class DisassemblyDialog: public QDialog {
+class DisassemblyDialog : public QDialog {
     Q_OBJECT
 
 public:
@@ -97,7 +97,7 @@ public:
      */
     boost::optional<ByteAddr> endAddress() const;
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     /**
      * Updates the list of sections to choose from.
@@ -125,6 +125,7 @@ private:
     QLineEdit *endLineEdit_;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

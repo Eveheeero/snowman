@@ -10,6 +10,9 @@
 /**
  * Macro for marking unreachable code.
  */
-#define unreachable() do { assert(!"Unreachable code executed."); } while (true)
+#define unreachable()                                                                                                  \
+    do {                                                                                                               \
+        assert(!"Unreachable code executed.");                                                                         \
+    } while (true)
 
 /* vim:set et sts=4 sw=4: */

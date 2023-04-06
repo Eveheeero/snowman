@@ -40,42 +40,44 @@
 namespace nc {
 
 namespace core {
-    class Context;
+class Context;
 
-    namespace arch {
-        class Instruction;
-    }
-
-    namespace ir {
-        class Statement;
-        class Term;
-    }
-
-    namespace likec {
-        class Declaration;
-        class FunctionDeclaration;
-        class FunctionDefinition;
-        class LabelDeclaration;
-        class LabelStatement;
-        class TreeNode;
-    }
+namespace arch {
+class Instruction;
 }
+
+namespace ir {
+class Statement;
+class Term;
+} // namespace ir
+
+namespace likec {
+class Declaration;
+class FunctionDeclaration;
+class FunctionDefinition;
+class LabelDeclaration;
+class LabelStatement;
+class TreeNode;
+} // namespace likec
+} // namespace core
 
 namespace gui {
 
 /**
  * Text document containing C++ listing.
  */
-class CxxDocument: public QTextDocument {
+class CxxDocument : public QTextDocument {
     Q_OBJECT
 
     std::shared_ptr<const core::Context> context_;
     RangeTree rangeTree_;
     boost::unordered_map<const core::likec::TreeNode *, const RangeNode *> node2rangeNode_;
     boost::unordered_map<const core::arch::Instruction *, std::vector<const RangeNode *>> instruction2rangeNodes_;
-    boost::unordered_map<const core::likec::Declaration *, std::vector<const core::likec::TreeNode *>> declaration2uses_;
+    boost::unordered_map<const core::likec::Declaration *, std::vector<const core::likec::TreeNode *>>
+        declaration2uses_;
     boost::unordered_map<const core::likec::LabelDeclaration *, const core::likec::LabelStatement *> label2statement_;
-    boost::unordered_map<const core::likec::FunctionDeclaration *, const core::likec::FunctionDefinition *> functionDeclaration2definition_;
+    boost::unordered_map<const core::likec::FunctionDeclaration *, const core::likec::FunctionDefinition *>
+        functionDeclaration2definition_;
 
 public:
     /**
@@ -129,7 +131,8 @@ public:
         return nc::find(label2statement_, declaration);
     }
 
-    const core::likec::FunctionDefinition *getFunctionDefinition(const core::likec::FunctionDeclaration *declaration) const {
+    const core::likec::FunctionDefinition *
+    getFunctionDefinition(const core::likec::FunctionDeclaration *declaration) const {
         assert(declaration != nullptr);
         return nc::find(functionDeclaration2definition_, declaration);
     }
@@ -175,6 +178,7 @@ private:
     void replaceText(const Range<int> &range, const QString &text);
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

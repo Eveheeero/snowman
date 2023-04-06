@@ -24,11 +24,11 @@ class Statement;
 class Term;
 
 namespace calling {
-    class Hooks;
+class Hooks;
 }
 
 namespace dflow {
-    class Dataflow;
+class Dataflow;
 }
 
 namespace cgen {

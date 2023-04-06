@@ -37,9 +37,9 @@ namespace nc {
 namespace core {
 namespace ir {
 
-class InlineAssembly: public Statement {
+class InlineAssembly : public Statement {
 public:
-    InlineAssembly(): Statement(INLINE_ASSEMBLY) {}
+    InlineAssembly() : Statement(INLINE_ASSEMBLY) {}
 
     void print(QTextStream &out) const override;
 
@@ -50,8 +50,8 @@ protected:
 /**
  * Assignment statement.
  */
-class Assignment: public Statement {
-    std::unique_ptr<Term> left_; ///< Term being the left-hand side.
+class Assignment : public Statement {
+    std::unique_ptr<Term> left_;  ///< Term being the left-hand side.
     std::unique_ptr<Term> right_; ///< Term being the right-hand side.
 
 public:
@@ -92,7 +92,7 @@ protected:
 /**
  * A statement reading, writing, or killing a term.
  */
-class Touch: public Statement {
+class Touch : public Statement {
     std::unique_ptr<Term> term_; ///< Term being accessed.
     Term::AccessType accessType_;
 
@@ -122,15 +122,14 @@ protected:
 /**
  * Function call statement.
  */
-class Call: public Statement {
+class Call : public Statement {
     std::unique_ptr<Term> target_; ///< Call target (function address).
 
 public:
     /**
      * \param[in] target    Call target (function address).
      */
-    explicit
-    Call(std::unique_ptr<Term> target);
+    explicit Call(std::unique_ptr<Term> target);
 
     /**
      * \return Call target (function address).
@@ -151,9 +150,9 @@ protected:
 /**
  * Return from a program.
  */
-class Halt: public Statement {
+class Halt : public Statement {
 public:
-    Halt(): Statement(HALT) {}
+    Halt() : Statement(HALT) {}
 
     void print(QTextStream &out) const override;
 
@@ -165,17 +164,14 @@ protected:
  * DataflowAnalyzer, when executing the statement, calls
  * the function stored in the statement.
  */
-class Callback: public Statement {
+class Callback : public Statement {
     std::function<void()> function_; ///< Callback function.
 
 public:
     /**
      * \param function Callback function.
      */
-    explicit
-    Callback(std::function<void()> function):
-        Statement(CALLBACK), function_(std::move(function))
-    {
+    explicit Callback(std::function<void()> function) : Statement(CALLBACK), function_(std::move(function)) {
         assert(function_);
     }
 
@@ -193,9 +189,9 @@ protected:
 /**
  * DataflowAnalyzer remembers definitions reaching this statement.
  */
-class RememberReachingDefinitions: public Statement {
+class RememberReachingDefinitions : public Statement {
 public:
-    RememberReachingDefinitions(): Statement(REMEMBER_REACHING_DEFINITIONS) {}
+    RememberReachingDefinitions() : Statement(REMEMBER_REACHING_DEFINITIONS) {}
 
     void print(QTextStream &out) const override;
 

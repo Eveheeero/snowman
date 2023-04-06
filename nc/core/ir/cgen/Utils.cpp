@@ -41,18 +41,14 @@ bool isBefore(const Statement *first, const Statement *second) {
         return false;
     }
 
-    if (first->instruction() && second->instruction() &&
-        first->instruction() != second->instruction())
-    {
+    if (first->instruction() && second->instruction() && first->instruction() != second->instruction()) {
         return first->instruction()->addr() < second->instruction()->addr();
     } else {
         const auto &statements = first->basicBlock()->statements();
         assert(nc::contains(statements, first));
         assert(nc::contains(statements, second));
-        return std::find(
-            std::next(std::find(statements.begin(), statements.end(), first)),
-            statements.end(),
-            second) != statements.end();
+        return std::find(std::next(std::find(statements.begin(), statements.end(), first)), statements.end(), second) !=
+               statements.end();
     }
 }
 
@@ -69,11 +65,7 @@ bool isDominating(const Statement *first, const Statement *second, const Dominat
 
 boost::optional<bool> allOfBasicBlocksBetween(const BasicBlock *first, const BasicBlock *second, const CFG &cfg,
                                               std::function<bool(const BasicBlock *)> pred) {
-    enum Color {
-        WHITE,
-        GRAY,
-        BLACK
-    };
+    enum Color { WHITE, GRAY, BLACK };
 
     std::queue<const BasicBlock *> queue;
     boost::unordered_map<const BasicBlock *, Color> colors;
@@ -136,15 +128,15 @@ boost::optional<bool> allOfStatementsBetween(const Statement *first, const State
         return boost::none;
     }
 
-    if (auto result = allOfBasicBlocksBetween(first->basicBlock(), second->basicBlock(), cfg,
-                                              [&](const BasicBlock *basicBlock) -> bool {
-            return std::all_of(basicBlock->statements().begin(), basicBlock->statements().end(), pred);
-        })) {
+    if (auto result = allOfBasicBlocksBetween(
+            first->basicBlock(), second->basicBlock(), cfg, [&](const BasicBlock *basicBlock) -> bool {
+                return std::all_of(basicBlock->statements().begin(), basicBlock->statements().end(), pred);
+            })) {
         return *result &&
-            std::all_of(std::next(first->basicBlock()->statements().get_iterator(first)),
-                        first->basicBlock()->statements().end(), pred) &&
-            std::all_of(second->basicBlock()->statements().begin(),
-                        second->basicBlock()->statements().get_iterator(second), pred);
+               std::all_of(std::next(first->basicBlock()->statements().get_iterator(first)),
+                           first->basicBlock()->statements().end(), pred) &&
+               std::all_of(second->basicBlock()->statements().begin(),
+                           second->basicBlock()->statements().get_iterator(second), pred);
     }
 
     return boost::none;
@@ -178,15 +170,14 @@ const Term *getTheOnlyDefinition(const Term *term, const dflow::Dataflow &datafl
 
     const auto &definitions = dataflow.getDefinitions(term);
 
-    if (definitions.chunks().size() == 1 &&
-        definitions.chunks().front().definitions().size() == 1)
-    {
+    if (definitions.chunks().size() == 1 && definitions.chunks().front().definitions().size() == 1) {
         return definitions.chunks().front().definitions().front();
     }
     return nullptr;
 }
 
-boost::unordered_set<const Statement *> getHookStatements(const Function *function, const dflow::Dataflow &dataflow, const calling::Hooks &hooks) {
+boost::unordered_set<const Statement *> getHookStatements(const Function *function, const dflow::Dataflow &dataflow,
+                                                          const calling::Hooks &hooks) {
     boost::unordered_set<const Statement *> result;
 
     if (auto hook = hooks.getEntryHook(function)) {

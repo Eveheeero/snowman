@@ -40,8 +40,8 @@ typedef int SmallByteSize; ///< Signed integer for representing small sizes in b
 typedef int SmallBitSize; ///< Signed integer for representing small sizes in bits (e.g. sizes of registers).
 
 /* Note, that overflows of signed integers are undefined behaviour in C, C++. */
-typedef boost::uint64_t ConstantValue; ///< Unsigned integer for representing constant values.
-typedef boost::int64_t  SignedConstantValue; ///< Signed integer for representing constant values.
+typedef boost::uint64_t ConstantValue;      ///< Unsigned integer for representing constant values.
+typedef boost::int64_t SignedConstantValue; ///< Signed integer for representing constant values.
 
 } // namespace nc
 

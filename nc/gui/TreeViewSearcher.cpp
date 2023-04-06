@@ -31,11 +31,10 @@
 
 #include <nc/common/Foreach.h>
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-TreeViewSearcher::TreeViewSearcher(QTreeView *treeView):
-    treeView_(treeView), hvalue_(-1), vvalue_(-1)
-{
+TreeViewSearcher::TreeViewSearcher(QTreeView *treeView) : treeView_(treeView), hvalue_(-1), vvalue_(-1) {
     assert(treeView != nullptr);
 }
 
@@ -48,8 +47,9 @@ void TreeViewSearcher::startTrackingViewport() {
 
 void TreeViewSearcher::stopTrackingViewport() {
     if (treeView_->selectionModel()) {
-        disconnect(treeView_->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            this, SLOT(rememberViewport()));
+        disconnect(treeView_->selectionModel(),
+                   SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this,
+                   SLOT(rememberViewport()));
     }
 }
 
@@ -216,6 +216,7 @@ bool TreeViewSearcher::find(const QString &expression, FindFlags flags) {
     }
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

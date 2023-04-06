@@ -38,7 +38,7 @@ class Expression;
 /**
  * A statement consisting of an expression.
  */
-class ExpressionStatement: public Statement {
+class ExpressionStatement : public Statement {
     std::unique_ptr<Expression> expression_; ///< Expression used as statement.
 
 public:
@@ -47,9 +47,8 @@ public:
      *
      * \param[in] expression Expression used as statement.
      */
-    explicit ExpressionStatement(std::unique_ptr<Expression> expression):
-        Statement(EXPRESSION_STATEMENT), expression_(std::move(expression))
-    {}
+    explicit ExpressionStatement(std::unique_ptr<Expression> expression)
+        : Statement(EXPRESSION_STATEMENT), expression_(std::move(expression)) {}
 
     /**
      * \return Expression used for the statement.
@@ -76,6 +75,7 @@ protected:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Statement, nc::core::likec::ExpressionStatement, nc::core::likec::Statement::EXPRESSION_STATEMENT)
+NC_SUBCLASS(nc::core::likec::Statement, nc::core::likec::ExpressionStatement,
+            nc::core::likec::Statement::EXPRESSION_STATEMENT)
 
 /* vim:set et sts=4 sw=4: */

@@ -34,16 +34,16 @@ QT_END_NAMESPACE
 namespace nc {
 
 namespace core {
-    namespace image {
-        class Section;
-    }
+namespace image {
+class Section;
 }
+} // namespace core
 
 namespace gui {
 
 class SectionsModel;
 
-class SectionsView: public TreeView {
+class SectionsView : public TreeView {
     Q_OBJECT
 
     /** The model being the source of the data. */

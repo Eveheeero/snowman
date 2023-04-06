@@ -44,7 +44,7 @@ namespace nc {
 namespace core {
 namespace image {
 
-class Reader: public ByteSource {
+class Reader : public ByteSource {
     const ByteSource *externalByteSource_; ///< External byte source.
 
 public:
@@ -53,10 +53,7 @@ public:
      *
      * \param externalByteSource Valid pointer to the byte source to take bytes from.
      */
-    explicit
-    Reader(const ByteSource *externalByteSource):
-        externalByteSource_(externalByteSource)
-    {
+    explicit Reader(const ByteSource *externalByteSource) : externalByteSource_(externalByteSource) {
         assert(externalByteSource_ != nullptr);
     }
 
@@ -84,7 +81,7 @@ public:
      *         If sizeof(T) < size, the lower bytes are returned.
      *         If sizeof(T) > size, the value is zero-extended.
      */
-    template<class T>
+    template <class T>
     boost::optional<T> readInt(ByteAddr addr, ByteSize size, ByteOrder byteOrder) const {
         assert(size >= 0);
         assert(byteOrder != ByteOrder::Unknown);

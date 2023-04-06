@@ -14,9 +14,7 @@ namespace nc {
 namespace arch {
 namespace arm {
 
-DefaultCallingConvention::DefaultCallingConvention():
-    core::ir::calling::Convention(QLatin1String("Default"))
-{
+DefaultCallingConvention::DefaultCallingConvention() : core::ir::calling::Convention(QLatin1String("Default")) {
     setStackPointer(ArmRegisters::sp()->memoryLocation());
 
     setFirstArgumentOffset(0);
@@ -33,10 +31,11 @@ DefaultCallingConvention::DefaultCallingConvention():
 
     addEnterStatement(std::make_unique<core::ir::Assignment>(
         std::make_unique<core::ir::MemoryLocationAccess>(ArmRegisters::lr()->memoryLocation()),
-        std::make_unique<core::ir::Intrinsic>(core::ir::Intrinsic::RETURN_ADDRESS, ArmRegisters::lr()->size())
-    ));
+        std::make_unique<core::ir::Intrinsic>(core::ir::Intrinsic::RETURN_ADDRESS, ArmRegisters::lr()->size())));
 }
 
-}}} // namespace nc::arch::arm
+} // namespace arm
+} // namespace arch
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -32,7 +32,7 @@ namespace likec {
 
 void CallOperator::doCallOnChildren(const std::function<void(TreeNode *)> &fun) {
     fun(callee_.get());
-    foreach(const auto &expression, arguments_) {
+    foreach (const auto &expression, arguments_) {
         fun(expression.get());
     }
 }

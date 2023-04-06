@@ -30,7 +30,9 @@
 
 #include <QString>
 
-namespace nc { namespace core { namespace input {
+namespace nc {
+namespace core {
+namespace input {
 
 class Parser;
 
@@ -68,6 +70,8 @@ public:
     const std::vector<const Parser *> &parsers() const;
 };
 
-}}} // namespace nc::core::input
+} // namespace input
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

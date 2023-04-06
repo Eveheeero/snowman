@@ -14,16 +14,16 @@ QT_END_NAMESPACE
 namespace nc {
 
 namespace core {
-    namespace image {
-        class Symbol;
-    }
+namespace image {
+class Symbol;
 }
+} // namespace core
 
 namespace gui {
 
 class SymbolsModel;
 
-class SymbolsView: public TreeView {
+class SymbolsView : public TreeView {
     Q_OBJECT
 
     /** The model being the source of the data. */

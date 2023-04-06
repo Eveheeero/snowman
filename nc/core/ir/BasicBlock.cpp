@@ -37,9 +37,8 @@ namespace nc {
 namespace core {
 namespace ir {
 
-BasicBlock::BasicBlock(const boost::optional<ByteAddr> &address):
-    address_(address), successorAddress_(address), function_(nullptr)
-{}
+BasicBlock::BasicBlock(const boost::optional<ByteAddr> &address)
+    : address_(address), successorAddress_(address), function_(nullptr) {}
 
 BasicBlock::~BasicBlock() {}
 
@@ -127,7 +126,8 @@ const Jump *BasicBlock::getJump() const {
     }
 }
 
-std::unique_ptr<BasicBlock> BasicBlock::split(ilist<Statement>::const_iterator position, const boost::optional<ByteAddr> &address) {
+std::unique_ptr<BasicBlock> BasicBlock::split(ilist<Statement>::const_iterator position,
+                                              const boost::optional<ByteAddr> &address) {
     /* Create a new basic block. */
     std::unique_ptr<BasicBlock> result(new BasicBlock(address));
     result->setSuccessorAddress(this->successorAddress());

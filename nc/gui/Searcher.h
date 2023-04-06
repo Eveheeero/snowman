@@ -27,7 +27,8 @@
 
 #include <QString>
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * This is a base class for classes knowing how to perform
@@ -35,17 +36,11 @@ namespace nc { namespace gui {
  * its subclasses are given to SearchWidget constructors.
  */
 class Searcher {
-    public:
-
+public:
     /**
      * Find flags.
      */
-    enum FindFlag {
-        FindBackward        = 0x1,
-        FindCaseSensitive   = 0x2,
-        FindWholeWords      = 0x4,
-        FindRegexp          = 0x8
-    };
+    enum FindFlag { FindBackward = 0x1, FindCaseSensitive = 0x2, FindWholeWords = 0x4, FindRegexp = 0x8 };
 
     /**
      * Bitmask of find flags.
@@ -95,6 +90,7 @@ class Searcher {
     virtual bool find(const QString &expression, FindFlags flags) = 0;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

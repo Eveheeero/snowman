@@ -35,17 +35,17 @@ namespace nc {
 namespace core {
 
 namespace likec {
-    class ArgumentDeclaration;
-    class FunctionDeclaration;
-    class Tree;
-}
+class ArgumentDeclaration;
+class FunctionDeclaration;
+class Tree;
+} // namespace likec
 
 namespace ir {
 
 class Term;
 
 namespace calling {
-    class FunctionSignature;
+class FunctionSignature;
 }
 
 namespace cgen {
@@ -53,7 +53,7 @@ namespace cgen {
 /**
  * Generator of function declarations.
  */
-class DeclarationGenerator: boost::noncopyable {
+class DeclarationGenerator : boost::noncopyable {
     CodeGenerator &parent_;
     calling::CalleeId calleeId_;
     const calling::FunctionSignature *signature_;
@@ -67,7 +67,8 @@ public:
      * \param calleeId Id of the function.
      * \param signature Valid pointer to the function's signature.
      */
-    DeclarationGenerator(CodeGenerator &parent, const calling::CalleeId &calleeId, const calling::FunctionSignature *signature);
+    DeclarationGenerator(CodeGenerator &parent, const calling::CalleeId &calleeId,
+                         const calling::FunctionSignature *signature);
 
     /**
      * Virtual destructor.

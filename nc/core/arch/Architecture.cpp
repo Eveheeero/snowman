@@ -33,12 +33,7 @@ namespace nc {
 namespace core {
 namespace arch {
 
-Architecture::Architecture():
-    mBitness(0),
-    mMaxInstructionSize(0),
-    mMasterAnalyzer(nullptr),
-    mRegisters(nullptr)
-{}
+Architecture::Architecture() : mBitness(0), mMaxInstructionSize(0), mMasterAnalyzer(nullptr), mRegisters(nullptr) {}
 
 Architecture::~Architecture() {}
 

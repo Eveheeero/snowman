@@ -36,9 +36,8 @@
 namespace nc {
 namespace gui {
 
-Disassemble::Disassemble(Project *project, const core::image::ByteSource *source, ByteAddr begin, ByteAddr end):
-    project_(project), source_(source), begin_(begin), end_(end)
-{
+Disassemble::Disassemble(Project *project, const core::image::ByteSource *source, ByteAddr begin, ByteAddr end)
+    : project_(project), source_(source), begin_(begin), end_(end) {
     assert(project);
     assert(source);
 }
@@ -57,6 +56,7 @@ void Disassemble::work() {
     delegate(std::make_unique<Disassembly>(context, source_, begin_, end_));
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

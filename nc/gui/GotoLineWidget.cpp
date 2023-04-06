@@ -25,20 +25,19 @@
 #include "GotoLineWidget.h"
 
 #include <QCompleter>
+#include <QHBoxLayout>
 #include <QIntValidator>
 #include <QLabel>
 #include <QLineEdit>
-#include <QHBoxLayout>
+#include <QPlainTextEdit>
 #include <QPushButton>
 #include <QStringListModel>
 #include <QTextBlock>
-#include <QPlainTextEdit>
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-GotoLineWidget::GotoLineWidget(QPlainTextEdit *textEdit, QWidget *parent):
-    QWidget(parent), textEdit_(textEdit)
-{
+GotoLineWidget::GotoLineWidget(QPlainTextEdit *textEdit, QWidget *parent) : QWidget(parent), textEdit_(textEdit) {
     QLabel *goLabel = new QLabel(tr("Go to line:"), this);
 
     completionModel_ = new QStringListModel(this);
@@ -62,7 +61,7 @@ GotoLineWidget::GotoLineWidget(QPlainTextEdit *textEdit, QWidget *parent):
     layout->addWidget(lineEdit_);
     layout->addWidget(goButton);
 
-    normalPalette_   = lineEdit_->palette();
+    normalPalette_ = lineEdit_->palette();
     notFoundPalette_ = lineEdit_->palette();
     notFoundPalette_.setColor(QPalette::Base, QColor(255, 192, 192));
 }
@@ -116,6 +115,7 @@ void GotoLineWidget::rememberCompletion() {
     }
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

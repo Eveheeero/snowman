@@ -38,8 +38,8 @@ namespace likec {
 /**
  * Integer constant.
  */
-class IntegerConstant: public Expression {
-    SizedValue value_; ///< Value of the constant.
+class IntegerConstant : public Expression {
+    SizedValue value_;        ///< Value of the constant.
     const IntegerType *type_; ///< Type of the constant.
 
 public:
@@ -81,6 +81,7 @@ public:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::IntegerConstant, nc::core::likec::Expression::INTEGER_CONSTANT)
+NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::IntegerConstant,
+            nc::core::likec::Expression::INTEGER_CONSTANT)
 
 /* vim:set et sts=4 sw=4: */

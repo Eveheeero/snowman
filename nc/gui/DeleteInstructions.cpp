@@ -33,9 +33,9 @@
 namespace nc {
 namespace gui {
 
-DeleteInstructions::DeleteInstructions(Project *project, const std::vector<const core::arch::Instruction *> &instructions):
-    project_(project)
-{
+DeleteInstructions::DeleteInstructions(Project *project,
+                                       const std::vector<const core::arch::Instruction *> &instructions)
+    : project_(project) {
     assert(project);
 
     instructions_.reserve(instructions.size());
@@ -49,7 +49,8 @@ DeleteInstructions::DeleteInstructions(Project *project, const std::vector<const
 }
 
 void DeleteInstructions::work() {
-    project_->logToken().info(tr("Deleting %1 instruction(s)...", nullptr, static_cast<int>(instructions_.size())).arg(instructions_.size()));
+    project_->logToken().info(
+        tr("Deleting %1 instruction(s)...", nullptr, static_cast<int>(instructions_.size())).arg(instructions_.size()));
 
     auto newInstructions = std::make_shared<core::arch::Instructions>(*project_->instructions());
     foreach (const auto &instruction, instructions_) {
@@ -61,6 +62,7 @@ void DeleteInstructions::work() {
     project_->logToken().info(tr("Deletion completed.", nullptr, static_cast<int>(instructions_.size())));
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

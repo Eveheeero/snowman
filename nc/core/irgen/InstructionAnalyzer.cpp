@@ -47,7 +47,7 @@ void InstructionAnalyzer::createStatements(const arch::Instructions *instruction
 }
 
 void InstructionAnalyzer::doCreateStatements(const arch::Instructions *instructions, ir::Program *program,
-                      const CancellationToken &canceled, const LogToken &log) {
+                                             const CancellationToken &canceled, const LogToken &log) {
     foreach (const auto &instr, instructions->all()) {
         try {
             createStatements(instr.get(), program);

@@ -33,18 +33,18 @@
 namespace nc {
 
 namespace core {
-    namespace arch {
-        class Instruction;
-        class Instructions;
-    }
-}
+namespace arch {
+class Instruction;
+class Instructions;
+} // namespace arch
+} // namespace core
 
 namespace gui {
 
 /**
  * Item model for InstructionsView.
  */
-class InstructionsModel: public QAbstractItemModel {
+class InstructionsModel : public QAbstractItemModel {
     Q_OBJECT
 
 public:
@@ -54,7 +54,8 @@ public:
      * \param parent  Pointer to the parent object. Can be nullptr.
      * \param instructions Pointer to the set of instructions. Can be nullptr.
      */
-    explicit InstructionsModel(QObject *parent = nullptr, std::shared_ptr<const core::arch::Instructions> instructions = nullptr);
+    explicit InstructionsModel(QObject *parent = nullptr,
+                               std::shared_ptr<const core::arch::Instructions> instructions = nullptr);
 
     /**
      * Sets the set of instructions that must be highlighted.
@@ -94,6 +95,7 @@ private:
     std::vector<const core::arch::Instruction *> highlightedInstructions_;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

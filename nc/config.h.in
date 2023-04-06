@@ -17,7 +17,7 @@
 #define NC_PREFER_CSTRINGS_TO_CONSTANTS
 
 /** Generate references to global variables instead of constants. */
-//#define NC_PREFER_GLOBAL_VARIABLES_TO_CONSTANTS
+// #define NC_PREFER_GLOBAL_VARIABLES_TO_CONSTANTS
 
 /** Generate function names instead of constants. */
 #define NC_PREFER_FUNCTIONS_TO_CONSTANTS
@@ -31,22 +31,22 @@
 
 /* Disable some bogus warnings. */
 #ifdef _MSC_VER
-#  /* We cannot put this pragma in a push-pop block as the actual warning is triggered in
+#                               /* We cannot put this pragma in a push-pop block as the actual warning is triggered in
 #   * template instantiations. */
-#   pragma warning(disable: 4355) /* C4355: 'this' : used in base member initializer list. */
+#pragma warning(disable : 4355) /* C4355: 'this' : used in base member initializer list. */
 #
-#   if _MSC_VER == 1600
-#       /* The C++11 standard specifies that the std::hash template shall be
+#if _MSC_VER == 1600
+#                               /* The C++11 standard specifies that the std::hash template shall be
 #        * declared using the 'struct' keyword but Visual Studio 2010 Standard
 #        * C++ Library declares std::hash as a 'class'. */
-#       pragma warning(disable: 4099) /* C4099: 'identifier' : type name first seen using
+#pragma warning(disable : 4099) /* C4099: 'identifier' : type name first seen using                                    \
 #                                      * 'objecttype1' now seen using 'objecttype2'. */
-#   endif
+#endif
 #endif
 
 /* Get GCC version in a format suitable for comparisons. */
 #if defined(__GNUC__) && !defined(__clang__)
-#   define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
+#define GCC_VERSION (__GNUC__ * 10000 + __GNUC_MINOR__ * 100 + __GNUC_PATCHLEVEL__)
 #endif
 
 /* Use expression-template-based string concatenation in Qt. */
@@ -55,31 +55,31 @@
 
 /* Disable override specifier for GCC < 4.7. */
 #if defined(GCC_VERSION) && (GCC_VERSION < 40700)
-#  define override
+#define override
 #endif
 
 /* Define noexcept as throw() for MSVC before 2015. */
 #ifdef _MSC_VER
-#  if _MSC_VER < 1900
-#    define noexcept throw()
-#    define _ALLOW_KEYWORD_MACROS /* Disable Error: The C++ Standard Library forbids macroizing keywords. */
-#  endif
+#if _MSC_VER < 1900
+#define noexcept throw()
+#define _ALLOW_KEYWORD_MACROS /* Disable Error: The C++ Standard Library forbids macroizing keywords. */
+#endif
 #endif
 
 /* Ready-made std::make_unique implementation. */
 #ifdef _MSC_VER
-#  if _MSC_VER >= 1800
-#    define NC_HAVE_STD_MAKE_UNIQUE
-#  endif
+#if _MSC_VER >= 1800
+#define NC_HAVE_STD_MAKE_UNIQUE
+#endif
 #endif
 
 /* Range-based for. */
 #ifdef _MSC_VER
-#  if _MSC_VER >= 1700
-#    define NC_HAVE_RANGE_BASED_FOR
-#  endif
+#if _MSC_VER >= 1700
+#define NC_HAVE_RANGE_BASED_FOR
+#endif
 #else
-#  define NC_HAVE_RANGE_BASED_FOR
+#define NC_HAVE_RANGE_BASED_FOR
 #endif
 
 /**

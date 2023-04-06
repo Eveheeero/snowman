@@ -28,22 +28,23 @@
 
 #include "LogManager.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-LogView::LogView(QWidget *parent):
-    TextView(tr("Log"), parent)
-{
+LogView::LogView(QWidget *parent) : TextView(tr("Log"), parent) {
     /* Limit log length. */
     textEdit()->document()->setMaximumBlockCount(10000);
 
     /* Log Qt messages here. */
-    connect(LogManager::instance(), SIGNAL(message(const QString &)), this, SLOT(log(const QString &)), Qt::QueuedConnection);
+    connect(LogManager::instance(), SIGNAL(message(const QString &)), this, SLOT(log(const QString &)),
+            Qt::QueuedConnection);
 }
 
 void LogView::log(const QString &text) {
     textEdit()->appendPlainText(text);
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

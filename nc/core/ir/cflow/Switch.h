@@ -41,7 +41,7 @@ class BasicNode;
 /**
  * Switch region.
  */
-class Switch: public Region {
+class Switch : public Region {
     /** Node that does table-based jump. */
     BasicNode *switchNode_;
 
@@ -65,14 +65,9 @@ public:
      * \param switchTerm    Valid pointer to the term being switched upon.
      * \param jumpTableSize Size of the jump table.
      */
-    Switch(BasicNode *switchNode, const Term *switchTerm, std::size_t jumpTableSize):
-        Region(Region::SWITCH),
-        switchNode_(switchNode),
-        switchTerm_(switchTerm),
-        jumpTableSize_(jumpTableSize),
-        boundsCheckNode_(nullptr),
-        defaultBasicBlock_(nullptr)
-    {
+    Switch(BasicNode *switchNode, const Term *switchTerm, std::size_t jumpTableSize)
+        : Region(Region::SWITCH), switchNode_(switchNode), switchTerm_(switchTerm), jumpTableSize_(jumpTableSize),
+          boundsCheckNode_(nullptr), defaultBasicBlock_(nullptr) {
         assert(switchNode);
         assert(switchTerm);
     }

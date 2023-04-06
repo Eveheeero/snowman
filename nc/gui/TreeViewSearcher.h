@@ -34,12 +34,13 @@ QT_BEGIN_NAMESPACE
 class QTreeView;
 QT_END_NAMESPACE
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * Search controller for QTreeView.
  */
-class TreeViewSearcher: public QObject, public Searcher {
+class TreeViewSearcher : public QObject, public Searcher {
     Q_OBJECT
 
     /** Controlled widget. */
@@ -57,8 +58,7 @@ class TreeViewSearcher: public QObject, public Searcher {
     /** Remembered vertical scrollbar position. */
     int vvalue_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -66,13 +66,12 @@ class TreeViewSearcher: public QObject, public Searcher {
      */
     explicit TreeViewSearcher(QTreeView *treeView);
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     virtual void rememberViewport() override;
     virtual void restoreViewport() override;
 
-    public:
-
+public:
     virtual void startTrackingViewport() override;
     virtual void stopTrackingViewport() override;
 
@@ -80,7 +79,7 @@ class TreeViewSearcher: public QObject, public Searcher {
     virtual bool find(const QString &string, int flags) override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */
-

@@ -34,7 +34,7 @@ namespace likec {
 /**
  * Formal argument declaration.
  */
-class ArgumentDeclaration: public VariableDeclaration {
+class ArgumentDeclaration : public VariableDeclaration {
 public:
     /**
      * Class constructor.
@@ -42,9 +42,7 @@ public:
      * \param[in] identifier Name of this variable.
      * \param[in] type Type of this variable.
      */
-    ArgumentDeclaration(const QString &identifier, const Type *type):
-        VariableDeclaration(identifier, type)
-    {}
+    ArgumentDeclaration(const QString &identifier, const Type *type) : VariableDeclaration(identifier, type) {}
 };
 
 } // namespace likec

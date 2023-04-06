@@ -531,7 +531,7 @@ bool PeParser::doCanParse(QIODevice *source) const {
 
 /**
  * @brief 소스코드를 기반으로 cpu타입이나 32비트 64비트인지를 파악한다. 이후 해당 소스코드 내부의 parse함수를 타게된다.
- * 
+ *
  * @param source 원본 소스코드 클래스?
  * @param image cpu타입과 32 / 64비트인지 정보가 저장되는 클래스
  * @param log 로거

@@ -24,8 +24,7 @@ class CapstoneDeleter {
     std::size_t count_;
 
 public:
-    explicit
-    CapstoneDeleter(std::size_t count = 0): count_(count) {}
+    explicit CapstoneDeleter(std::size_t count = 0) : count_(count) {}
 
     void operator()(cs_insn *ptr) const {
         assert(ptr == nullptr || count_ > 0);
@@ -53,7 +52,7 @@ public:
      * \param arch Architecture.
      * \param mode Mode.
      */
-    Capstone(cs_arch arch, int mode): arch_(arch), mode_(mode) {
+    Capstone(cs_arch arch, int mode) : arch_(arch), mode_(mode) {
         auto result = cs_open(arch_, static_cast<cs_mode>(mode_), &handle_);
         if (result != CS_ERR_OK) {
             throw nc::Exception(cs_strerror(result));
@@ -68,11 +67,7 @@ public:
         }
     }
 
-    Capstone(Capstone &&other):
-        handle_(other.handle_)
-    {
-        other.handle_ = 0;
-    }
+    Capstone(Capstone &&other) : handle_(other.handle_) { other.handle_ = 0; }
 
     Capstone &operator=(Capstone &&other) {
         close();
@@ -84,9 +79,7 @@ public:
     /**
      * Destructor.
      */
-    ~Capstone() {
-        close();
-    }
+    ~Capstone() { close(); }
 
     /**
      * Disassembles given number of instruction.
@@ -132,6 +125,8 @@ private:
     }
 };
 
-}}} // namespace nc::core::arch
+} // namespace arch
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

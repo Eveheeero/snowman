@@ -37,9 +37,7 @@ public:
         const Term *term_;
 
     public:
-        Use(const MemoryLocation &location, const Term *term):
-            location_(location), term_(term)
-        {}
+        Use(const MemoryLocation &location, const Term *term) : location_(location), term_(term) {}
 
         const MemoryLocation &location() const { return location_; }
         const Term *term() const { return term_; }
@@ -55,8 +53,7 @@ public:
      *
      * \param dataflow Dataflow.
      */
-    explicit
-    Uses(const Dataflow &dataflow);
+    explicit Uses(const Dataflow &dataflow);
 
     /**
      * \param[in] term Valid pointer to a write term.

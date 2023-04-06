@@ -15,11 +15,13 @@ namespace mangling {
  * A simple demangler delegating all the work to
  * __cxa_demangle and __unDName.
  */
-class DefaultDemangler: public Demangler {
+class DefaultDemangler : public Demangler {
 public:
     QString demangle(const QString &symbol) const override;
 };
 
-}}} // namespace nc::core::mangling
+} // namespace mangling
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

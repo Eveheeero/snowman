@@ -35,15 +35,15 @@ class LogToken;
 namespace core {
 
 namespace ir {
-    class Program;
-    class Term;
-}
+class Program;
+class Term;
+} // namespace ir
 
 namespace arch {
-    class Instruction;
-    class Instructions;
-    class Register;
-}
+class Instruction;
+class Instructions;
+class Register;
+} // namespace arch
 
 namespace irgen {
 
@@ -94,7 +94,7 @@ protected:
      * \param log               Log token.
      */
     virtual void doCreateStatements(const arch::Instructions *instructions, ir::Program *program,
-                          const CancellationToken &canceled, const LogToken &log);
+                                    const CancellationToken &canceled, const LogToken &log);
 
     /**
      * Actually creates intermediate representation of an instruction.

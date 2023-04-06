@@ -20,7 +20,7 @@ namespace cflow {
 /**
  * Mapping from a function to its structural graph.
  */
-class Graphs: public boost::unordered_map<const Function *, std::unique_ptr<const Graph>> {};
+class Graphs : public boost::unordered_map<const Function *, std::unique_ptr<const Graph>> {};
 
 } // namespace cflow
 } // namespace ir

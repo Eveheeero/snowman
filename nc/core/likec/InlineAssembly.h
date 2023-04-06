@@ -36,7 +36,7 @@ namespace likec {
 /**
  * An __asm__ statement.
  */
-class InlineAssembly: public Statement {
+class InlineAssembly : public Statement {
     QString code_; ///< Assembler code.
 
 public:
@@ -45,9 +45,7 @@ public:
      *
      * \param[in] code Assembler code.
      */
-    InlineAssembly(QString code):
-        Statement(INLINE_ASSEMBLY), code_(std::move(code))
-    {}
+    InlineAssembly(QString code) : Statement(INLINE_ASSEMBLY), code_(std::move(code)) {}
 
     /**
      * \return Assembler code.

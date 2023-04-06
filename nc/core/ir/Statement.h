@@ -40,7 +40,7 @@ namespace nc {
 namespace core {
 
 namespace arch {
-    class Instruction;
+class Instruction;
 }
 
 namespace ir {
@@ -58,7 +58,7 @@ class Touch;
 /**
  * Base class for different kinds of statements of intermediate representation.
  */
-class Statement: public Printable, public nc::ilist_item, boost::noncopyable {
+class Statement : public Printable, public nc::ilist_item, boost::noncopyable {
     NC_BASE_CLASS(Statement, kind)
 
 public:
@@ -66,19 +66,19 @@ public:
      * Statement kind.
      */
     enum {
-        INLINE_ASSEMBLY,///< Inline assembly.
-        ASSIGNMENT,     ///< Assignment.
-        JUMP,           ///< Jump.
-        CALL,           ///< Function call.
-        HALT,           ///< Return from a program.
-        TOUCH,          ///< Reads or writes a term.
-        CALLBACK,       ///< Custom operation.
+        INLINE_ASSEMBLY,               ///< Inline assembly.
+        ASSIGNMENT,                    ///< Assignment.
+        JUMP,                          ///< Jump.
+        CALL,                          ///< Function call.
+        HALT,                          ///< Return from a program.
+        TOUCH,                         ///< Reads or writes a term.
+        CALLBACK,                      ///< Custom operation.
         REMEMBER_REACHING_DEFINITIONS, ///< Remembers reaching definition.
-        USER = 1000     ///< Base for user-defined statements.
+        USER = 1000                    ///< Base for user-defined statements.
     };
 
 private:
-    BasicBlock *basicBlock_; ///< Basic block to which this statement belongs.
+    BasicBlock *basicBlock_;               ///< Basic block to which this statement belongs.
     const arch::Instruction *instruction_; ///< Instruction from which this statement was generated.
 
 public:
@@ -87,7 +87,7 @@ public:
      *
      * \param[in] kind Kind of the statement.
      */
-    explicit Statement(int kind): kind_(kind), basicBlock_(nullptr), instruction_(nullptr) {}
+    explicit Statement(int kind) : kind_(kind), basicBlock_(nullptr), instruction_(nullptr) {}
 
     /**
      * \return Pointer to the basic block to which this statement belongs.
@@ -125,9 +125,7 @@ public:
      * \return True iff this a terminator statement, i.e. a statement
      *         which can be only the last statement of a basic block.
      */
-    bool isTerminator() const {
-        return is<Jump>() || is<Halt>();
-    }
+    bool isTerminator() const { return is<Jump>() || is<Halt>(); }
 
     /**
      * Clones the statement and sets the instruction of the clone
@@ -144,7 +142,7 @@ public:
     inline const Call *asCall() const;
     inline const Touch *asTouch() const;
     inline const Callback *asCallback() const;
-    
+
 protected:
     /**
      * \return Valid pointer to the clone of the statement.
@@ -152,27 +150,28 @@ protected:
     virtual std::unique_ptr<Statement> doClone() const = 0;
 };
 
-}}} // namespace nc::core::ir
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /**
  * Defines a compile-time mapping from statement class to statement kind.
  * Makes it possible to use the given class as an argument to <tt>Statement::as</tt>
  * and <tt>Statement::is</tt> template functions.
- * 
+ *
  * Must be used at global namespace.
- * 
+ *
  * \param CLASS                        Statement class.
  * \param KIND                         Statement kind.
  */
-#define NC_REGISTER_STATEMENT_CLASS(CLASS, KIND)                                \
-    NC_SUBCLASS(nc::core::ir::Statement, CLASS, KIND)
+#define NC_REGISTER_STATEMENT_CLASS(CLASS, KIND) NC_SUBCLASS(nc::core::ir::Statement, CLASS, KIND)
 
 NC_REGISTER_STATEMENT_CLASS(nc::core::ir::InlineAssembly, nc::core::ir::Statement::INLINE_ASSEMBLY)
-NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Assignment,     nc::core::ir::Statement::ASSIGNMENT)
-NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Jump,           nc::core::ir::Statement::JUMP)
-NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Call,           nc::core::ir::Statement::CALL)
-NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Halt,           nc::core::ir::Statement::HALT)
-NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Touch,          nc::core::ir::Statement::TOUCH)
-NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Callback,       nc::core::ir::Statement::CALLBACK)
+NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Assignment, nc::core::ir::Statement::ASSIGNMENT)
+NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Jump, nc::core::ir::Statement::JUMP)
+NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Call, nc::core::ir::Statement::CALL)
+NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Halt, nc::core::ir::Statement::HALT)
+NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Touch, nc::core::ir::Statement::TOUCH)
+NC_REGISTER_STATEMENT_CLASS(nc::core::ir::Callback, nc::core::ir::Statement::CALLBACK)
 
 /* vim:set et sts=4 sw=4: */

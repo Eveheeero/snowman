@@ -20,11 +20,7 @@ class RangeNodeAndPosition {
     int position_;
 
 public:
-    RangeNodeAndPosition(RangeNode *node, int position):
-        node_(node), position_(position)
-    {
-        assert(position >= 0);
-    }
+    RangeNodeAndPosition(RangeNode *node, int position) : node_(node), position_(position) { assert(position >= 0); }
 
     RangeNode *node() const { return node_; }
     int position() const { return position_; }
@@ -35,7 +31,7 @@ class RangeTreeBuilder {
     std::stack<RangeNodeAndPosition> stack_;
 
 public:
-    RangeTreeBuilder(RangeTree &tree): tree_(tree) {}
+    RangeTreeBuilder(RangeTree &tree) : tree_(tree) {}
 
     void onStart(void *data, int position) {
         if (stack_.empty()) {
@@ -44,8 +40,7 @@ public:
             tree_.setRoot(std::move(root));
         } else {
             stack_.push(RangeNodeAndPosition(
-                stack_.top().node()->addChild(RangeNode(data, position - stack_.top().position())),
-                position));
+                stack_.top().node()->addChild(RangeNode(data, position - stack_.top().position())), position));
         }
     }
 
@@ -57,6 +52,7 @@ public:
     }
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

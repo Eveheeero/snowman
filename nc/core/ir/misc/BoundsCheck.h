@@ -48,7 +48,7 @@ public:
     /**
      * Constructs an invalid index check.
      */
-    BoundsCheck(): index_(nullptr) {}
+    BoundsCheck() : index_(nullptr) {}
 
     /**
      * Constructs a valid index check.
@@ -57,9 +57,8 @@ public:
      * \param maxValue  Maximal value the index can have.
      * \param ifFailed  Pointer to the basic block getting control if the check fails. Can be nullptr.
      */
-    BoundsCheck(const Term *index, ConstantValue maxValue, const BasicBlock *ifFailed):
-        index_(index), maxValue_(maxValue), ifFailed_(ifFailed)
-    {
+    BoundsCheck(const Term *index, ConstantValue maxValue, const BasicBlock *ifFailed)
+        : index_(index), maxValue_(maxValue), ifFailed_(ifFailed) {
         assert(index_ != nullptr);
     }
 
@@ -67,24 +66,36 @@ public:
      * \return Valid pointer to the term serving as the index, i.e. the value
      *         being compared against a constant max value.
      */
-    const Term *index() const { assert(*this); return index_; }
+    const Term *index() const {
+        assert(*this);
+        return index_;
+    }
 
     /**
      * \return Maximal value the index can have.
      */
-    ConstantValue maxValue() const { assert(*this); return maxValue_; }
+    ConstantValue maxValue() const {
+        assert(*this);
+        return maxValue_;
+    }
 
     /**
      * \return Pointer to the basic block getting control if the check fails. Can be nullptr.
      */
-    const BasicBlock *ifFailed() const { assert(*this); return ifFailed_; }
+    const BasicBlock *ifFailed() const {
+        assert(*this);
+        return ifFailed_;
+    }
 
     /**
      * \return A non-nullptr pointer if and only if the object describes a valid index check.
      */
-    operator const void*() const { return index_; }
+    operator const void *() const { return index_; }
 };
 
-}}}} // namespace nc::core::ir::misc
+} // namespace misc
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

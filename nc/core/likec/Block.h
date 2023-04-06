@@ -39,15 +39,15 @@ namespace likec {
 /**
  * Block statement. Contains variable declarations and statements.
  */
-class Block: public Statement {
-    std::vector<std::unique_ptr<Declaration> > declarations_; ///< Declarations.
-    std::vector<std::unique_ptr<Statement> > statements_; ///< Statements.
+class Block : public Statement {
+    std::vector<std::unique_ptr<Declaration>> declarations_; ///< Declarations.
+    std::vector<std::unique_ptr<Statement>> statements_;     ///< Statements.
 
 public:
     /**
      * Constructor.
      */
-    Block(): Statement(BLOCK) {}
+    Block() : Statement(BLOCK) {}
 
     /**
      * \return Declarations.

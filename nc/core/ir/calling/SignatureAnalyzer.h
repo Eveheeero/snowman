@@ -29,12 +29,12 @@ class Jump;
 class Term;
 
 namespace dflow {
-    class Dataflows;
-    class Uses;
-}
+class Dataflows;
+class Uses;
+} // namespace dflow
 
 namespace liveness {
-    class Livenesses;
+class Livenesses;
 }
 
 namespace calling {

@@ -42,14 +42,14 @@ namespace calling {
  */
 class FunctionSignature {
     std::vector<std::shared_ptr<const Term>> arguments_; ///< Terms representing the arguments.
-    bool variadic_; ///< True if the function is variadic.
-    std::shared_ptr<const Term> returnValue_; ///< Term representing the return value.
+    bool variadic_;                                      ///< True if the function is variadic.
+    std::shared_ptr<const Term> returnValue_;            ///< Term representing the return value.
 
 public:
     /**
      * Constructs an empty signature.
      */
-    FunctionSignature(): variadic_(false) {}
+    FunctionSignature() : variadic_(false) {}
 
     /**
      * \return List of terms representing function's arguments.

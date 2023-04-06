@@ -23,10 +23,10 @@ public:
      * Enum with the byte orders.
      */
     enum Type {
-        Unknown      = -1,                     ///< Unknown/undefined.
-        BigEndian    = QSysInfo::BigEndian,    ///< Highest byte first.
+        Unknown = -1,                          ///< Unknown/undefined.
+        BigEndian = QSysInfo::BigEndian,       ///< Highest byte first.
         LittleEndian = QSysInfo::LittleEndian, ///< Lowest byte first.
-        Current      = QSysInfo::ByteOrder     ///< Host byte order.
+        Current = QSysInfo::ByteOrder          ///< Host byte order.
     };
 
     /**
@@ -34,7 +34,7 @@ public:
      *
      * \param type Type of the byte order.
      */
-    ByteOrder(Type type): type_(type) {}
+    ByteOrder(Type type) : type_(type) {}
 
     /**
      * Implicit cast operator to enum.
@@ -67,7 +67,7 @@ public:
      *
      * \param[in,out] buf   Buffer to be converted.
      */
-    template<class T>
+    template <class T>
     void convertFrom(T &buf) const {
         convert(&buf, sizeof(buf), *this, Current);
     }
@@ -77,7 +77,7 @@ public:
      *
      * \param[in,out] buf   Buffer to be converted.
      */
-    template<class T>
+    template <class T>
     void convertTo(T &buf) const {
         convert(&buf, sizeof(buf), Current, *this);
     }

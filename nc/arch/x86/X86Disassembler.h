@@ -38,7 +38,7 @@ class X86Architecture;
 /**
  * Disassembler for x86 instructions.
  */
-class X86Disassembler: public core::arch::Disassembler {
+class X86Disassembler : public core::arch::Disassembler {
     ud_t ud_obj_;
 
 public:
@@ -47,10 +47,10 @@ public:
      *
      * \param architecture Valid pointer to the architecture.
      */
-    explicit
-    X86Disassembler(const X86Architecture *architecture);
+    explicit X86Disassembler(const X86Architecture *architecture);
 
-    std::shared_ptr<core::arch::Instruction> disassembleSingleInstruction(ByteAddr pc, const void *buffer, ByteSize size) override;
+    std::shared_ptr<core::arch::Instruction> disassembleSingleInstruction(ByteAddr pc, const void *buffer,
+                                                                          ByteSize size) override;
 };
 
 } // namespace x86

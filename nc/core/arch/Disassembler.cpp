@@ -18,7 +18,8 @@ namespace nc {
 namespace core {
 namespace arch {
 
-void Disassembler::disassemble(const image::Image *image, const image::ByteSource *source, ByteAddr begin, ByteAddr end, const InstructionCallback &callback, const CancellationToken &canceled) {
+void Disassembler::disassemble(const image::Image *image, const image::ByteSource *source, ByteAddr begin, ByteAddr end,
+                               const InstructionCallback &callback, const CancellationToken &canceled) {
     assert(source != nullptr);
     assert(begin <= end);
 
@@ -35,7 +36,7 @@ void Disassembler::disassemble(const image::Image *image, const image::ByteSourc
             bufferEnd = bufferBegin + source->readBytes(pc, buffer.get(), std::min(bufferSize, end - pc));
         }
 
-        const image::Relocation* reloc = image->getRelocation(pc);
+        const image::Relocation *reloc = image->getRelocation(pc);
         // If a relocation starts at a particular address it does make sense for there to be an instruction
         // there as well so skip over it
         if (reloc) {
@@ -59,10 +60,7 @@ std::shared_ptr<Instruction> Disassembler::disassembleSingleInstruction(ByteAddr
     const SmallByteSize maxInstructionSize = architecture_->maxInstructionSize();
     const std::unique_ptr<char[]> buffer(new char[maxInstructionSize]);
 
-    return disassembleSingleInstruction(
-        pc,
-        buffer.get(),
-        source->readBytes(pc, buffer.get(), maxInstructionSize));
+    return disassembleSingleInstruction(pc, buffer.get(), source->readBytes(pc, buffer.get(), maxInstructionSize));
 }
 
 } // namespace arch

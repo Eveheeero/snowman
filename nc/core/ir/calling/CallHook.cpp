@@ -40,9 +40,8 @@ namespace ir {
 namespace calling {
 
 CallHook::CallHook(const Convention *convention, const CallSignature *signature,
-    const boost::optional<ByteSize> &stackArgumentsSize):
-    stackPointer_(nullptr), snapshotStatement_(nullptr)
-{
+                   const boost::optional<ByteSize> &stackArgumentsSize)
+    : stackPointer_(nullptr), snapshotStatement_(nullptr) {
     assert(convention != nullptr);
 
     auto &statements = patch_.statements();
@@ -51,25 +50,17 @@ CallHook::CallHook(const Convention *convention, const CallSignature *signature,
         auto stackPointer = std::make_unique<MemoryLocationAccess>(convention->stackPointer());
         stackPointer_ = stackPointer.get();
 
-        statements.push_back(std::make_unique<Touch>(
-            std::move(stackPointer),
-            Term::READ
-        ));
+        statements.push_back(std::make_unique<Touch>(std::move(stackPointer), Term::READ));
     }
 
     auto addArgumentRead = [&](std::unique_ptr<Term> term) {
-        statements.push_back(std::make_unique<Touch>(
-            std::move(term),
-            Term::READ
-        ));
+        statements.push_back(std::make_unique<Touch>(std::move(term), Term::READ));
     };
 
     auto addReturnValueWrite = [&](std::unique_ptr<Term> term) {
         auto size = term->size();
-        statements.push_back(std::make_unique<Assignment>(
-            std::move(term),
-            std::make_unique<Intrinsic>(Intrinsic::UNDEFINED, size)
-        ));
+        statements.push_back(
+            std::make_unique<Assignment>(std::move(term), std::make_unique<Intrinsic>(Intrinsic::UNDEFINED, size)));
     };
 
     if (signature) {
@@ -102,8 +93,7 @@ CallHook::CallHook(const Convention *convention, const CallSignature *signature,
         statements.push_back(std::make_unique<Assignment>(
             std::make_unique<MemoryLocationAccess>(convention->stackPointer()),
             std::make_unique<BinaryOperator>(
-                BinaryOperator::ADD,
-                std::make_unique<MemoryLocationAccess>(convention->stackPointer()),
+                BinaryOperator::ADD, std::make_unique<MemoryLocationAccess>(convention->stackPointer()),
                 std::make_unique<Constant>(SizedValue(convention->stackPointer().size(), *stackArgumentsSize)),
                 convention->stackPointer().size<SmallBitSize>())));
     }

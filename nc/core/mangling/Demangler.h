@@ -47,9 +47,14 @@ public:
      *
      * \return Demangled name, or QString() in case of failure.
      */
-    virtual QString demangle(const QString &symbol) const { NC_UNUSED(symbol); return QString(); }
+    virtual QString demangle(const QString &symbol) const {
+        NC_UNUSED(symbol);
+        return QString();
+    }
 };
 
-}}} // namespace nc::core::mangling
+} // namespace mangling
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

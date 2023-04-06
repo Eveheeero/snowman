@@ -17,9 +17,7 @@ namespace nc {
 namespace arch {
 namespace arm {
 
-ArmArchitecture::ArmArchitecture(ByteOrder byteOrder):
-    byteOrder_(byteOrder)
-{
+ArmArchitecture::ArmArchitecture(ByteOrder byteOrder) : byteOrder_(byteOrder) {
     if (byteOrder == ByteOrder::LittleEndian) {
         setName(QLatin1String("arm-le"));
     } else {
@@ -39,9 +37,7 @@ ArmArchitecture::ArmArchitecture(ByteOrder byteOrder):
 ArmArchitecture::~ArmArchitecture() {}
 
 ByteOrder ArmArchitecture::getByteOrder(core::ir::Domain domain) const {
-    if (domain == core::ir::MemoryDomain::MEMORY ||
-        domain == core::ir::MemoryDomain::STACK)
-    {
+    if (domain == core::ir::MemoryDomain::MEMORY || domain == core::ir::MemoryDomain::STACK) {
         return byteOrder_;
     }
     return ByteOrder::LittleEndian;
@@ -55,6 +51,8 @@ std::unique_ptr<core::irgen::InstructionAnalyzer> ArmArchitecture::createInstruc
     return std::make_unique<ArmInstructionAnalyzer>(this);
 }
 
-}}} // namespace nc::arch::arm
+} // namespace arm
+} // namespace arch
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -33,7 +33,7 @@ namespace nc {
 namespace core {
 
 namespace ir {
-    class Term;
+class Term;
 }
 
 namespace likec {
@@ -41,7 +41,7 @@ namespace likec {
 /**
  * Base class for different kinds of expressions.
  */
-class Expression: public TreeNode {
+class Expression : public TreeNode {
     NC_BASE_CLASS(Expression, expressionKind)
 
     const ir::Term *term_; ///< Term this expression was created from.
@@ -66,9 +66,7 @@ public:
      *
      * \param[in] expressionKind Kind of expression.
      */
-    explicit Expression(int expressionKind):
-        TreeNode(EXPRESSION), expressionKind_(expressionKind), term_(nullptr)
-    {}
+    explicit Expression(int expressionKind) : TreeNode(EXPRESSION), expressionKind_(expressionKind), term_(nullptr) {}
 
     /**
      * \return Term this expression was created from.

@@ -44,10 +44,7 @@ ReturnHook::ReturnHook(const Convention *convention, const FunctionSignature *si
     auto &statements = patch_.statements();
 
     auto addReturnValueRead = [&](std::unique_ptr<Term> term) {
-        statements.push_back(std::make_unique<Touch>(
-            std::move(term),
-            Term::READ
-        ));
+        statements.push_back(std::make_unique<Touch>(std::move(term), Term::READ));
     };
 
     if (signature) {

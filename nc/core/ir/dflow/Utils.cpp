@@ -62,8 +62,7 @@ const Term *getFirstCopy(const Term *term, const Dataflow &dataflow) {
 
             if (definitions.chunks().size() == 1 &&
                 definitions.chunks().front().location() == dataflow.getMemoryLocation(term) &&
-                definitions.chunks().front().definitions().size() == 1)
-            {
+                definitions.chunks().front().definitions().size() == 1) {
                 term = definitions.chunks().front().definitions().front();
             } else {
                 break;

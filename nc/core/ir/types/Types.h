@@ -39,10 +39,10 @@ class Type;
  * Information about types of terms.
  */
 class Types {
-    mutable boost::unordered_map<const Term *, std::unique_ptr<Type> > types_; ///< Mapping of terms to their type traits.
+    mutable boost::unordered_map<const Term *, std::unique_ptr<Type>>
+        types_; ///< Mapping of terms to their type traits.
 
-    public:
-
+public:
     /**
      * Constructor.
      */
@@ -70,9 +70,12 @@ class Types {
     /**
      * \return Mapping of terms to their type traits.
      */
-    boost::unordered_map<const Term *, std::unique_ptr<Type> > &map() { return types_; };
+    boost::unordered_map<const Term *, std::unique_ptr<Type>> &map() { return types_; };
 };
 
-}}}} // namespace nc::core::ir::types
+} // namespace types
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -25,8 +25,8 @@
 
 #include <nc/config.h>
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "Declaration.h"
 
@@ -37,14 +37,14 @@ namespace likec {
 /**
  * Compilation unit.
  */
-class CompilationUnit: public TreeNode {
+class CompilationUnit : public TreeNode {
     std::vector<std::unique_ptr<Declaration>> declarations_; ///< Declarations.
 
 public:
     /**
      * Constructor.
      */
-    CompilationUnit(): TreeNode(COMPILATION_UNIT) {}
+    CompilationUnit() : TreeNode(COMPILATION_UNIT) {}
 
     /**
      * \return Declarations.
@@ -61,7 +61,7 @@ public:
     /**
      * Adds a declaration to the unit.
      *
-     * \param declaration Valid pointer to a declaration. 
+     * \param declaration Valid pointer to a declaration.
      */
     void addDeclaration(std::unique_ptr<Declaration> declaration) {
         assert(declaration);

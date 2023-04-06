@@ -44,25 +44,27 @@ namespace likec {
 /**
  * Abstract syntax tree of high-level program in a C-like language.
  */
-class Tree: boost::noncopyable {
+class Tree : boost::noncopyable {
     std::unique_ptr<CompilationUnit> root_; ///< Tree root node.
 
-    SmallBitSize intSize_; ///< Size of int in bits for target platform.
+    SmallBitSize intSize_;     ///< Size of int in bits for target platform.
     SmallBitSize pointerSize_; ///< Size of void * in bits for target platform.
     SmallBitSize ptrdiffSize_; ///< Size of ptrdiff_t in bits for target platform.
 
-    const VoidType voidType_; ///< Void type.
-    std::vector<std::unique_ptr<IntegerType> > integerTypes_; ///< Integer types.
-    std::vector<std::unique_ptr<FloatType> > floatTypes_; ///< Float types.
-    std::multimap<const Type *, std::unique_ptr<PointerType> > pointerTypes_; ///< Pointers to other types.
-    std::multimap<const Type *, std::unique_ptr<ArrayType> > arrayTypes_; ///< Arrays of other types.
-    const ErroneousType erroneousType_; ///< Erroneous type.
+    const VoidType voidType_;                                                ///< Void type.
+    std::vector<std::unique_ptr<IntegerType>> integerTypes_;                 ///< Integer types.
+    std::vector<std::unique_ptr<FloatType>> floatTypes_;                     ///< Float types.
+    std::multimap<const Type *, std::unique_ptr<PointerType>> pointerTypes_; ///< Pointers to other types.
+    std::multimap<const Type *, std::unique_ptr<ArrayType>> arrayTypes_;     ///< Arrays of other types.
+    const ErroneousType erroneousType_;                                      ///< Erroneous type.
 
 public:
     /**
      * Class constructor.
      */
-    Tree(): intSize_(sizeof(int) * CHAR_BIT), pointerSize_(sizeof(void *) * CHAR_BIT), ptrdiffSize_(sizeof(ptrdiff_t) * CHAR_BIT) {}
+    Tree()
+        : intSize_(sizeof(int) * CHAR_BIT), pointerSize_(sizeof(void *) * CHAR_BIT),
+          ptrdiffSize_(sizeof(ptrdiff_t) * CHAR_BIT) {}
 
     /**
      * \return Size of int in bits for target platform.
@@ -165,9 +167,7 @@ public:
      *
      * \param[in] pointee Pointee type.
      */
-    const PointerType *makePointerType(const Type *pointee) {
-        return makePointerType(pointerSize(), pointee);
-    }
+    const PointerType *makePointerType(const Type *pointee) { return makePointerType(pointerSize(), pointee); }
 
     /**
      * \return Array type with required properties.

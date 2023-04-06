@@ -1,4 +1,4 @@
-/* The file is part of Snowman decompiler. */
+X/* The file is part of Snowman decompiler. */
 /* See doc/licenses.asciidoc for the licensing information. */
 
 /* * SmartDec decompiler - SmartDec is a native code to C/C++ decompiler
@@ -29,9 +29,9 @@
  * For motivation, refer to http://herbsutter.com/gotw/_102/
  */
 
-#include <nc/config.h>
 #include <boost/config.hpp>
 #include <memory>
+#include <nc/config.h>
 
 namespace std {
 
@@ -39,36 +39,37 @@ namespace std {
 
 #if defined(BOOST_HAS_VARIADIC_TMPL) && defined(BOOST_HAS_RVALUE_REFS) // have C++11 support
 
-template<typename T, typename... Args>
-unique_ptr<T> make_unique(Args && ... args) {
+template <typename T, typename... Args>
+unique_ptr<T> make_unique(Args &&...args) {
     return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
 }
 
 #else // no C++11 support
 
-template<typename T>
+template <typename T>
 unique_ptr<T> make_unique() {
     return std::unique_ptr<T>(new T());
 }
 
-template<typename T, typename Arg1>
+template <typename T, typename Arg1>
 unique_ptr<T> make_unique(Arg1 &&arg1) {
     return std::unique_ptr<T>(new T(std::forward<Arg1>(arg1)));
 }
 
-template<typename T, typename Arg1, typename Arg2>
+template <typename T, typename Arg1, typename Arg2>
 unique_ptr<T> make_unique(Arg1 &&arg1, Arg2 &&arg2) {
     return std::unique_ptr<T>(new T(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2)));
 }
 
-template<typename T, typename Arg1, typename Arg2, typename Arg3>
+template <typename T, typename Arg1, typename Arg2, typename Arg3>
 unique_ptr<T> make_unique(Arg1 &&arg1, Arg2 &&arg2, Arg3 &&arg3) {
     return std::unique_ptr<T>(new T(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), std::forward<Arg3>(arg3)));
 }
 
-template<typename T, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
+template <typename T, typename Arg1, typename Arg2, typename Arg3, typename Arg4>
 unique_ptr<T> make_unique(Arg1 &&arg1, Arg2 &&arg2, Arg3 &&arg3, Arg4 &&arg4) {
-    return std::unique_ptr<T>(new T(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), std::forward<Arg3>(arg3), std::forward<Arg4>(arg4)));
+    return std::unique_ptr<T>(
+        new T(std::forward<Arg1>(arg1), std::forward<Arg2>(arg2), std::forward<Arg3>(arg3), std::forward<Arg4>(arg4)));
 }
 
 #endif

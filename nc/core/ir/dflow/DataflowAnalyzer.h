@@ -37,7 +37,7 @@ namespace nc {
 namespace core {
 
 namespace arch {
-    class Architecture;
+class Architecture;
 }
 
 namespace ir {
@@ -62,7 +62,7 @@ class Value;
 class DataflowAnalyzer {
     Q_DECLARE_TR_FUNCTIONS(DataflowAnalyzer)
 
-    Dataflow &dataflow_; ///< Dataflow information.
+    Dataflow &dataflow_;                     ///< Dataflow information.
     const arch::Architecture *architecture_; ///< Valid pointer to architecture description.
     const CancellationToken &canceled_;
     const LogToken &log_;
@@ -76,10 +76,9 @@ public:
      * \param canceled      Cancellation token.
      * \param log           Log token.
      */
-    DataflowAnalyzer(Dataflow &dataflow, const arch::Architecture *architecture,
-        const CancellationToken &canceled, const LogToken &log):
-        dataflow_(dataflow), architecture_(architecture), canceled_(canceled), log_(log)
-    {
+    DataflowAnalyzer(Dataflow &dataflow, const arch::Architecture *architecture, const CancellationToken &canceled,
+                     const LogToken &log)
+        : dataflow_(dataflow), architecture_(architecture), canceled_(canceled), log_(log) {
         assert(architecture != nullptr);
     }
 

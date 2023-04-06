@@ -37,7 +37,7 @@ namespace pe {
  * A good description of the PE file format is given here:
  * http://en.wikibooks.org/wiki/X86_Disassembly/Windows_Executable_Files
  */
-class PeParser: public core::input::Parser {
+class PeParser : public core::input::Parser {
 public:
     /**
      * Constructor.

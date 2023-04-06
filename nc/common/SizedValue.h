@@ -47,7 +47,7 @@ public:
     /**
      * Constructs a value of zero size.
      */
-    SizedValue(): size_(0), value_(0) {}
+    SizedValue() : size_(0), value_(0) {}
 
     /**
      * Constructor.
@@ -57,10 +57,7 @@ public:
      *
      * The value is truncated to the lowest <em>size</em> bits.
      */
-    SizedValue(SmallBitSize size, ConstantValue value):
-        size_(size),
-        value_(bitTruncate(value, size))
-    {
+    SizedValue(SmallBitSize size, ConstantValue value) : size_(size), value_(bitTruncate(value, size)) {
         assert(size >= 0);
     }
 
@@ -83,10 +80,7 @@ public:
      * \param[in] value Bits of the value, with <em>size</em> and higher cleared.
      * \param[in] exact Exact construction flag.
      */
-    SizedValue(SmallBitSize size, ConstantValue value, Exact exact):
-        size_(size),
-        value_(value)
-    {
+    SizedValue(SmallBitSize size, ConstantValue value, Exact exact) : size_(size), value_(value) {
         NC_UNUSED(exact);
         assert(size >= 0);
         assert(bitTruncate(value, size) == value);

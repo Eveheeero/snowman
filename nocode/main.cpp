@@ -62,7 +62,7 @@ QTextStream qin(stdin, QIODevice::ReadOnly);
 QTextStream qout(stdout, QIODevice::WriteOnly);
 QTextStream qerr(stderr, QIODevice::WriteOnly);
 
-template<class T>
+template <class T>
 void openFileForWritingAndCall(const QString &filename, T functor) {
     if (filename.isEmpty()) {
         return;
@@ -100,7 +100,11 @@ void printSections(nc::core::Context &context, QTextStream &out) {
             flags += QLatin1String(",bss");
         }
         out << QString(QLatin1String("section name = '%1', start = 0x%2, size = 0x%3, flags = %4"))
-            .arg(section->name()).arg(section->addr(), 0, 16).arg(section->size(), 0, 16).arg(flags) << '\n';
+                   .arg(section->name())
+                   .arg(section->addr(), 0, 16)
+                   .arg(section->size(), 0, 16)
+                   .arg(flags)
+            << '\n';
     }
     auto entrypoint = context.image()->entrypoint();
     if (entrypoint) {
@@ -117,8 +121,11 @@ void printSymbols(nc::core::Context &context, QTextStream &out) {
             value = QLatin1String("Undefined");
         }
         out << QString("symbol name = '%1', type = %2, value = 0x%3, section = %4")
-            .arg(symbol->name()).arg(symbol->type().getName()).arg(value)
-            .arg(symbol->section() ? symbol->section()->name() : QString()) << '\n';
+                   .arg(symbol->name())
+                   .arg(symbol->type().getName())
+                   .arg(value)
+                   .arg(symbol->section() ? symbol->section()->name() : QString())
+            << '\n';
     }
 }
 
@@ -163,7 +170,7 @@ void help() {
     }
     qout << '\n';
     qout << "Available parsers:";
-    foreach(auto parser, nc::core::input::ParserRepository::instance()->parsers()) {
+    foreach (auto parser, nc::core::input::ParserRepository::instance()->parsers()) {
         qout << " " << parser->name();
     }
     qout << '\n';
@@ -207,31 +214,34 @@ int main(int argc, char *argv[]) {
             } else if (arg == "--verbose" || arg == "-v") {
                 verbose = true;
 
-            #define FILE_OPTION(option, variable)       \
-            } else if (arg == option) {                 \
-                variable = "-";                         \
-                autoDefault = false;                    \
-            } else if (arg.startsWith(option "=")) {    \
-                variable = arg.section('=', 1);         \
-                autoDefault = false;
-            #define ADDR_OPTION(option, variable)                   \
-            } else if (arg.startsWith(option "=")) {                \
-                bool ok;                                            \
-                variable = arg.section('=', 1).toInt(&ok,16);       \
-                autoDefault = true;
+#define FILE_OPTION(option, variable)                                                                                  \
+    }                                                                                                                  \
+    else if (arg == option) {                                                                                          \
+        variable = "-";                                                                                                \
+        autoDefault = false;                                                                                           \
+    }                                                                                                                  \
+    else if (arg.startsWith(option "=")) {                                                                             \
+        variable = arg.section('=', 1);                                                                                \
+        autoDefault = false;
+#define ADDR_OPTION(option, variable)                                                                                  \
+    }                                                                                                                  \
+    else if (arg.startsWith(option "=")) {                                                                             \
+        bool ok;                                                                                                       \
+        variable = arg.section('=', 1).toInt(&ok, 16);                                                                 \
+        autoDefault = true;
 
-            FILE_OPTION("--print-sections", sectionsFile)
-            FILE_OPTION("--print-symbols", symbolsFile)
-            FILE_OPTION("--print-instructions", instructionsFile)
-            FILE_OPTION("--print-cfg", cfgFile)
-            FILE_OPTION("--print-ir", irFile)
-            FILE_OPTION("--print-regions", regionsFile)
-            FILE_OPTION("--print-cxx", cxxFile)
-            ADDR_OPTION("--from", from_addr)
-            ADDR_OPTION("--to", to_addr)
+                FILE_OPTION("--print-sections", sectionsFile)
+                FILE_OPTION("--print-symbols", symbolsFile)
+                FILE_OPTION("--print-instructions", instructionsFile)
+                FILE_OPTION("--print-cfg", cfgFile)
+                FILE_OPTION("--print-ir", irFile)
+                FILE_OPTION("--print-regions", regionsFile)
+                FILE_OPTION("--print-cxx", cxxFile)
+                ADDR_OPTION("--from", from_addr)
+                ADDR_OPTION("--to", to_addr)
 
-            #undef FILE_OPTION
-            #undef ADDR_OPTION
+#undef FILE_OPTION
+#undef ADDR_OPTION
 
             } else if (arg == "--") {
                 while (++i < args.size()) {
@@ -279,14 +289,15 @@ int main(int argc, char *argv[]) {
         openFileForWritingAndCall(sectionsFile, [&](QTextStream &out) { printSections(context, out); });
         openFileForWritingAndCall(symbolsFile, [&](QTextStream &out) { printSymbols(context, out); });
 
-        // 위에서는 섹션과 심볼정보만 출력하고, 아래에서 디스어셈블을 하는것을 보면 위의 Driver::parse에서는 섹션정보와 심볼만을 분석하는듯하다.
+        // 위에서는 섹션과 심볼정보만 출력하고, 아래에서 디스어셈블을 하는것을 보면 위의 Driver::parse에서는 섹션정보와
+        // 심볼만을 분석하는듯하다.
 
-        if (!instructionsFile.isEmpty() || !cfgFile.isEmpty() || !irFile.isEmpty() || !regionsFile.isEmpty() || !cxxFile.isEmpty()) {
+        if (!instructionsFile.isEmpty() || !cfgFile.isEmpty() || !irFile.isEmpty() || !regionsFile.isEmpty() ||
+            !cxxFile.isEmpty()) {
             // 시작주소와 끝주소가 설정되어있으면 해당 범위를 가진 섹션만 디스어셈블한다.
-            if(from_addr && to_addr)
-            {
+            if (from_addr && to_addr) {
                 foreach (const nc::core::image::Section *section, context.image()->sections())
-                    if( from_addr >= section->addr() && to_addr <= section->endAddr() )
+                    if (from_addr >= section->addr() && to_addr <= section->endAddr())
                         nc::core::Driver::disassemble(context, section, from_addr, to_addr);
             }
             // 아니면 전체를 디스어셈블한다.
@@ -300,10 +311,10 @@ int main(int argc, char *argv[]) {
                 // 디컴파일 실행
                 nc::core::Driver::decompile(context);
 
-                openFileForWritingAndCall(cfgFile,     [&](QTextStream &out) { context.program()->print(out); });
-                openFileForWritingAndCall(irFile,      [&](QTextStream &out) { context.functions()->print(out); });
+                openFileForWritingAndCall(cfgFile, [&](QTextStream &out) { context.program()->print(out); });
+                openFileForWritingAndCall(irFile, [&](QTextStream &out) { context.functions()->print(out); });
                 openFileForWritingAndCall(regionsFile, [&](QTextStream &out) { printRegionGraphs(context, out); });
-                openFileForWritingAndCall(cxxFile,     [&](QTextStream &out) { context.tree()->print(out); });
+                openFileForWritingAndCall(cxxFile, [&](QTextStream &out) { context.tree()->print(out); });
             }
         }
     } catch (const nc::Exception &e) {

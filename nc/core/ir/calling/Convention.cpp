@@ -36,12 +36,8 @@ namespace core {
 namespace ir {
 namespace calling {
 
-Convention::Convention(QString name):
-    name_(std::move(name)),
-    firstArgumentOffset_(0),
-    argumentAlignment_(0),
-    calleeCleanup_(false)
-{}
+Convention::Convention(QString name)
+    : name_(std::move(name)), firstArgumentOffset_(0), argumentAlignment_(0), calleeCleanup_(false) {}
 
 Convention::~Convention() {}
 
@@ -50,7 +46,7 @@ namespace {
 /**
  * Rounds given number down to the closest multiple of the multiple.
  */
-template<class T>
+template <class T>
 T roundDown(T number, T multiple) {
     assert(multiple > 0);
 
@@ -71,7 +67,7 @@ T roundDown(T number, T multiple) {
 /**
  * Rounds given number up to the closest multiple of the multiple.
  */
-template<class T>
+template <class T>
 T roundUp(T number, T multiple) {
     assert(multiple > 0);
 
@@ -115,9 +111,7 @@ MemoryLocation Convention::getArgumentLocationCovering(const MemoryLocation &mem
     }
 
     /* Note: this assumes the stack growing down. */
-    if (memoryLocation.domain() == MemoryDomain::STACK &&
-        memoryLocation.addr() >= firstArgumentOffset()
-    ) {
+    if (memoryLocation.domain() == MemoryDomain::STACK && memoryLocation.addr() >= firstArgumentOffset()) {
         /* Align the location properly. */
         if (argumentAlignment()) {
             auto addr = roundDown(memoryLocation.addr(), argumentAlignment());
@@ -173,12 +167,11 @@ std::vector<MemoryLocation> Convention::sortArguments(std::vector<MemoryLocation
 
     /* If some group was completely filled, copy the stack arguments. */
     if (someGroupIsFilled) {
-        arguments.erase(
-            std::remove_if(arguments.begin(), arguments.end(),
-                [](const MemoryLocation &memoryLocation) {
-                    return memoryLocation.domain() != MemoryDomain::STACK;
-                }),
-            arguments.end());
+        arguments.erase(std::remove_if(arguments.begin(), arguments.end(),
+                                       [](const MemoryLocation &memoryLocation) {
+                                           return memoryLocation.domain() != MemoryDomain::STACK;
+                                       }),
+                        arguments.end());
 
         if (!arguments.empty()) {
             std::sort(arguments.begin(), arguments.end());
@@ -187,8 +180,7 @@ std::vector<MemoryLocation> Convention::sortArguments(std::vector<MemoryLocation
 
             foreach (const auto &memoryLocation, arguments) {
                 if (nextArgumentOffset <= memoryLocation.addr() &&
-                    memoryLocation.addr() < nextArgumentOffset + argumentAlignment())
-                {
+                    memoryLocation.addr() < nextArgumentOffset + argumentAlignment()) {
                     result.push_back(memoryLocation);
                     nextArgumentOffset = getArgumentLocationCovering(memoryLocation).endAddr();
                 } else {

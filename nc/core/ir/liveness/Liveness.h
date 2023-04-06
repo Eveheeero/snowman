@@ -22,7 +22,7 @@ namespace liveness {
  */
 class Liveness {
     boost::unordered_set<const Term *> liveTermSet_; ///< The set of live terms.
-    std::vector<const Term *> liveTermList_; ///< The list of live terms.
+    std::vector<const Term *> liveTermList_;         ///< The list of live terms.
 
 public:
     /**

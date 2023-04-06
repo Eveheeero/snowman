@@ -40,7 +40,7 @@ namespace x86 {
 /**
  * An instruction of Intel x86 platform.
  */
-class X86Instruction: public core::arch::Instruction {
+class X86Instruction : public core::arch::Instruction {
 public:
     /** Max size of an instruction. */
     static const SmallByteSize MAX_SIZE = 15;
@@ -61,9 +61,8 @@ public:
      * \param[in] size Instruction size in bytes.
      * \param[in] bytes Valid pointer to the bytes of the instruction.
      */
-    X86Instruction(SmallBitSize bitness, ByteAddr addr, SmallByteSize size, const void *bytes):
-        core::arch::Instruction(addr, size), bitness_(checked_cast<uint8_t>(bitness))
-    {
+    X86Instruction(SmallBitSize bitness, ByteAddr addr, SmallByteSize size, const void *bytes)
+        : core::arch::Instruction(addr, size), bitness_(checked_cast<uint8_t>(bitness)) {
         assert(size > 0);
         assert(size <= MAX_SIZE);
         memcpy(&bytes_, bytes, size);

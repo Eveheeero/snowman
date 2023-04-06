@@ -40,9 +40,7 @@ namespace nc {
 namespace core {
 namespace ir {
 
-CFG::CFG(const BasicBlocks &basicBlocks):
-    basicBlocks_(basicBlocks)
-{
+CFG::CFG(const BasicBlocks &basicBlocks) : basicBlocks_(basicBlocks) {
     foreach (const BasicBlock *basicBlock, basicBlocks) {
         if (const Jump *jump = basicBlock->getJump()) {
             addConnections(basicBlock, jump->thenTarget());

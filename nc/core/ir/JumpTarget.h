@@ -55,9 +55,7 @@ public:
      * \param address    Jump target address.
      * \param basicBlock Pointer to the target basic block. Can be nullptr.
      * */
-    JumpTableEntry(ByteAddr address, BasicBlock *basicBlock = nullptr):
-        address_(address), basicBlock_(basicBlock)
-    {}
+    JumpTableEntry(ByteAddr address, BasicBlock *basicBlock = nullptr) : address_(address), basicBlock_(basicBlock) {}
 
     /**
      * \return Jump target address.
@@ -82,7 +80,7 @@ typedef std::vector<JumpTableEntry> JumpTable;
 /**
  * Jump target: an address, a basic block, or a vector of basic blocks (jump table).
  */
-class JumpTarget: public PrintableBase<JumpTarget> {
+class JumpTarget : public PrintableBase<JumpTarget> {
     /** Term representing the jump address. */
     std::unique_ptr<Term> address_;
 
@@ -180,7 +178,7 @@ public:
     /**
      * \return Non-null pointer is this is a valid jump target, nullptr otherwise.
      */
-    operator const void*() { return (address() || basicBlock() || table()) ? this : nullptr; }
+    operator const void *() { return (address() || basicBlock() || table()) ? this : nullptr; }
 
     /**
      * Prints the textual representation of the jump target to the stream.

@@ -36,10 +36,10 @@ QT_END_NAMESPACE
 namespace nc {
 
 namespace core {
-    namespace arch {
-        class Instruction;
-    }
+namespace arch {
+class Instruction;
 }
+} // namespace core
 
 namespace gui {
 
@@ -48,7 +48,7 @@ class InstructionsModel;
 /**
  * Dock widget for showing lists of instructions.
  */
-class InstructionsView: public TreeView {
+class InstructionsView : public TreeView {
     Q_OBJECT
 
     /** The model being shown. */
@@ -89,7 +89,8 @@ public Q_SLOTS:
      * \param instructions  Instructions to be highlighted.
      * \param ensureVisible Ensure that changes in highlighting are visible.
      */
-    void highlightInstructions(const std::vector<const core::arch::Instruction *> &instructions, bool ensureVisible = true);
+    void highlightInstructions(const std::vector<const core::arch::Instruction *> &instructions,
+                               bool ensureVisible = true);
 
 Q_SIGNALS:
     /**
@@ -114,6 +115,7 @@ private Q_SLOTS:
     void updateSelection();
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

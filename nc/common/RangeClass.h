@@ -35,16 +35,16 @@ namespace nc {
  *
  * \tparam T Type of range boundaries.
  */
-template<class T>
+template <class T>
 class Range {
     T start_; ///< Start of the range.
-    T end_; ///< End of the range.
+    T end_;   ///< End of the range.
 
 public:
     /**
      * Constructor of an invalid range.
      */
-    Range(): start_(0), end_(-1) {}
+    Range() : start_(0), end_(-1) {}
 
     /**
      * Constructor of a valid range.
@@ -52,11 +52,7 @@ public:
      * \param start     Start of the range.
      * \param end       End of the range.
      */
-    Range(T start, T end):
-        start_(start), end_(end)
-    {
-        assert(start <= end);
-    }
+    Range(T start, T end) : start_(start), end_(end) { assert(start <= end); }
 
     /**
      * \return Start of the range --- the first position in the range.
@@ -88,23 +84,17 @@ public:
     /**
      * \return True iff *this and that are disjoint ranges.
      */
-    bool disjoint(const Range<T> &that) const {
-        return this->end() <= that.start() || that.end() <= this->start();
-    }
+    bool disjoint(const Range<T> &that) const { return this->end() <= that.start() || that.end() <= this->start(); }
 
     /**
      * \return True iff *this and that are overlapping ranges.
      */
-    bool overlaps(const Range<T> &that) const {
-        return !disjoint(that);
-    }
+    bool overlaps(const Range<T> &that) const { return !disjoint(that); }
 
     /**
      * \return This range shifted by the given offset.
      */
-    Range<T> shifted(T offset) const {
-        return Range<T>(start() + offset, end() + offset);
-    }
+    Range<T> shifted(T offset) const { return Range<T>(start() + offset, end() + offset); }
 
     /**
      * \return Non-zero pointer if and only if the range is valid.
@@ -112,22 +102,22 @@ public:
     operator const void *() const { return start() <= end() ? this : 0; }
 };
 
-template<class T>
+template <class T>
 inline bool operator==(const Range<T> &a, const Range<T> &b) {
     return a.start() == b.start() && a.end() == b.end();
 }
 
-template<class T>
+template <class T>
 inline bool operator!=(const Range<T> &a, const Range<T> &b) {
     return !(a == b);
 }
 
-template<class T>
+template <class T>
 inline bool operator<(const Range<T> &a, const Range<T> &b) {
     return a.start() < b.start() || (a.start() == b.start() && a.end() < b.end());
 }
 
-template<class T>
+template <class T>
 Range<T> make_range(T start, T end) {
     return Range<T>(start, end);
 }

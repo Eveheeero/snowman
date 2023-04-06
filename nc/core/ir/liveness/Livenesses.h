@@ -20,7 +20,7 @@ namespace liveness {
 /**
  * Mapping from a function to its liveness.
  */
-class Livenesses: public boost::unordered_map<const Function *, std::unique_ptr<const Liveness>> {};
+class Livenesses : public boost::unordered_map<const Function *, std::unique_ptr<const Liveness>> {};
 
 } // namespace liveness
 } // namespace ir

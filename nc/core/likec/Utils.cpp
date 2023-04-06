@@ -19,8 +19,7 @@ std::unique_ptr<Expression> divide(Expression *dividend, SignedConstantValue div
     if (auto constant = dividend->as<IntegerConstant>()) {
         if (constant->value().signedValue() % divisor == 0) {
             return std::make_unique<IntegerConstant>(
-                SizedValue(constant->value().size(), constant->value().signedValue() / divisor),
-                constant->type());
+                SizedValue(constant->value().size(), constant->value().signedValue() / divisor), constant->type());
         }
     } else if (auto binary = dividend->as<BinaryOperator>()) {
         if (binary->operatorKind() == BinaryOperator::MUL) {

@@ -23,13 +23,15 @@
 
 #pragma once
 
-#include <nc/config.h>
 #include <nc/common/Exception.h>
 #include <nc/common/Types.h>
+#include <nc/config.h>
 
 #include <QCoreApplication>
 
-namespace nc { namespace core { namespace input {
+namespace nc {
+namespace core {
+namespace input {
 
 /** Error info structure for error line.  */
 typedef boost::error_info<struct LineTag, int> ErrorLine;
@@ -41,7 +43,7 @@ typedef boost::error_info<struct PositionTag, ByteSize> ErrorOffset;
 /**
  * Parse error.
  */
-class ParseError: public Exception {
+class ParseError : public Exception {
     Q_DECLARE_TR_FUNCTIONS(ParseError)
 public:
     /**
@@ -54,12 +56,13 @@ public:
      *
      * \param[in] message              Description of what has happened.
      */
-    explicit
-    ParseError(const QString &message): Exception(message) {}
+    explicit ParseError(const QString &message) : Exception(message) {}
 
     virtual QString unicodeWhat() const noexcept;
 };
 
-}}} // namespace nc::core::input
+} // namespace input
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

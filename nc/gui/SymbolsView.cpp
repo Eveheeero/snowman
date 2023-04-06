@@ -12,10 +12,7 @@
 namespace nc {
 namespace gui {
 
-SymbolsView::SymbolsView(QWidget *parent):
-    TreeView(tr("Symbols"), parent),
-    model_(nullptr)
-{
+SymbolsView::SymbolsView(QWidget *parent) : TreeView(tr("Symbols"), parent), model_(nullptr) {
     treeView()->setItemsExpandable(false);
     treeView()->setRootIsDecorated(false);
     treeView()->setSelectionBehavior(QAbstractItemView::SelectRows);

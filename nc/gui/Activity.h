@@ -34,25 +34,23 @@ namespace gui {
 /**
  * Base class for background activities.
  */
-class Activity: public QObject, public QRunnable {
+class Activity : public QObject, public QRunnable {
     Q_OBJECT
 
-    public:
-
+public:
     /**
      * Does the work and emits the finished() signal.
      */
     void run() override;
 
-    protected:
-
+protected:
     /**
      * This function does the real work.
      * Override it in subclasses.
      */
     virtual void work() = 0;
 
-    Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * This signal is emitted when the activity has finished execution.
@@ -60,6 +58,7 @@ class Activity: public QObject, public QRunnable {
     void finished();
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

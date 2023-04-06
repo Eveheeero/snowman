@@ -27,8 +27,8 @@
 
 #include <QObject>
 
-#include <memory>
 #include <deque>
+#include <memory>
 
 namespace nc {
 namespace gui {
@@ -38,7 +38,7 @@ class Command;
 /**
  * Command for executing a sequence of commands.
  */
-class CommandQueue: public QObject {
+class CommandQueue : public QObject {
     Q_OBJECT
 
     /** Command queue. */
@@ -47,8 +47,7 @@ class CommandQueue: public QObject {
     /** First element of the queue. */
     std::shared_ptr<Command> front_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -80,7 +79,7 @@ class CommandQueue: public QObject {
      */
     bool empty() const { return front() == nullptr; }
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     /**
      * Cancels currently executed command.
@@ -92,7 +91,7 @@ class CommandQueue: public QObject {
      */
     void clear();
 
-    Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * This signal is emitted just before the next command starts being executed.
@@ -104,14 +103,13 @@ class CommandQueue: public QObject {
      */
     void idle();
 
-    private:
-
+private:
     /**
      * Executes the next instruction in the queue.
      */
     void executeNext();
 
-    private Q_SLOTS:
+private Q_SLOTS:
 
     /**
      * Slot called when an activity is finished.
@@ -119,7 +117,7 @@ class CommandQueue: public QObject {
     void commandFinished();
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */
-

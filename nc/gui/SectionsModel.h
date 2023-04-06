@@ -32,26 +32,24 @@
 namespace nc {
 
 namespace core {
-    namespace image {
-        class Section;
-        class Image;
-    }
-}
+namespace image {
+class Section;
+class Image;
+} // namespace image
+} // namespace core
 
 namespace gui {
 
 /**
  * Item model for SectionsView.
  */
-class SectionsModel: public QAbstractItemModel {
+class SectionsModel : public QAbstractItemModel {
     Q_OBJECT
 
     std::shared_ptr<const core::image::Image> image_;
 
 public:
-    enum {
-        SortRole = Qt::UserRole
-    };
+    enum { SortRole = Qt::UserRole };
 
     /**
      * Constructor.
@@ -76,6 +74,7 @@ public:
     QVariant headerData(int section, Qt::Orientation orientation, int role = Qt::DisplayRole) const override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

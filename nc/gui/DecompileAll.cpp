@@ -36,9 +36,7 @@
 namespace nc {
 namespace gui {
 
-DecompileAll::DecompileAll(Project *project):
-    project_(project)
-{
+DecompileAll::DecompileAll(Project *project) : project_(project) {
     assert(project);
     assert(project->instructions());
 
@@ -57,6 +55,7 @@ void DecompileAll::work() {
     delegate(std::make_unique<Decompilation>(context));
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

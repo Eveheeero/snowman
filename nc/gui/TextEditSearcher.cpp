@@ -29,11 +29,10 @@
 #include <QPlainTextEdit>
 #include <QScrollBar>
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-TextEditSearcher::TextEditSearcher(QPlainTextEdit *textEdit):
-    textEdit_(textEdit), hvalue_(-1), vvalue_(-1)
-{
+TextEditSearcher::TextEditSearcher(QPlainTextEdit *textEdit) : textEdit_(textEdit), hvalue_(-1), vvalue_(-1) {
     assert(textEdit != nullptr);
 }
 
@@ -93,6 +92,7 @@ bool TextEditSearcher::find(const QString &expression, FindFlags flags) {
     }
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

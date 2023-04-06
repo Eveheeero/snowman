@@ -20,9 +20,8 @@ namespace nc {
  *
  * \return The resulting integer on success, boost::none on failure.
  */
-template<class T>
-boost::optional<T>
-stringToInt(const QString &s, int base = 10);
+template <class T>
+boost::optional<T> stringToInt(const QString &s, int base = 10);
 
 } // namespace nc
 

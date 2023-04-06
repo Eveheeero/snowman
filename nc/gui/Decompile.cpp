@@ -36,10 +36,8 @@
 namespace nc {
 namespace gui {
 
-Decompile::Decompile(Project *project, const std::shared_ptr<const core::arch::Instructions> &instructions):
-    project_(project),
-    instructions_(instructions)
-{
+Decompile::Decompile(Project *project, const std::shared_ptr<const core::arch::Instructions> &instructions)
+    : project_(project), instructions_(instructions) {
     assert(project);
     assert(instructions);
 
@@ -58,6 +56,7 @@ void Decompile::work() {
     delegate(std::make_unique<Decompilation>(context));
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

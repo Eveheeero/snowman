@@ -45,15 +45,15 @@ class Statement;
 /**
  * Basic block.
  */
-class BasicBlock: public PrintableBase<BasicBlock>, public nc::ilist_item, boost::noncopyable {
+class BasicBlock : public PrintableBase<BasicBlock>, public nc::ilist_item, boost::noncopyable {
 public:
     typedef nc::ilist<Statement> Statements;
 
 private:
-    boost::optional<ByteAddr> address_; ///< Address of basic block.
+    boost::optional<ByteAddr> address_;          ///< Address of basic block.
     boost::optional<ByteAddr> successorAddress_; ///< Address of the end of the basic block.
-    Statements statements_; ///< Statements.
-    Function *function_; ///< Function this basic block belongs to.
+    Statements statements_;                      ///< Statements.
+    Function *function_;                         ///< Function this basic block belongs to.
 
 public:
     /**

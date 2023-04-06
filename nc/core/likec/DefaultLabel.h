@@ -34,9 +34,9 @@ namespace likec {
 /**
  * Default case label.
  */
-class DefaultLabel: public Statement {
+class DefaultLabel : public Statement {
 public:
-    DefaultLabel(): Statement(DEFAULT_LABEL) {}
+    DefaultLabel() : Statement(DEFAULT_LABEL) {}
 };
 
 } // namespace likec

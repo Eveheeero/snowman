@@ -38,7 +38,7 @@ class X86Registers;
 /**
  * Intel x86 architecture.
  */
-class X86Architecture: public core::arch::Architecture {
+class X86Architecture : public core::arch::Architecture {
 public:
     /**
      * Processor mode.
@@ -54,8 +54,7 @@ public:
      *
      * \param mode Processor mode.
      */
-    explicit
-    X86Architecture(Mode mode);
+    explicit X86Architecture(Mode mode);
 
     /**
      * Destructor.

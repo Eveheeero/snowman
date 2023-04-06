@@ -9,9 +9,9 @@
 #include <nc/common/CheckedCast.h>
 #include <nc/common/Foreach.h>
 #include <nc/common/LogToken.h>
+#include <nc/common/Range.h>
 #include <nc/common/Unreachable.h>
 #include <nc/common/make_unique.h>
-#include <nc/common/Range.h>
 #include <nc/core/image/Image.h>
 #include <nc/core/image/Section.h>
 #include <nc/core/input/ParseError.h>
@@ -25,16 +25,12 @@ namespace mach_o {
 
 namespace {
 
-using nc::core::input::read;
 using nc::core::input::getAsciizString;
 using nc::core::input::ParseError;
+using nc::core::input::read;
 
-boost::optional<std::pair<SmallBitSize, ByteOrder>>
-getBitnessAndByteOrder(uint32_t magic) {
-    static const ByteOrder byteOrders[] = {
-        ByteOrder::BigEndian,
-        ByteOrder::LittleEndian
-    };
+boost::optional<std::pair<SmallBitSize, ByteOrder>> getBitnessAndByteOrder(uint32_t magic) {
+    static const ByteOrder byteOrders[] = {ByteOrder::BigEndian, ByteOrder::LittleEndian};
 
     foreach (const auto &byteOrder, byteOrders) {
         auto m = magic;
@@ -85,11 +81,10 @@ class MachOParserImpl {
     std::vector<IndirectSection> indirectSections_;
 
 public:
-    MachOParserImpl(QIODevice *source, core::image::Image *image, const LogToken &log):
-        source_(source), image_(image), log_(log), byteOrder_(ByteOrder::Current)
-    {}
+    MachOParserImpl(QIODevice *source, core::image::Image *image, const LogToken &log)
+        : source_(source), image_(image), log_(log), byteOrder_(ByteOrder::Current) {}
 
-    template<class Mach>
+    template <class Mach>
     void parse() {
         source_->seek(0);
 
@@ -114,24 +109,25 @@ public:
         }
 
         switch (header.cputype) {
-            case CPU_TYPE_I386:
-                image_->platform().setArchitecture(QLatin1String("i386"));
-                break;
-            case CPU_TYPE_X86_64:
-                image_->platform().setArchitecture(QLatin1String("x86-64"));
-                break;
-            case CPU_TYPE_ARM:
-                image_->platform().setArchitecture(QLatin1String(byteOrder_ == ByteOrder::LittleEndian ? "arm-le" : "arm-be"));
-                break;
-            default:
-                throw ParseError(tr("Unknown CPU type: %1.").arg(header.cputype));
+        case CPU_TYPE_I386:
+            image_->platform().setArchitecture(QLatin1String("i386"));
+            break;
+        case CPU_TYPE_X86_64:
+            image_->platform().setArchitecture(QLatin1String("x86-64"));
+            break;
+        case CPU_TYPE_ARM:
+            image_->platform().setArchitecture(
+                QLatin1String(byteOrder_ == ByteOrder::LittleEndian ? "arm-le" : "arm-be"));
+            break;
+        default:
+            throw ParseError(tr("Unknown CPU type: %1.").arg(header.cputype));
         }
 
         parseLoadCommands<Mach>(header.ncmds);
     }
 
 private:
-    template<class Mach>
+    template <class Mach>
     void parseLoadCommands(uint32_t ncmds) {
         log_.debug(tr("Parsing load commands, %1 of them.").arg(ncmds));
 
@@ -154,26 +150,26 @@ private:
             }
 
             switch (loadCommand.cmd & ~LC_REQ_DYLD) {
-                case LC_SEGMENT: {
-                    parseSegmentCommand<segment_command, section>();
-                    break;
-                }
-                case LC_SEGMENT_64: {
-                    parseSegmentCommand<segment_command_64, section_64>();
-                    break;
-                }
-                case LC_SYMTAB: {
-                    parseSymtabCommand<Mach>();
-                    break;
-                }
-                case LC_DYSYMTAB: {
-                    parseDySymtabCommand<Mach>();
-                    break;
-                }
-                case LC_MAIN: {
-                    parseMainCommand<Mach>();
-                    break;
-                }
+            case LC_SEGMENT: {
+                parseSegmentCommand<segment_command, section>();
+                break;
+            }
+            case LC_SEGMENT_64: {
+                parseSegmentCommand<segment_command_64, section_64>();
+                break;
+            }
+            case LC_SYMTAB: {
+                parseSymtabCommand<Mach>();
+                break;
+            }
+            case LC_DYSYMTAB: {
+                parseDySymtabCommand<Mach>();
+                break;
+            }
+            case LC_MAIN: {
+                parseMainCommand<Mach>();
+                break;
+            }
             }
 
             if (!source_->seek(pos + loadCommand.cmdsize)) {
@@ -182,7 +178,7 @@ private:
         }
     }
 
-    template<class SegmentCommand, class Section>
+    template <class SegmentCommand, class Section>
     void parseSegmentCommand() {
         SegmentCommand command;
         if (!read(source_, command)) {
@@ -191,7 +187,8 @@ private:
         byteOrder_.convertFrom(command.nsects);
         byteOrder_.convertFrom(command.initprot);
 
-        log_.debug(tr("Found segment '%1' with %2 sections.").arg(getAsciizString(command.segname)).arg(command.nsects));
+        log_.debug(
+            tr("Found segment '%1' with %2 sections.").arg(getAsciizString(command.segname)).arg(command.nsects));
 
         for (uint32_t i = 0; i < command.nsects; ++i) {
             log_.debug(tr("Parsing section number %1.").arg(i));
@@ -199,7 +196,7 @@ private:
         }
     }
 
-    template<class Section>
+    template <class Section>
     void parseSection(vm_prot_t protection) {
         Section section;
         if (!read(source_, section)) {
@@ -211,7 +208,6 @@ private:
         byteOrder_.convertFrom(section.flags);
         byteOrder_.convertFrom(section.reserved1);
         byteOrder_.convertFrom(section.reserved2);
-
 
         auto sectionName = getAsciizString(section.sectname);
         auto segmentName = getAsciizString(section.segname);
@@ -226,12 +222,9 @@ private:
                                                                    section.addr, section.size);
 
         uint32_t section_type = section.flags & SECTION_TYPE;
-        if (section_type == S_NON_LAZY_SYMBOL_POINTERS ||
-            section_type == S_LAZY_SYMBOL_POINTERS ||
-            section_type == S_LAZY_DYLIB_SYMBOL_POINTERS ||
-            section_type == S_THREAD_LOCAL_VARIABLE_POINTERS ||
-            section_type == S_SYMBOL_STUBS)
-        {
+        if (section_type == S_NON_LAZY_SYMBOL_POINTERS || section_type == S_LAZY_SYMBOL_POINTERS ||
+            section_type == S_LAZY_DYLIB_SYMBOL_POINTERS || section_type == S_THREAD_LOCAL_VARIABLE_POINTERS ||
+            section_type == S_SYMBOL_STUBS) {
             IndirectSection indirectSection;
             if (section_type == S_SYMBOL_STUBS)
                 indirectSection.stride = section.reserved2;
@@ -268,11 +261,11 @@ private:
         }
 
         sections_.push_back(imageSection.get());
-        section2foff_[imageSection.get()]= section.offset;
+        section2foff_[imageSection.get()] = section.offset;
         image_->addSection(std::move(imageSection));
     }
 
-    template<class Mach>
+    template <class Mach>
     void parseSymtabCommand() {
         symtab_command command;
         if (!read(source_, command)) {
@@ -339,7 +332,7 @@ private:
         }
     }
 
-    template<class Mach>
+    template <class Mach>
     void parseDySymtabCommand() {
         dysymtab_command command;
         if (!read(source_, command)) {
@@ -374,17 +367,18 @@ private:
                 }
                 byteOrder_.convertFrom(symbolIndex);
 
-                if (! (symbolIndex & INDIRECT_SYMBOL_LOCAL || symbolIndex & INDIRECT_SYMBOL_ABS)) {
+                if (!(symbolIndex & INDIRECT_SYMBOL_LOCAL || symbolIndex & INDIRECT_SYMBOL_ABS)) {
                     if (symbolIndex >= symbols_.size()) {
                         throw ParseError(tr("Symbol index %1 is too large.").arg(symbolIndex));
                     }
-                    const core::image::Symbol * sym = symbols_[symbolIndex];
-                    image_->addSymbol(std::make_unique<core::image::Symbol>(sym->type(), sym->name(), indirectSection.addr + i, indirectSection.section));
+                    const core::image::Symbol *sym = symbols_[symbolIndex];
+                    image_->addSymbol(std::make_unique<core::image::Symbol>(
+                        sym->type(), sym->name(), indirectSection.addr + i, indirectSection.section));
                 }
             }
         }
     }
-    template<class Mach>
+    template <class Mach>
     void parseMainCommand() {
         entry_point_command command;
         if (!read(source_, command)) {
@@ -393,14 +387,14 @@ private:
         byteOrder_.convertFrom(command.entryoff);
 
         log_.debug(tr("Found an entry point offset %1.").arg(command.entryoff));
-        foreach(const auto &section, sections_) {
+        foreach (const auto &section, sections_) {
             auto offset = nc::find(section2foff_, section);
             assert(offset);
 
-            if (offset <= command.entryoff && command.entryoff < offset+section->size()) {
+            if (offset <= command.entryoff && command.entryoff < offset + section->size()) {
                 auto entrypoint = command.entryoff - offset + section->addr();
 
-                log_.debug(tr("Entry point = 0x%1.").arg(entrypoint,8, 16));
+                log_.debug(tr("Entry point = 0x%1.").arg(entrypoint, 8, 16));
                 image_->setEntryPoint(entrypoint);
                 break;
             }
@@ -410,9 +404,7 @@ private:
 
 } // anonymous namespace
 
-MachOParser::MachOParser():
-    core::input::Parser("Mach-O")
-{}
+MachOParser::MachOParser() : core::input::Parser("Mach-O") {}
 
 bool MachOParser::doCanParse(QIODevice *source) const {
     uint32_t magic;
@@ -431,14 +423,14 @@ void MachOParser::doParse(QIODevice *source, core::image::Image *image, const Lo
     }
 
     switch (bitnessAndByteOrder->first) {
-        case 32:
-            MachOParserImpl(source, image, log).parse<MachO32>();
-            break;
-        case 64:
-            MachOParserImpl(source, image, log).parse<MachO64>();
-            break;
-        default:
-            unreachable();
+    case 32:
+        MachOParserImpl(source, image, log).parse<MachO32>();
+        break;
+    case 64:
+        MachOParserImpl(source, image, log).parse<MachO64>();
+        break;
+    default:
+        unreachable();
     }
 }
 

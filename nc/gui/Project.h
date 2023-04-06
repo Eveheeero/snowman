@@ -31,24 +31,24 @@
 #include <memory>
 #include <vector>
 
-#include <nc/common/Types.h>
 #include <nc/common/LogToken.h>
+#include <nc/common/Types.h>
 
 namespace nc {
 
 namespace core {
-    class Context;
+class Context;
 
-    namespace arch {
-        class Instruction;
-        class Instructions;
-    }
+namespace arch {
+class Instruction;
+class Instructions;
+} // namespace arch
 
-    namespace image {
-        class ByteSource;
-        class Image;
-    }
-}
+namespace image {
+class ByteSource;
+class Image;
+} // namespace image
+} // namespace core
 
 namespace gui {
 
@@ -58,7 +58,7 @@ class Decompile;
 /**
  * Class providing high-level model of the decompilation project.
  */
-class Project: public QObject {
+class Project : public QObject {
     Q_OBJECT
 
     /** Name of the project. */
@@ -79,8 +79,7 @@ class Project: public QObject {
     /** Queue of user commands. */
     CommandQueue *commandQueue_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -132,7 +131,10 @@ class Project: public QObject {
     /**
      * \return Pointer to the current context instance. Can be nullptr.
      */
-    const std::shared_ptr<const core::Context> &context() const { assert(context_); return context_; }
+    const std::shared_ptr<const core::Context> &context() const {
+        assert(context_);
+        return context_;
+    }
 
     /**
      * Sets current context.
@@ -188,7 +190,7 @@ class Project: public QObject {
      */
     void decompile(const std::shared_ptr<const core::arch::Instructions> &instructions);
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     /**
      * Schedules disassembly of all code sections.
@@ -205,7 +207,7 @@ class Project: public QObject {
      */
     void cancelAll();
 
-    Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * Signal emitted when the project gets a new name.
@@ -227,7 +229,7 @@ class Project: public QObject {
      */
     void treeChanged();
 
-    private Q_SLOTS:
+private Q_SLOTS:
 
     /**
      * Takes and sets the set of instructions from context.
@@ -235,6 +237,7 @@ class Project: public QObject {
     void updateInstructions();
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

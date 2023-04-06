@@ -36,7 +36,7 @@ namespace likec {
 /**
  * Base class for unary operators.
  */
-class UnaryOperator: public Expression {
+class UnaryOperator : public Expression {
     NC_BASE_CLASS(UnaryOperator, operatorKind)
     std::unique_ptr<Expression> operand_; ///< Operand.
 
@@ -45,14 +45,14 @@ public:
      * Operator id.
      */
     enum Kind {
-        DEREFERENCE,            ///< *a
-        REFERENCE,              ///< &a
-        BITWISE_NOT,            ///< ~a
-        LOGICAL_NOT,            ///< !a
-        NEGATION,               ///< -a
-        PREFIX_INCREMENT,       ///< ++a
-        PREFIX_DECREMENT,       ///< --a
-        USER_OPERATOR = 1000    ///< Base value for user-defined operators.
+        DEREFERENCE,         ///< *a
+        REFERENCE,           ///< &a
+        BITWISE_NOT,         ///< ~a
+        LOGICAL_NOT,         ///< !a
+        NEGATION,            ///< -a
+        PREFIX_INCREMENT,    ///< ++a
+        PREFIX_DECREMENT,    ///< --a
+        USER_OPERATOR = 1000 ///< Base value for user-defined operators.
     };
 
     /**
@@ -61,8 +61,8 @@ public:
      * \param[in] operatorKind Operator's kind.
      * \param[in] operand Operand.
      */
-    UnaryOperator(int operatorKind, std::unique_ptr<Expression> operand):
-        Expression(UNARY_OPERATOR), operatorKind_(operatorKind), operand_(std::move(operand)) {}
+    UnaryOperator(int operatorKind, std::unique_ptr<Expression> operand)
+        : Expression(UNARY_OPERATOR), operatorKind_(operatorKind), operand_(std::move(operand)) {}
 
     /**
      * Sets operator's kind.

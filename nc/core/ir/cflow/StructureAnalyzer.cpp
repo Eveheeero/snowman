@@ -163,11 +163,10 @@ bool StructureAnalyzer::reduceConditional(Node *entry) {
     /*
      * IF_THEN_ELSE
      */
-    if (left->inEdges().size() == 1 && right->inEdges().size() == 1 &&
-        left->outEdges().size() <= 1 && right->outEdges().size() <= 1 &&
+    if (left->inEdges().size() == 1 && right->inEdges().size() == 1 && left->outEdges().size() <= 1 &&
+        right->outEdges().size() <= 1 &&
         (left->outEdges().empty() || right->outEdges().empty() ||
-         left->outEdges()[0]->head() == right->outEdges()[0]->head()))
-    {
+         left->outEdges()[0]->head() == right->outEdges()[0]->head())) {
         auto subregion = std::make_unique<Region>(Region::IF_THEN_ELSE);
         subregion->setEntry(entry);
         subregion->nodes().push_back(entry);
@@ -179,17 +178,15 @@ bool StructureAnalyzer::reduceConditional(Node *entry) {
     /*
      * IF_THEN
      */
-#define REDUCE(left, right)                                                         \
-    if (left->inEdges().size() == 1 &&                                              \
-        (left->outEdges().empty() ||                                                \
-         (left->outEdges().size() == 1 && left->outEdges()[0]->head() == right)))   \
-    {                                                                               \
-        auto subregion = std::make_unique<Region>(Region::IF_THEN);                 \
-        subregion->setEntry(entry);                                                 \
-        subregion->nodes().push_back(entry);                                        \
-        subregion->nodes().push_back(left);                                         \
-        subregion->setExitBasicBlock(right->getEntryBasicBlock());                  \
-        return insertSubregion(entry->parent(), std::move(subregion));              \
+#define REDUCE(left, right)                                                                                            \
+    if (left->inEdges().size() == 1 &&                                                                                 \
+        (left->outEdges().empty() || (left->outEdges().size() == 1 && left->outEdges()[0]->head() == right))) {        \
+        auto subregion = std::make_unique<Region>(Region::IF_THEN);                                                    \
+        subregion->setEntry(entry);                                                                                    \
+        subregion->nodes().push_back(entry);                                                                           \
+        subregion->nodes().push_back(left);                                                                            \
+        subregion->setExitBasicBlock(right->getEntryBasicBlock());                                                     \
+        return insertSubregion(entry->parent(), std::move(subregion));                                                 \
     }
     REDUCE(left, right)
     REDUCE(right, left)
@@ -222,16 +219,15 @@ bool StructureAnalyzer::reduceCompoundCondition(Node *entry) {
     Node *left = entry->outEdges()[0]->head();
     Node *right = entry->outEdges()[1]->head();
 
-#define REDUCE(left, right)                                                                 \
-    if (left->inEdges().size() == 1 && left->isFork() && left->isCondition() &&             \
-        ((left->outEdges()[0]->head() == right && left->outEdges()[1]->head() != entry) ||  \
-         (left->outEdges()[1]->head() == right && left->outEdges()[0]->head() != entry)))   \
-    {                                                                                       \
-        auto subregion = std::make_unique<Region>(Region::COMPOUND_CONDITION);              \
-        subregion->setEntry(entry);                                                         \
-        subregion->nodes().push_back(entry);                                                \
-        subregion->nodes().push_back(left);                                                 \
-        return insertSubregion(entry->parent(), std::move(subregion));                      \
+#define REDUCE(left, right)                                                                                            \
+    if (left->inEdges().size() == 1 && left->isFork() && left->isCondition() &&                                        \
+        ((left->outEdges()[0]->head() == right && left->outEdges()[1]->head() != entry) ||                             \
+         (left->outEdges()[1]->head() == right && left->outEdges()[0]->head() != entry))) {                            \
+        auto subregion = std::make_unique<Region>(Region::COMPOUND_CONDITION);                                         \
+        subregion->setEntry(entry);                                                                                    \
+        subregion->nodes().push_back(entry);                                                                           \
+        subregion->nodes().push_back(left);                                                                            \
+        return insertSubregion(entry->parent(), std::move(subregion));                                                 \
     }
     REDUCE(left, right)
     REDUCE(right, left)
@@ -248,9 +244,8 @@ struct LoopDescription {
     Node *bodyEntry;
     Node *exitNode;
 
-    LoopDescription(Region::RegionKind kind, Node *condition, Node *bodyEntry, Node *exitNode):
-        kind(kind), condition(condition), bodyEntry(bodyEntry), exitNode(exitNode)
-    {}
+    LoopDescription(Region::RegionKind kind, Node *condition, Node *bodyEntry, Node *exitNode)
+        : kind(kind), condition(condition), bodyEntry(bodyEntry), exitNode(exitNode) {}
 };
 
 } // anonymous namespace
@@ -413,8 +408,7 @@ bool StructureAnalyzer::reduceSwitch(Node *entry) {
             if (const Jump *jump = basicBlockNode->basicBlock()->getJump()) {
                 if (auto boundsCheck = misc::recognizeBoundsCheck(jump, entry->getEntryBasicBlock(), dataflow_)) {
                     if (dflow::getFirstCopy(boundsCheck.index(), dataflow_) ==
-                        dflow::getFirstCopy(arrayAccess.index(), dataflow_))
-                    {
+                        dflow::getFirstCopy(arrayAccess.index(), dataflow_)) {
                         boundsCheckNode = basicBlockNode;
                         jumpTableSize = std::min(jumpTableSize, static_cast<std::size_t>(boundsCheck.maxValue() + 1));
                     }
@@ -579,12 +573,9 @@ Region *StructureAnalyzer::insertSubregion(Region *region, std::unique_ptr<Regio
         node->setParent(subregion.get());
     }
 
-    region->nodes().erase(
-        std::remove_if(
-            region->nodes().begin(),
-            region->nodes().end(),
-            [&](Node *n) { return n->parent() == subregion.get(); }),
-        region->nodes().end());
+    region->nodes().erase(std::remove_if(region->nodes().begin(), region->nodes().end(),
+                                         [&](Node *n) { return n->parent() == subregion.get(); }),
+                          region->nodes().end());
 
     subregion->setParent(region);
     region->nodes().push_back(subregion.get());

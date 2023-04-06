@@ -36,65 +36,65 @@ namespace nc {
 namespace core {
 
 namespace arch {
-    class Instructions;
+class Instructions;
 }
 
 namespace image {
-    class Image;
+class Image;
 }
 
 namespace ir {
-    class Function;
-    class Functions;
-    class Program;
+class Function;
+class Functions;
+class Program;
 
-    namespace calling {
-        class Conventions;
-        class Hooks;
-        class Signatures;
-    }
-    namespace cflow {
-        class Graphs;
-    }
-    namespace dflow {
-        class Dataflows;
-    }
-    namespace types {
-        class Types;
-    }
-    namespace liveness {
-        class Livenesses;
-    }
-    namespace vars {
-        class Variables;
-    }
+namespace calling {
+class Conventions;
+class Hooks;
+class Signatures;
+} // namespace calling
+namespace cflow {
+class Graphs;
 }
+namespace dflow {
+class Dataflows;
+}
+namespace types {
+class Types;
+}
+namespace liveness {
+class Livenesses;
+}
+namespace vars {
+class Variables;
+}
+} // namespace ir
 
 namespace likec {
-    class Tree;
+class Tree;
 }
 
 /**
  * 디컴파일 과정중에 필요한 모든 정보를 저장하고 있는 클래스
  */
-class Context: public QObject {
+class Context : public QObject {
     Q_OBJECT
 
-    std::shared_ptr<image::Image> image_; ///< 디컴파일할 실행 프로그램
+    std::shared_ptr<image::Image> image_;                    ///< 디컴파일할 실행 프로그램
     std::shared_ptr<const arch::Instructions> instructions_; ///< 디컴파일된 인스트럭션
-    std::unique_ptr<ir::Program> program_; ///< 분석에 사용되는 Program.
-    std::unique_ptr<ir::Functions> functions_; ///< 분석에 사용되는 Functions.
-    std::unique_ptr<ir::calling::Conventions> conventions_; ///< Assigned calling conventions.
-    std::unique_ptr<ir::calling::Hooks> hooks_; ///< 분석에 사용되는 후크 매니저.
-    std::unique_ptr<ir::calling::Signatures> signatures_; ///< Signatures.
-    std::unique_ptr<ir::dflow::Dataflows> dataflows_; ///< Dataflows.
-    std::unique_ptr<ir::vars::Variables> variables_; ///< Reconstructed variables.
-    std::unique_ptr<ir::cflow::Graphs> graphs_; ///< Structured graphs.
-    std::unique_ptr<ir::liveness::Livenesses> livenesses_; ///< Liveness information.
-    std::unique_ptr<ir::types::Types> types_; ///< Information about types.
-    std::unique_ptr<likec::Tree> tree_; ///< Abstract syntax tree of the LikeC program.
-    LogToken logToken_; ///< Log token.
-    CancellationToken cancellationToken_; ///< Cancellation token.
+    std::unique_ptr<ir::Program> program_;                   ///< 분석에 사용되는 Program.
+    std::unique_ptr<ir::Functions> functions_;               ///< 분석에 사용되는 Functions.
+    std::unique_ptr<ir::calling::Conventions> conventions_;  ///< Assigned calling conventions.
+    std::unique_ptr<ir::calling::Hooks> hooks_;              ///< 분석에 사용되는 후크 매니저.
+    std::unique_ptr<ir::calling::Signatures> signatures_;    ///< Signatures.
+    std::unique_ptr<ir::dflow::Dataflows> dataflows_;        ///< Dataflows.
+    std::unique_ptr<ir::vars::Variables> variables_;         ///< Reconstructed variables.
+    std::unique_ptr<ir::cflow::Graphs> graphs_;              ///< Structured graphs.
+    std::unique_ptr<ir::liveness::Livenesses> livenesses_;   ///< Liveness information.
+    std::unique_ptr<ir::types::Types> types_;                ///< Information about types.
+    std::unique_ptr<likec::Tree> tree_;                      ///< Abstract syntax tree of the LikeC program.
+    LogToken logToken_;                                      ///< Log token.
+    CancellationToken cancellationToken_;                    ///< Cancellation token.
 
 public:
     /**
@@ -317,7 +317,7 @@ public:
      */
     const LogToken &logToken() const { return logToken_; }
 
-    Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * Signal emitted when the set of instructions is changed.

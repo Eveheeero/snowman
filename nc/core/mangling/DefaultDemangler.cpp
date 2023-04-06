@@ -9,8 +9,8 @@
 #include <undname/undname.h>
 
 extern "C" {
-    /* Provided by libiberty. */
-    char *__cxa_demangle(const char *mangled_name, char *output_buffer, size_t *length, int *status);
+/* Provided by libiberty. */
+char *__cxa_demangle(const char *mangled_name, char *output_buffer, size_t *length, int *status);
 }
 
 namespace nc {
@@ -20,9 +20,7 @@ namespace mangling {
 namespace {
 
 struct FreeDeleter {
-    void operator()(void *ptr) const {
-        free(ptr);
-    }
+    void operator()(void *ptr) const { free(ptr); }
 };
 
 QString doDemangle(const char *symbol) {
@@ -52,6 +50,8 @@ QString DefaultDemangler::demangle(const QString &symbol) const {
     return result;
 }
 
-}}} // namespace nc::core::mangling
+} // namespace mangling
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

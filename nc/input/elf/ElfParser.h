@@ -34,7 +34,7 @@ namespace elf {
 /**
  * Parser for ELF32 and ELF64 formats.
  */
-class ElfParser: public core::input::Parser {
+class ElfParser : public core::input::Parser {
 public:
     /**
      * Constructor.

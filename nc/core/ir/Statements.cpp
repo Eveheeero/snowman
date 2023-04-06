@@ -47,9 +47,8 @@ void InlineAssembly::print(QTextStream &out) const {
     out << " }" << '\n';
 }
 
-Assignment::Assignment(std::unique_ptr<Term> left, std::unique_ptr<Term> right):
-    Statement(ASSIGNMENT), left_(std::move(left)), right_(std::move(right))
-{
+Assignment::Assignment(std::unique_ptr<Term> left, std::unique_ptr<Term> right)
+    : Statement(ASSIGNMENT), left_(std::move(left)), right_(std::move(right)) {
     assert(left_);
     assert(right_);
     assert(left_->size() == right_->size());
@@ -66,9 +65,8 @@ void Assignment::print(QTextStream &out) const {
     out << *left_ << " = " << *right_ << '\n';
 }
 
-Touch::Touch(std::unique_ptr<Term> term, Term::AccessType accessType):
-    Statement(TOUCH), term_(std::move(term)), accessType_(accessType)
-{
+Touch::Touch(std::unique_ptr<Term> term, Term::AccessType accessType)
+    : Statement(TOUCH), term_(std::move(term)), accessType_(accessType) {
     assert(term_);
 
     term_->setStatement(this);
@@ -80,22 +78,19 @@ std::unique_ptr<Statement> Touch::doClone() const {
 
 void Touch::print(QTextStream &out) const {
     switch (term()->accessType()) {
-        case Term::READ:
-            out << "read";
-            break;
-        case Term::WRITE:
-            out << "write";
-            break;
-        default:
-            unreachable();
+    case Term::READ:
+        out << "read";
+        break;
+    case Term::WRITE:
+        out << "write";
+        break;
+    default:
+        unreachable();
     }
     out << "(" << *term_ << ")" << '\n';
 }
 
-Call::Call(std::unique_ptr<Term> target):
-    Statement(CALL), 
-    target_(std::move(target))
-{
+Call::Call(std::unique_ptr<Term> target) : Statement(CALL), target_(std::move(target)) {
     assert(target_ != nullptr);
 
     target_->setStatement(this);

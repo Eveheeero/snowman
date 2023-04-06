@@ -39,8 +39,7 @@ class Graph;
  * Class building control flow graph from function's basic blocks.
  */
 class GraphBuilder {
-    public:
-
+public:
     /**
      * Builds control flow graph.
      *

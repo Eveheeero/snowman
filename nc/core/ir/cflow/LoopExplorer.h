@@ -44,11 +44,7 @@ class Node;
  */
 class LoopExplorer {
     /** Node color. */
-    enum NodeColor {
-        WHITE,
-        GRAY,
-        BLACK
-    };
+    enum NodeColor { WHITE, GRAY, BLACK };
 
     /** Entry node of a potential loop. */
     Node *entry_;

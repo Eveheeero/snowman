@@ -52,7 +52,7 @@ class Statement;
 /**
  * Base class for different kinds of expressions of intermediate representation.
  */
-class Term: public Printable, boost::noncopyable {
+class Term : public Printable, boost::noncopyable {
     NC_BASE_CLASS(Term, kind)
 
 public:
@@ -60,25 +60,25 @@ public:
      * Term kind.
      */
     enum {
-        INT_CONST, ///< Integer constant.
-        INTRINSIC, ///< Some special value.
+        INT_CONST,              ///< Integer constant.
+        INTRINSIC,              ///< Some special value.
         MEMORY_LOCATION_ACCESS, ///< Access to an abstract memory location.
-        DEREFERENCE, ///< Dereference.
-        UNARY_OPERATOR, ///< Unary operator.
-        BINARY_OPERATOR, ///< Binary operator.
+        DEREFERENCE,            ///< Dereference.
+        UNARY_OPERATOR,         ///< Unary operator.
+        BINARY_OPERATOR,        ///< Binary operator.
     };
 
     /**
      * How term is used.
      */
     enum AccessType {
-        READ,      ///< Term is read.
-        WRITE,     ///< Term is written.
+        READ,  ///< Term is read.
+        WRITE, ///< Term is written.
     };
 
 private:
     const Statement *statement_; ///< Statement that this term belongs to.
-    SmallBitSize size_; ///< Size of this term's value in bits.
+    SmallBitSize size_;          ///< Size of this term's value in bits.
 
 public:
     /**
@@ -87,11 +87,7 @@ public:
      * \param[in] kind Kind of this term.
      * \param[in] size Size of this term's value in bits.
      */
-    Term(int kind, SmallBitSize size):
-        kind_(kind), statement_(nullptr), size_(size)
-    {
-        assert(size != 0);
-    }
+    Term(int kind, SmallBitSize size) : kind_(kind), statement_(nullptr), size_(size) { assert(size != 0); }
 
     /**
      * \returns Size of this term's value in bits.
@@ -182,7 +178,9 @@ protected:
     virtual void doCallOnChildren(const std::function<void(Term *)> &fun) = 0;
 };
 
-}}} // namespace nc::core::ir
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /**
  * Defines a compile-time mapping from term class to term kind.
@@ -194,14 +192,13 @@ protected:
  * \param CLASS Term class.
  * \param KIND  Term kind.
  */
-#define NC_REGISTER_TERM_CLASS(CLASS, KIND)                                     \
-    NC_SUBCLASS(nc::core::ir::Term, CLASS, KIND)
+#define NC_REGISTER_TERM_CLASS(CLASS, KIND) NC_SUBCLASS(nc::core::ir::Term, CLASS, KIND)
 
-NC_REGISTER_TERM_CLASS(nc::core::ir::Constant,             nc::core::ir::Term::INT_CONST)
-NC_REGISTER_TERM_CLASS(nc::core::ir::Intrinsic,            nc::core::ir::Term::INTRINSIC)
+NC_REGISTER_TERM_CLASS(nc::core::ir::Constant, nc::core::ir::Term::INT_CONST)
+NC_REGISTER_TERM_CLASS(nc::core::ir::Intrinsic, nc::core::ir::Term::INTRINSIC)
 NC_REGISTER_TERM_CLASS(nc::core::ir::MemoryLocationAccess, nc::core::ir::Term::MEMORY_LOCATION_ACCESS)
-NC_REGISTER_TERM_CLASS(nc::core::ir::Dereference,          nc::core::ir::Term::DEREFERENCE)
-NC_REGISTER_TERM_CLASS(nc::core::ir::UnaryOperator,        nc::core::ir::Term::UNARY_OPERATOR)
-NC_REGISTER_TERM_CLASS(nc::core::ir::BinaryOperator,       nc::core::ir::Term::BINARY_OPERATOR)
+NC_REGISTER_TERM_CLASS(nc::core::ir::Dereference, nc::core::ir::Term::DEREFERENCE)
+NC_REGISTER_TERM_CLASS(nc::core::ir::UnaryOperator, nc::core::ir::Term::UNARY_OPERATOR)
+NC_REGISTER_TERM_CLASS(nc::core::ir::BinaryOperator, nc::core::ir::Term::BINARY_OPERATOR)
 
 /* vim:set et sts=4 sw=4: */

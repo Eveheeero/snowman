@@ -44,10 +44,10 @@ EntryHook::EntryHook(const Convention *convention, const FunctionSignature *sign
     auto &statements = patch_.statements();
 
     if (convention->stackPointer()) {
-        statements.push_back(std::make_unique<Assignment>(
-            std::make_unique<MemoryLocationAccess>(convention->stackPointer()),
-            std::make_unique<Intrinsic>(Intrinsic::ZERO_STACK_OFFSET, convention->stackPointer().size<SmallBitSize>())
-        ));
+        statements.push_back(
+            std::make_unique<Assignment>(std::make_unique<MemoryLocationAccess>(convention->stackPointer()),
+                                         std::make_unique<Intrinsic>(Intrinsic::ZERO_STACK_OFFSET,
+                                                                     convention->stackPointer().size<SmallBitSize>())));
     }
 
     foreach (auto statement, convention->entryStatements()) {
@@ -59,9 +59,7 @@ EntryHook::EntryHook(const Convention *convention, const FunctionSignature *sign
         argumentTerms_[term] = clone.get();
 
         statements.push_back(std::make_unique<Assignment>(
-            std::move(clone),
-            std::make_unique<Intrinsic>(Intrinsic::UNDEFINED, term->size())
-        ));
+            std::move(clone), std::make_unique<Intrinsic>(Intrinsic::UNDEFINED, term->size())));
     };
 
     if (signature) {

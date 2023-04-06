@@ -34,13 +34,13 @@ namespace nc {
 /**
  * Logger converting log() calls to signals.
  */
-class SignalLogger: public QObject, public nc::Logger {
+class SignalLogger : public QObject, public nc::Logger {
     Q_OBJECT
 
 public:
     void log(LogLevel level, const QString &text) override;
 
-Q_SIGNAL
+    Q_SIGNAL
     /**
      * Signal emitted when there is a message to be logged.
      *

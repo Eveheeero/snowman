@@ -41,9 +41,7 @@ Q_DECLARE_METATYPE(const nc::core::image::Section *)
 namespace nc {
 namespace gui {
 
-DisassemblyDialog::DisassemblyDialog(QWidget *parent):
-    QDialog(parent, Qt::Dialog)
-{
+DisassemblyDialog::DisassemblyDialog(QWidget *parent) : QDialog(parent, Qt::Dialog) {
     setWindowTitle(tr("Disassemble"));
 
     sectionComboBox_ = new QComboBox(this);
@@ -128,13 +126,15 @@ void DisassemblyDialog::accept() {
 
     auto startAddr = startAddress();
     if (!startAddr || *startAddr < section->addr() || *startAddr > section->endAddr()) {
-        QMessageBox::critical(this, tr("Error"), tr("Please, specify the start address within the section's address range."));
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Please, specify the start address within the section's address range."));
         return;
     }
 
     auto endAddr = endAddress();
     if (!endAddr || *endAddr < section->addr() || *endAddr > section->endAddr()) {
-        QMessageBox::critical(this, tr("Error"), tr("Please, specify the end address within the section's address range."));
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Please, specify the end address within the section's address range."));
         return;
     }
 
@@ -146,6 +146,7 @@ void DisassemblyDialog::accept() {
     QDialog::accept();
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

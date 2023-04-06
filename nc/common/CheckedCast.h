@@ -27,74 +27,63 @@
 
 #include <cassert>
 
-#include <limits>
+#include <boost/mpl/and.hpp>
 #include <boost/type_traits/is_integral.hpp>
-#include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/type_traits/is_pointer.hpp>
+#include <boost/type_traits/is_polymorphic.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/mpl/and.hpp>
+#include <limits>
 
 namespace nc {
 
-    /**
-     * Performs a static numeric cast with range checking in debug build.
-     * 
-     * \param value                    Value to cast.
-     * \returns                        Cast result.
-     */
-    template<class To, class From>
-    typename boost::enable_if<
-        boost::mpl::and_<
-            boost::is_integral<To>,
-            boost::is_integral<From>
-        >,
-        To
-    >::type checked_cast(const From &value) {
-        assert(static_cast<From>(static_cast<To>(value)) == value);
+/**
+ * Performs a static numeric cast with range checking in debug build.
+ *
+ * \param value                    Value to cast.
+ * \returns                        Cast result.
+ */
+template <class To, class From>
+typename boost::enable_if<boost::mpl::and_<boost::is_integral<To>, boost::is_integral<From>>, To>::type
+checked_cast(const From &value) {
+    assert(static_cast<From>(static_cast<To>(value)) == value);
 
-        return static_cast<To>(value);
-    }
+    return static_cast<To>(value);
+}
 
-    /**
-     * Performs a static cast that is checked in debug build.
-     * 
-     * \param source                   Pointer to cast.
-     * \returns                        Cast result.
-     */
-    template<class To, class From>
-    typename boost::enable_if<
-        boost::is_polymorphic<From>,
-        To
-    >::type checked_cast(From *source) {
-        static_assert(boost::is_pointer<To>::value, "Target type must be a pointer");
+/**
+ * Performs a static cast that is checked in debug build.
+ *
+ * \param source                   Pointer to cast.
+ * \returns                        Cast result.
+ */
+template <class To, class From>
+typename boost::enable_if<boost::is_polymorphic<From>, To>::type checked_cast(From *source) {
+    static_assert(boost::is_pointer<To>::value, "Target type must be a pointer");
 #ifndef NDEBUG
-        To result = dynamic_cast<To>(source);
-        assert(source == nullptr || result != nullptr);
-        return result;
+    To result = dynamic_cast<To>(source);
+    assert(source == nullptr || result != nullptr);
+    return result;
 #else
-        return static_cast<To>(source);
+    return static_cast<To>(source);
 #endif // NDEBUG
-    }
+}
 
-    /**
-     * Performs a static cast that is checked in debug build.
-     * 
-     * \param source                   Value to cast.
-     * \returns                        Cast result.
-     */
-    template<class To, class From>
-    typename boost::enable_if<
-        boost::is_polymorphic<From>,
-        To
-    >::type checked_cast(From &source) {
-        static_assert(boost::is_reference<To>::value, "Target type must be a reference");
+/**
+ * Performs a static cast that is checked in debug build.
+ *
+ * \param source                   Value to cast.
+ * \returns                        Cast result.
+ */
+template <class To, class From>
+typename boost::enable_if<boost::is_polymorphic<From>, To>::type checked_cast(From &source) {
+    static_assert(boost::is_reference<To>::value, "Target type must be a reference");
 #ifndef NDEBUG
-        return dynamic_cast<To>(source);
+    return dynamic_cast<To>(source);
 #else
-        return static_cast<To>(source);
+    return static_cast<To>(source);
 #endif // NDEBUG
-    }
+}
 
 } // namespace nc
 

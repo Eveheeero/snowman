@@ -38,20 +38,19 @@ typedef int Domain;
  * Memory domains.
  */
 class MemoryDomain {
-    public:
-
+public:
     enum {
-        UNKNOWN,                ///< Unknown area.
-        MEMORY,                 ///< Global memory area.
-        STACK,                  ///< Stack frame area.
-        FIRST_REGISTER = 1000,  ///< First register's domain.
-        LAST_REGISTER  = 10000, ///< Last register's domain.
-        USER = 65536,           ///< First user-defined domain.
+        UNKNOWN,               ///< Unknown area.
+        MEMORY,                ///< Global memory area.
+        STACK,                 ///< Stack frame area.
+        FIRST_REGISTER = 1000, ///< First register's domain.
+        LAST_REGISTER = 10000, ///< Last register's domain.
+        USER = 65536,          ///< First user-defined domain.
     };
 };
 
-} // namespace core
 } // namespace ir
+} // namespace core
 } // namespace nc
 
 /* vim:set et sts=4 sw=4: */

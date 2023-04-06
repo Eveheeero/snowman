@@ -53,9 +53,8 @@ void Intrinsic::print(QTextStream &out) const {
     out << "intrinsic(" << intrinsicKind() << ")";
 }
 
-MemoryLocationAccess::MemoryLocationAccess(const MemoryLocation &memoryLocation):
-    Term(MEMORY_LOCATION_ACCESS, memoryLocation.size<SmallBitSize>()), memoryLocation_(memoryLocation)
-{}
+MemoryLocationAccess::MemoryLocationAccess(const MemoryLocation &memoryLocation)
+    : Term(MEMORY_LOCATION_ACCESS, memoryLocation.size<SmallBitSize>()), memoryLocation_(memoryLocation) {}
 
 std::unique_ptr<Term> MemoryLocationAccess::doClone() const {
     return std::make_unique<MemoryLocationAccess>(memoryLocation());
@@ -67,9 +66,8 @@ void MemoryLocationAccess::print(QTextStream &out) const {
     out << memoryLocation_;
 }
 
-Dereference::Dereference(std::unique_ptr<Term> address, Domain domain, SmallBitSize size):
-    Term(DEREFERENCE, size), domain_(domain), address_(std::move(address))
-{}
+Dereference::Dereference(std::unique_ptr<Term> address, Domain domain, SmallBitSize size)
+    : Term(DEREFERENCE, size), domain_(domain), address_(std::move(address)) {}
 
 std::unique_ptr<Term> Dereference::doClone() const {
     return std::make_unique<Dereference>(address()->clone(), domain(), size());
@@ -83,23 +81,22 @@ void Dereference::print(QTextStream &out) const {
     out << "[" << *address() << "]";
 }
 
-UnaryOperator::UnaryOperator(int operatorKind, std::unique_ptr<Term> operand, SmallBitSize size):
-    Term(UNARY_OPERATOR, size), 
-    operatorKind_(operatorKind), 
-    operand_(std::move(operand))
-{
+UnaryOperator::UnaryOperator(int operatorKind, std::unique_ptr<Term> operand, SmallBitSize size)
+    : Term(UNARY_OPERATOR, size), operatorKind_(operatorKind), operand_(std::move(operand)) {
     assert(operand_ != nullptr);
 
     switch (operatorKind) {
-        case NOT: case NEGATION:
-            assert(size == operand_->size());
-            break;
-        case SIGN_EXTEND: case ZERO_EXTEND:
-            assert(size > operand_->size());
-            break;
-        case TRUNCATE:
-            assert(size < operand_->size());
-            break;
+    case NOT:
+    case NEGATION:
+        assert(size == operand_->size());
+        break;
+    case SIGN_EXTEND:
+    case ZERO_EXTEND:
+        assert(size > operand_->size());
+        break;
+    case TRUNCATE:
+        assert(size < operand_->size());
+        break;
     }
 }
 
@@ -113,53 +110,63 @@ void UnaryOperator::doCallOnChildren(const std::function<void(Term *)> &fun) {
 
 void UnaryOperator::print(QTextStream &out) const {
     switch (operatorKind()) {
-        case NOT:
-            out << '~';
-            break;
-        case NEGATION:
-            out << '-';
-            break;
-        case SIGN_EXTEND:
-            out << "sign_extend ";
-            break;
-        case ZERO_EXTEND:
-            out << "zero_extend ";
-            break;
-        case TRUNCATE:
-            out << "truncate ";
-            break;
-        default:
-            unreachable();
-            break;
+    case NOT:
+        out << '~';
+        break;
+    case NEGATION:
+        out << '-';
+        break;
+    case SIGN_EXTEND:
+        out << "sign_extend ";
+        break;
+    case ZERO_EXTEND:
+        out << "zero_extend ";
+        break;
+    case TRUNCATE:
+        out << "truncate ";
+        break;
+    default:
+        unreachable();
+        break;
     }
     out << *operand();
 }
 
-BinaryOperator::BinaryOperator(int operatorKind, std::unique_ptr<Term> left, std::unique_ptr<Term> right, SmallBitSize size):
-    Term(BINARY_OPERATOR, size), operatorKind_(operatorKind), left_(std::move(left)), right_(std::move(right))
-{
+BinaryOperator::BinaryOperator(int operatorKind, std::unique_ptr<Term> left, std::unique_ptr<Term> right,
+                               SmallBitSize size)
+    : Term(BINARY_OPERATOR, size), operatorKind_(operatorKind), left_(std::move(left)), right_(std::move(right)) {
     assert(left_ != nullptr);
     assert(right_ != nullptr);
 
     switch (operatorKind) {
-        case AND: case OR: case XOR:
-        case ADD: case SUB: case MUL:
-        case SIGNED_DIV: case SIGNED_REM:
-        case UNSIGNED_DIV: case UNSIGNED_REM:
-            assert(left_->size() == right_->size());
-            assert(size == left_->size());
-            break;
+    case AND:
+    case OR:
+    case XOR:
+    case ADD:
+    case SUB:
+    case MUL:
+    case SIGNED_DIV:
+    case SIGNED_REM:
+    case UNSIGNED_DIV:
+    case UNSIGNED_REM:
+        assert(left_->size() == right_->size());
+        assert(size == left_->size());
+        break;
 
-        case SHL: case SHR: case SAR:
-            assert(size == left_->size());
-            break;
+    case SHL:
+    case SHR:
+    case SAR:
+        assert(size == left_->size());
+        break;
 
-        case EQUAL:
-        case SIGNED_LESS: case SIGNED_LESS_OR_EQUAL:
-        case UNSIGNED_LESS: case UNSIGNED_LESS_OR_EQUAL:
-            assert(left_->size() == right_->size());
-            assert(size == 1);
-            break;
+    case EQUAL:
+    case SIGNED_LESS:
+    case SIGNED_LESS_OR_EQUAL:
+    case UNSIGNED_LESS:
+    case UNSIGNED_LESS_OR_EQUAL:
+        assert(left_->size() == right_->size());
+        assert(size == 1);
+        break;
     }
 }
 
@@ -175,63 +182,63 @@ void BinaryOperator::doCallOnChildren(const std::function<void(Term *)> &fun) {
 void BinaryOperator::print(QTextStream &out) const {
     out << '(' << *left() << ' ';
     switch (operatorKind()) {
-        case AND:
-            out << '&';
-            break;
-        case OR:
-            out << '|';
-            break;
-        case XOR:
-            out << '^';
-            break;
-        case SHL:
-            out << "<<";
-            break;
-        case SHR:
-            out << ">>>";
-            break;
-        case SAR:
-            out << ">>";
-            break;
-        case ADD:
-            out << '+';
-            break;
-        case SUB:
-            out << '-';
-            break;
-        case MUL:
-            out << '*';
-            break;
-        case SIGNED_DIV:
-            out << "(signed)/";
-            break;
-        case SIGNED_REM:
-            out << "(signed)%";
-            break;
-        case UNSIGNED_DIV:
-            out << "(unsigned)/";
-            break;
-        case UNSIGNED_REM:
-            out << "(unsigned)%";
-            break;
-        case EQUAL:
-            out << "==";
-            break;
-        case SIGNED_LESS:
-            out << "(signed)<";
-            break;
-        case SIGNED_LESS_OR_EQUAL:
-            out << "(signed)<=";
-            break;
-        case UNSIGNED_LESS:
-            out << "(unsigned)<";
-            break;
-        case UNSIGNED_LESS_OR_EQUAL:
-            out << "(unsigned)<=";
-            break;
-        default:
-            unreachable();
-            break;
+    case AND:
+        out << '&';
+        break;
+    case OR:
+        out << '|';
+        break;
+    case XOR:
+        out << '^';
+        break;
+    case SHL:
+        out << "<<";
+        break;
+    case SHR:
+        out << ">>>";
+        break;
+    case SAR:
+        out << ">>";
+        break;
+    case ADD:
+        out << '+';
+        break;
+    case SUB:
+        out << '-';
+        break;
+    case MUL:
+        out << '*';
+        break;
+    case SIGNED_DIV:
+        out << "(signed)/";
+        break;
+    case SIGNED_REM:
+        out << "(signed)%";
+        break;
+    case UNSIGNED_DIV:
+        out << "(unsigned)/";
+        break;
+    case UNSIGNED_REM:
+        out << "(unsigned)%";
+        break;
+    case EQUAL:
+        out << "==";
+        break;
+    case SIGNED_LESS:
+        out << "(signed)<";
+        break;
+    case SIGNED_LESS_OR_EQUAL:
+        out << "(signed)<=";
+        break;
+    case UNSIGNED_LESS:
+        out << "(unsigned)<";
+        break;
+    case UNSIGNED_LESS_OR_EQUAL:
+        out << "(unsigned)<=";
+        break;
+    default:
+        unreachable();
+        break;
     }
     out << ' ' << *right() << ')';
 }

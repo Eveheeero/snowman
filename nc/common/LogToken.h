@@ -52,11 +52,7 @@ public:
      *
      * \param logger Valid pointer to a logger.
      */
-    LogToken(std::shared_ptr<Logger> logger):
-        logger_(std::move(logger))
-    {
-        assert(logger_);
-    }
+    LogToken(std::shared_ptr<Logger> logger) : logger_(std::move(logger)) { assert(logger_); }
 
     /**
      * Logs a message with a given level.

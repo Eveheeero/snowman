@@ -21,20 +21,22 @@
  * along with SmartDec decompiler.  If not, see <http://www.gnu.org/licenses/>.
  */
 
-#pragma once 
+#pragma once
 
-#include <nc/config.h>
 #include <nc/common/Foreach.h>
+#include <nc/config.h>
 #include <nc/core/ir/MemoryLocation.h>
 
 #include <vector>
 
-#include <QString>
 #include <QHash>
+#include <QString>
 
 #include "Register.h"
 
-namespace nc { namespace core { namespace arch {
+namespace nc {
+namespace core {
+namespace arch {
 
 class Register;
 
@@ -52,16 +54,14 @@ public:
      * Virtual destructor.
      */
     virtual ~Registers() {
-        foreach(const core::arch::Register *regizter, mRegisters)
+        foreach (const core::arch::Register *regizter, mRegisters)
             delete regizter;
     }
 
     /**
      * \returns                        All registers.
      */
-    const std::vector<const Register *> &registers() const {
-        return mRegisters;
-    }
+    const std::vector<const Register *> &registers() const { return mRegisters; }
 
     /**
      * \param number                   Register number.
@@ -69,7 +69,7 @@ public:
      *                                 no such register exists.
      */
     const Register *getRegister(int number) const {
-        if(number < 0 || static_cast<std::size_t>(number) >= mRegisterByNumber.size())
+        if (number < 0 || static_cast<std::size_t>(number) >= mRegisterByNumber.size())
             return nullptr;
 
         return mRegisterByNumber[number];
@@ -88,7 +88,7 @@ protected:
     /**
      * Registers the given register. This register container takes ownership of
      * the given register.
-     * 
+     *
      * \param[in] reg   Valid pointer to a register.
      */
     void registerRegister(Register *reg) {
@@ -116,34 +116,29 @@ private:
     QHash<ir::MemoryLocation, Register *> mRegisterByLocation;
 };
 
-
 /**
  * Base class for static register containers.
  */
-template<class Derived>
-class StaticRegisters: public Registers {
+template <class Derived>
+class StaticRegisters : public Registers {
 public:
-    static const std::vector<const Register *> &registers() {
-        return instance()->Registers::registers();
-    }
+    static const std::vector<const Register *> &registers() { return instance()->Registers::registers(); }
 
-    static const Register *getRegister(int number) {
-        return instance()->Registers::getRegister(number);
-    }
+    static const Register *getRegister(int number) { return instance()->Registers::getRegister(number); }
 
     static const Register *getRegister(const ir::MemoryLocation &location) {
         return instance()->Registers::getRegister(location);
     }
 
-    static Derived *instance() {
-        return &sInstance;
-    }
+    static Derived *instance() { return &sInstance; }
 
 private:
     static Derived sInstance;
 };
 
-template<class Derived>
+template <class Derived>
 Derived StaticRegisters<Derived>::sInstance;
 
-}}} // namespace nc::core::arch
+} // namespace arch
+} // namespace core
+} // namespace nc

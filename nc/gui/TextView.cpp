@@ -47,11 +47,10 @@
 #include "SearchWidget.h"
 #include "TextEditSearcher.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-TextView::TextView(const QString &title, QWidget *parent):
-    QDockWidget(title, parent)
-{
+TextView::TextView(const QString &title, QWidget *parent) : QDockWidget(title, parent) {
     textEdit_ = new QPlainTextEdit(this);
     textEdit_->setTextInteractionFlags(Qt::TextSelectableByKeyboard | Qt::TextSelectableByMouse);
     textEdit_->setLineWrapMode(QPlainTextEdit::NoWrap);
@@ -185,16 +184,12 @@ void TextView::highlight(std::vector<Range<int>> ranges, bool ensureVisible) {
         if (ensureVisible) {
             std::vector<Range<int>> difference;
 
-            set_difference(
-                ranges.begin(), ranges.end(),
-                highlighting_.begin(), highlighting_.end(),
-                std::back_inserter(difference));
+            set_difference(ranges.begin(), ranges.end(), highlighting_.begin(), highlighting_.end(),
+                           std::back_inserter(difference));
 
             if (difference.empty()) {
-                set_difference(
-                    highlighting_.begin(), highlighting_.end(),
-                    ranges.begin(), ranges.end(),
-                    std::back_inserter(difference));
+                set_difference(highlighting_.begin(), highlighting_.end(), ranges.begin(), ranges.end(),
+                               std::back_inserter(difference));
             }
 
             if (!difference.empty()) {
@@ -297,11 +292,11 @@ bool TextView::eventFilter(QObject *watched, QEvent *event) {
             auto wheelEvent = static_cast<QWheelEvent *>(event);
 
             int delta;
-            #if QT_VERSION >= 0x050000
-                delta = wheelEvent->angleDelta().y();
-            #else
-                delta = wheelEvent->orientation() == Qt::Vertical ? wheelEvent->delta() : 0;
-            #endif
+#if QT_VERSION >= 0x050000
+            delta = wheelEvent->angleDelta().y();
+#else
+            delta = wheelEvent->orientation() == Qt::Vertical ? wheelEvent->delta() : 0;
+#endif
 
             if (wheelEvent->modifiers() & Qt::ControlModifier) {
                 if (delta > 0) {
@@ -316,6 +311,7 @@ bool TextView::eventFilter(QObject *watched, QEvent *event) {
     return QDockWidget::eventFilter(watched, event);
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

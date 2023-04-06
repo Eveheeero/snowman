@@ -26,8 +26,8 @@
 
 #include <cassert>
 
-#include <nc/common/make_unique.h>
 #include <nc/common/Foreach.h>
+#include <nc/common/make_unique.h>
 
 #include <nc/core/Context.h>
 #include <nc/core/arch/Instructions.h>
@@ -43,14 +43,10 @@
 namespace nc {
 namespace gui {
 
-Project::Project(QObject *parent):
-    QObject(parent),
-    image_(std::make_shared<core::image::Image>()),
-    instructions_(std::make_shared<core::arch::Instructions>()),
-    context_(std::make_shared<core::Context>()),
-    commandQueue_(new CommandQueue(this))
-{
-}
+Project::Project(QObject *parent)
+    : QObject(parent), image_(std::make_shared<core::image::Image>()),
+      instructions_(std::make_shared<core::arch::Instructions>()), context_(std::make_shared<core::Context>()),
+      commandQueue_(new CommandQueue(this)) {}
 
 Project::~Project() {}
 
@@ -140,6 +136,7 @@ void Project::cancelAll() {
     commandQueue()->clear();
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

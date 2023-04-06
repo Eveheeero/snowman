@@ -27,7 +27,7 @@ protected:
     /**
      * Protected constructor.
      */
-    ilist_item() noexcept: next_(nullptr), prev_(nullptr) {}
+    ilist_item() noexcept : next_(nullptr), prev_(nullptr) {}
 
 private:
     /**
@@ -40,8 +40,10 @@ private:
      */
     ilist_item &operator=(const ilist_item &);
 
-    template<class X, class Y> friend class ilist;
-    template<class X> friend class ilist_iterator;
+    template <class X, class Y>
+    friend class ilist;
+    template <class X>
+    friend class ilist_iterator;
 };
 
 /**
@@ -80,7 +82,7 @@ private:
  *
  * \tparam T Element type as exposed to the user.
  */
-template<class T>
+template <class T>
 class ilist_iterator {
 public:
     typedef std::bidirectional_iterator_tag iterator_category;
@@ -103,9 +105,8 @@ public:
      * \param list      Reference to the data of the list being iterated.
      * \param element   Pointer to the element this iterator points to. Can be nullptr.
      */
-    explicit ilist_iterator(const ilist_data *list, ilist_item *element = nullptr) noexcept:
-        element_(element), list_(list)
-    {
+    explicit ilist_iterator(const ilist_data *list, ilist_item *element = nullptr) noexcept
+        : element_(element), list_(list) {
         assert(list != nullptr);
     }
 
@@ -118,17 +119,17 @@ public:
      *
      * \param that Iterator to construct from.
      */
-    template<class U>
-    ilist_iterator(const ilist_iterator<U> &that, typename std::enable_if<std::is_convertible<U *, T *>::value, Tag>::type = Tag()) noexcept:
-        element_(that.element_), list_(that.list_)
-    {}
+    template <class U>
+    ilist_iterator(const ilist_iterator<U> &that,
+                   typename std::enable_if<std::is_convertible<U *, T *>::value, Tag>::type = Tag()) noexcept
+        : element_(that.element_), list_(that.list_) {}
 
     /**
      * Assignment from a compatible iterator.
      *
      * \param that Iterator to assign from.
      */
-    template<class U>
+    template <class U>
     typename std::enable_if<std::is_convertible<U *, T *>::value, ilist_iterator &>::type
     operator=(const ilist_iterator<U> &that) noexcept {
         element_ = that.element_;
@@ -189,37 +190,33 @@ public:
     /**
      * \returns True if *this and that point to different elements, false otherwise.
      */
-    bool operator!=(const ilist_iterator &that) const noexcept {
-        return !(*this == that);
-    }
+    bool operator!=(const ilist_iterator &that) const noexcept { return !(*this == that); }
 
     /**
      * \return Pointer to the element being pointed to.
      */
-    pointer operator->() const noexcept {
-        return static_cast<pointer>(element_);
-    }
+    pointer operator->() const noexcept { return static_cast<pointer>(element_); }
 
     /**
      * \return Pointer to the element being pointed to.
      */
-    pointer operator*() const noexcept {
-        return static_cast<pointer>(element_);
-    }
+    pointer operator*() const noexcept { return static_cast<pointer>(element_); }
 
-    template<class X> friend class ilist_iterator;
-    template<class X, class Y> friend class ilist;
+    template <class X>
+    friend class ilist_iterator;
+    template <class X, class Y>
+    friend class ilist;
 };
 
 /**
-* Intrusive doubly linked list owning its elements.
-* Features stable iterators, insertion and deletion in O(1) time.
-*
-* \param T       Type of elements.
-* \param Deleter Type of deleter for the list elements.
-*/
-template<class T, class Deleter = std::default_delete<T>>
-class ilist: private ilist_data {
+ * Intrusive doubly linked list owning its elements.
+ * Features stable iterators, insertion and deletion in O(1) time.
+ *
+ * \param T       Type of elements.
+ * \param Deleter Type of deleter for the list elements.
+ */
+template <class T, class Deleter = std::default_delete<T>>
+class ilist : private ilist_data {
 public:
     typedef T value_type;
     typedef Deleter deleter_type;
@@ -237,9 +234,7 @@ public:
      *
      * \param deleter Deleter for the list elements.
      */
-    ilist(const deleter_type &deleter = deleter_type()):
-        deleter_(deleter)
-    {
+    ilist(const deleter_type &deleter = deleter_type()) : deleter_(deleter) {
         front_ = nullptr;
         back_ = nullptr;
     }
@@ -249,10 +244,8 @@ public:
      *
      * \param that The list to move from.
      */
-    template<class U>
-    ilist(ilist<U, Deleter> &&that):
-        deleter_(std::move(that.deleter_))
-    {
+    template <class U>
+    ilist(ilist<U, Deleter> &&that) : deleter_(std::move(that.deleter_)) {
         front_ = that.front_;
         back_ = that.back_;
 
@@ -272,7 +265,7 @@ public:
      *
      * \param that List to move from.
      */
-    template<class U>
+    template <class U>
     ilist &operator=(ilist<U, Deleter> &&that) {
         clear();
 
@@ -380,27 +373,21 @@ public:
      *
      * \return Valid pointer to the removed element.
      */
-    unique_ptr erase(const_iterator iterator) {
-        return erase(*iterator);
-    }
+    unique_ptr erase(const_iterator iterator) { return erase(*iterator); }
 
     /**
      * Removes the front element from the list.
      *
      * \return Valid pointer to the erased element.
      */
-    unique_ptr pop_front() {
-        return erase(front());
-    }
+    unique_ptr pop_front() { return erase(front()); }
 
     /**
      * Removes the back element from the list.
      *
      * \return Valid pointer to the erased element.
      */
-    unique_ptr pop_back() {
-        return erase(back());
-    }
+    unique_ptr pop_back() { return erase(back()); }
 
     /**
      * Inserts the element in the list at the given position.
@@ -444,9 +431,7 @@ public:
      *
      * \return Valid pointer to the inserted element.
      */
-    pointer push_front(unique_ptr element) noexcept {
-        return insert(begin(), std::move(element));
-    }
+    pointer push_front(unique_ptr element) noexcept { return insert(begin(), std::move(element)); }
 
     /**
      * Inserts given element to the back of the list.
@@ -455,9 +440,7 @@ public:
      *
      * \return Valid pointer to the inserted element.
      */
-    pointer push_back(unique_ptr element) noexcept {
-        return insert(end(), std::move(element));
-    }
+    pointer push_back(unique_ptr element) noexcept { return insert(end(), std::move(element)); }
 
     /**
      * \param first First element of the range to be cut out.
@@ -593,9 +576,7 @@ public:
      *
      * \warning This function takes O(N) time to compute.
      */
-    size_type size() const noexcept {
-        return std::distance(begin(), end());
-    }
+    size_type size() const noexcept { return std::distance(begin(), end()); }
 
 private:
     /**

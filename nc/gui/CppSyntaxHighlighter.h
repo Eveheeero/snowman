@@ -27,39 +27,40 @@
 
 #include <boost/array.hpp>
 
-#include <QSyntaxHighlighter>
 #include <QSet>
+#include <QSyntaxHighlighter>
 #include <QWidget>
 
 QT_BEGIN_NAMESPACE
 class QTextDocument;
 QT_END_NAMESPACE
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * An object storing the formatting information used for C++ highlighting. It
  * has to be inherited from QWidget, otherwise, styling via Qt style sheets
  * does not work.
  */
-class CxxFormatting: public QWidget {
+class CxxFormatting : public QWidget {
     Q_OBJECT
 
 public:
     enum Element {
         /** Normal text. */
-        TEXT, 
+        TEXT,
 
         /* Following elements can be matched with simple regexps. */
         SINGLE_LINE_COMMENT,
-        KEYWORD, 
+        KEYWORD,
         OPERATOR,
         NUMBER,
         ESCAPE_CHAR,
 
         /* Following elements need states on lines. */
-        MACRO, 
-        MULTI_LINE_COMMENT, 
+        MACRO,
+        MULTI_LINE_COMMENT,
         STRING,
 
         ITEM_COUNT
@@ -72,9 +73,7 @@ public:
      *
      * \return Formatting that must be used for that text element.
      */
-    const QTextCharFormat &getFormat(Element element) const {
-        return formats_[element];
-    }
+    const QTextCharFormat &getFormat(Element element) const { return formats_[element]; }
 
 private:
     /** Formats of the text elements. */
@@ -121,12 +120,12 @@ private:
 /**
  * Syntax highlighter for C++.
  */
-class CppSyntaxHighlighter: public QSyntaxHighlighter {
+class CppSyntaxHighlighter : public QSyntaxHighlighter {
     Q_OBJECT
 public:
     /**
      * Constructor.
-     * 
+     *
      * \param[in] parent Pointer to the parent object. Can be nullptr.
      * \param[in] formatting Valid pointer to the formatting information.
      */
@@ -155,7 +154,7 @@ private:
 
     int findMultilineCommentEnd(const QString &text, int startPos = 0);
 
-    /** Keywords. */ 
+    /** Keywords. */
     QSet<QString> mKeywords;
 
     /* Regular expressions. */
@@ -170,6 +169,7 @@ private:
     const CxxFormatting *formatting_;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

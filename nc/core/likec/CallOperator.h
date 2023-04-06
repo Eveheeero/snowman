@@ -25,8 +25,8 @@
 
 #include <nc/config.h>
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "Expression.h"
 
@@ -37,9 +37,9 @@ namespace likec {
 /**
  * Function call.
  */
-class CallOperator: public Expression {
-    std::unique_ptr<Expression> callee_; ///< Callee.
-    std::vector<std::unique_ptr<Expression> > arguments_; ///< Function arguments.
+class CallOperator : public Expression {
+    std::unique_ptr<Expression> callee_;                 ///< Callee.
+    std::vector<std::unique_ptr<Expression>> arguments_; ///< Function arguments.
 
 public:
     /**
@@ -47,8 +47,7 @@ public:
      *
      * \param[in] callee Callee.
      */
-    explicit CallOperator(std::unique_ptr<Expression> callee):
-        Expression(CALL_OPERATOR), callee_(std::move(callee)) {}
+    explicit CallOperator(std::unique_ptr<Expression> callee) : Expression(CALL_OPERATOR), callee_(std::move(callee)) {}
 
     /**
      * \return Callee.

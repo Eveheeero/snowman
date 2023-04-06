@@ -26,7 +26,9 @@
 
 #include "Statements.h"
 
-namespace nc { namespace core { namespace ir {
+namespace nc {
+namespace core {
+namespace ir {
 
 void Term::setStatement(const Statement *statement) {
     assert(statement_ == nullptr);
@@ -65,6 +67,8 @@ const Term *Term::source() const {
     return nullptr;
 }
 
-}}} // namespace nc::core::ir
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

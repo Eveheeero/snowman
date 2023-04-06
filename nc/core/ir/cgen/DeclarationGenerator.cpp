@@ -45,17 +45,14 @@ namespace core {
 namespace ir {
 namespace cgen {
 
-DeclarationGenerator::DeclarationGenerator(CodeGenerator &parent, const calling::CalleeId &calleeId, const calling::FunctionSignature *signature):
-    parent_(parent),
-    calleeId_(calleeId),
-    signature_(signature),
-    declaration_(nullptr)
-{
+DeclarationGenerator::DeclarationGenerator(CodeGenerator &parent, const calling::CalleeId &calleeId,
+                                           const calling::FunctionSignature *signature)
+    : parent_(parent), calleeId_(calleeId), signature_(signature), declaration_(nullptr) {
     assert(signature != nullptr);
 }
 
 void DeclarationGenerator::setDeclaration(likec::FunctionDeclaration *declaration) {
-    assert(!declaration_); 
+    assert(!declaration_);
     declaration_ = declaration;
     parent().setFunctionDeclaration(signature_, declaration);
 }
@@ -63,8 +60,8 @@ void DeclarationGenerator::setDeclaration(likec::FunctionDeclaration *declaratio
 std::unique_ptr<likec::FunctionDeclaration> DeclarationGenerator::createDeclaration() {
     auto nameAndComment = parent().nameGenerator().getFunctionName(calleeId_);
 
-    auto functionDeclaration = std::make_unique<likec::FunctionDeclaration>(tree(),
-        std::move(nameAndComment.name()), makeReturnType(), signature()->variadic());
+    auto functionDeclaration = std::make_unique<likec::FunctionDeclaration>(tree(), std::move(nameAndComment.name()),
+                                                                            makeReturnType(), signature()->variadic());
     functionDeclaration->setComment(std::move(nameAndComment.comment()));
 
     setDeclaration(functionDeclaration.get());

@@ -9,10 +9,11 @@
 
 #include <nc/common/Types.h>
 
-namespace nc { namespace core {
+namespace nc {
+namespace core {
 
 namespace arch {
-    class Architecture;
+class Architecture;
 }
 
 namespace image {
@@ -22,11 +23,7 @@ namespace image {
  */
 class Platform {
 public:
-    enum OperatingSystem {
-        UnknownOS,
-        Windows,
-        DOS
-    };
+    enum OperatingSystem { UnknownOS, Windows, DOS };
 
     Platform();
 
@@ -81,6 +78,8 @@ private:
     SmallBitSize intSize_;
 };
 
-}}} // namespace nc::core::image
+} // namespace image
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

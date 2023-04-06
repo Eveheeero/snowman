@@ -37,8 +37,8 @@ namespace likec {
 /**
  * Conditional statement (if-then-?else?).
  */
-class If: public Statement {
-    std::unique_ptr<Expression> condition_; ///< Condition.
+class If : public Statement {
+    std::unique_ptr<Expression> condition_;    ///< Condition.
     std::unique_ptr<Statement> thenStatement_; ///< Then-statement.
     std::unique_ptr<Statement> elseStatement_; ///< Else-statement.
 
@@ -50,14 +50,10 @@ public:
      * \param[in] thenStatement Statement of "then" branch.
      * \param[in] elseStatement Statement of "else" branch.
      */
-    If(std::unique_ptr<Expression> condition,
-       std::unique_ptr<Statement> thenStatement,
+    If(std::unique_ptr<Expression> condition, std::unique_ptr<Statement> thenStatement,
        std::unique_ptr<Statement> elseStatement = nullptr)
-    :  Statement(IF),
-       condition_(std::move(condition)),
-       thenStatement_(std::move(thenStatement)),
-       elseStatement_(std::move(elseStatement))
-    {}
+        : Statement(IF), condition_(std::move(condition)), thenStatement_(std::move(thenStatement)),
+          elseStatement_(std::move(elseStatement)) {}
 
     /**
      * \return Condition.

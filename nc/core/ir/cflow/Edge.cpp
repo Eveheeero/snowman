@@ -33,9 +33,7 @@ namespace core {
 namespace ir {
 namespace cflow {
 
-Edge::Edge(Node *tail, Node *head):
-    tail_(nullptr), head_(nullptr)
-{
+Edge::Edge(Node *tail, Node *head) : tail_(nullptr), head_(nullptr) {
     setTail(tail);
     setHead(head);
 }

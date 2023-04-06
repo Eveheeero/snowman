@@ -43,7 +43,7 @@ class CallAddress {
     ByteAddr value_;
 
 public:
-    explicit CallAddress(ByteAddr value): value_(value) {}
+    explicit CallAddress(ByteAddr value) : value_(value) {}
 
     ByteAddr value() const { return value_; }
 };
@@ -52,7 +52,7 @@ class EntryAddress {
     ByteAddr value_;
 
 public:
-    explicit EntryAddress(ByteAddr value): value_(value) {}
+    explicit EntryAddress(ByteAddr value) : value_(value) {}
 
     ByteAddr value() const { return value_; }
 };
@@ -75,9 +75,9 @@ public:
 
 private:
     union {
-        ByteAddr entryAddress;     ///< Function's entry address.
-        ByteAddr callAddress;      ///< Address of the call calling the function.
-        const Function *function;  ///< Pointer to the function.
+        ByteAddr entryAddress;    ///< Function's entry address.
+        ByteAddr callAddress;     ///< Address of the call calling the function.
+        const Function *function; ///< Pointer to the function.
     } data_;
 
     Kind kind_; ///< Kind of this id.
@@ -86,38 +86,28 @@ public:
     /**
      * Constructs an invalid id.
      */
-    CalleeId(): kind_(INVALID) {}
+    CalleeId() : kind_(INVALID) {}
 
     /**
      * Constructs a valid id from a function's entry address.
      *
      * \param address Function's entry address.
      */
-    CalleeId(EntryAddress address):
-        kind_(ENTRY_ADDR)
-    {
-        data_.entryAddress = address.value();
-    }
+    CalleeId(EntryAddress address) : kind_(ENTRY_ADDR) { data_.entryAddress = address.value(); }
 
     /**
      * Constructs a valid id from a call address.
      *
      * \param address Function's entry address.
      */
-    CalleeId(CallAddress address):
-        kind_(CALL_ADDR)
-    {
-        data_.callAddress = address.value();
-    }
+    CalleeId(CallAddress address) : kind_(CALL_ADDR) { data_.callAddress = address.value(); }
 
     /**
      * Constructs a valid id from a function's pointer.
      *
      * \param function Pointer to a function's intermediate representation.
      */
-    explicit CalleeId(const Function *function):
-        kind_(FUNCTION)
-    {
+    explicit CalleeId(const Function *function) : kind_(FUNCTION) {
         assert(function != nullptr);
         data_.function = function;
     }
@@ -150,23 +140,21 @@ public:
             return false;
         }
         switch (kind_) {
-            case ENTRY_ADDR:
-                return data_.entryAddress == that.data_.entryAddress;
-            case CALL_ADDR:
-                return data_.callAddress == that.data_.callAddress;
-            case FUNCTION:
-                return data_.function == that.data_.function;
-            default:
-                unreachable();
+        case ENTRY_ADDR:
+            return data_.entryAddress == that.data_.entryAddress;
+        case CALL_ADDR:
+            return data_.callAddress == that.data_.callAddress;
+        case FUNCTION:
+            return data_.function == that.data_.function;
+        default:
+            unreachable();
         }
     }
 
     /**
      * \return True if this is not equal to that, false otherwise.
      */
-    bool operator!=(const CalleeId &that) const {
-        return !(*this == that);
-    }
+    bool operator!=(const CalleeId &that) const { return !(*this == that); }
 
     /**
      * \return nullptr if this id is invalid, non-null pointer otherwise.
@@ -188,28 +176,28 @@ namespace std {
  *
  * This makes it possible to use callee ids as keys in hash maps.
  */
-template<>
-struct hash<nc::core::ir::calling::CalleeId>: public unary_function<nc::core::ir::calling::CalleeId, size_t> {
+template <>
+struct hash<nc::core::ir::calling::CalleeId> : public unary_function<nc::core::ir::calling::CalleeId, size_t> {
 public:
     result_type operator()(const argument_type &value) const {
         using nc::core::ir::calling::CalleeId;
 
         switch (value.kind_) {
-            case CalleeId::INVALID:
-                return 0;
-            case CalleeId::ENTRY_ADDR:
-                return hash_value(value.data_.entryAddress);
-            case CalleeId::CALL_ADDR:
-                return hash_value(value.data_.callAddress);
-            case CalleeId::FUNCTION:
-                return hash_value(value.data_.function);
-            default:
-                unreachable();
+        case CalleeId::INVALID:
+            return 0;
+        case CalleeId::ENTRY_ADDR:
+            return hash_value(value.data_.entryAddress);
+        case CalleeId::CALL_ADDR:
+            return hash_value(value.data_.callAddress);
+        case CalleeId::FUNCTION:
+            return hash_value(value.data_.function);
+        default:
+            unreachable();
         }
     }
 
 protected:
-    template<class T>
+    template <class T>
     result_type hash_value(const T &value) const {
         return hash<T>()(value);
     }
@@ -217,7 +205,10 @@ protected:
 
 } // namespace std
 
-namespace nc { namespace core { namespace ir { namespace calling {
+namespace nc {
+namespace core {
+namespace ir {
+namespace calling {
 
 /**
  * Qt hash function for memory locations.
@@ -233,6 +224,9 @@ inline std::size_t hash_value(const CalleeId &value) {
     return std::hash<CalleeId>()(value);
 }
 
-}}}} // namespace nc::core::ir::calling
+} // namespace calling
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

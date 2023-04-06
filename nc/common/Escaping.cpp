@@ -36,18 +36,18 @@ QString escapeDotString(const QString &string) {
 
     foreach (QChar c, string) {
         switch (c.toLatin1()) {
-            case '\\':
-                result += "\\\\";
-                break;
-            case '"':
-                result += "\\\"";
-                break;
-            case '\n':
-                result += "\\n";
-                break;
-            default:
-                result += c;
-                break;
+        case '\\':
+            result += "\\\\";
+            break;
+        case '"':
+            result += "\\\"";
+            break;
+        case '\n':
+            result += "\\n";
+            break;
+        default:
+            result += c;
+            break;
         }
     }
 
@@ -60,36 +60,36 @@ QString escapeCString(const QString &string) {
 
     foreach (QChar c, string) {
         switch (c.toLatin1()) {
-            case '\\':
-                result += "\\\\";
-                break;
-            case '\a':
-                result += "\\a";
-                break;
-            case '\b':
-                result += "\\b";
-                break;
-            case '\f':
-                result += "\\f";
-                break;
-            case '\n':
-                result += "\\n";
-                break;
-            case '\r':
-                result += "\\r";
-                break;
-            case '\t':
-                result += "\\t";
-                break;
-            case '\v':
-                result += "\\v";
-                break;
-            case '"':
-                result += "\\\"";
-                break;
-            default:
-                result += c;
-                break;
+        case '\\':
+            result += "\\\\";
+            break;
+        case '\a':
+            result += "\\a";
+            break;
+        case '\b':
+            result += "\\b";
+            break;
+        case '\f':
+            result += "\\f";
+            break;
+        case '\n':
+            result += "\\n";
+            break;
+        case '\r':
+            result += "\\r";
+            break;
+        case '\t':
+            result += "\\t";
+            break;
+        case '\v':
+            result += "\\v";
+            break;
+        case '"':
+            result += "\\\"";
+            break;
+        default:
+            result += c;
+            break;
         }
     }
 

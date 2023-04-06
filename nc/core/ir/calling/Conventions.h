@@ -30,7 +30,6 @@ class Conventions {
     boost::unordered_map<CalleeId, ByteSize> id2stackArgumentsSize_;
 
 public:
-
     /**
      * Assigns a calling convention to a callee id.
      *
@@ -46,9 +45,7 @@ public:
      *
      * \return Pointer to the calling convention used for calls to given address. Can be nullptr.
      */
-    const Convention *getConvention(const CalleeId &calleeId) const {
-        return nc::find(id2convention_, calleeId);
-    }
+    const Convention *getConvention(const CalleeId &calleeId) const { return nc::find(id2convention_, calleeId); }
 
     /**
      * Sets the stack arguments size for the given callee id.

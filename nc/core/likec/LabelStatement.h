@@ -39,7 +39,7 @@ namespace likec {
 /**
  * Label in place of a statement.
  */
-class LabelStatement: public Statement {
+class LabelStatement : public Statement {
     std::unique_ptr<LabelIdentifier> identifier_;
 
 public:
@@ -48,9 +48,8 @@ public:
      *
      * \param[in] identifier Valid pointer to the label identifier.
      */
-    LabelStatement(std::unique_ptr<LabelIdentifier> identifier):
-        Statement(LABEL_STATEMENT), identifier_(std::move(identifier))
-    {
+    LabelStatement(std::unique_ptr<LabelIdentifier> identifier)
+        : Statement(LABEL_STATEMENT), identifier_(std::move(identifier)) {
         assert(identifier_);
 
         /* Do not count our identifier as a real reference. */

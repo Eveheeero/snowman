@@ -32,7 +32,7 @@ namespace core {
 namespace ir {
 
 namespace dflow {
-    class Dataflow;
+class Dataflow;
 }
 
 namespace cflow {
@@ -59,9 +59,7 @@ public:
      * \param graph Graph to analyze.
      * \param dataflow Dataflow information.
      */
-    StructureAnalyzer(Graph &graph, const dflow::Dataflow &dataflow):
-        graph_(graph), dataflow_(dataflow)
-    {}
+    StructureAnalyzer(Graph &graph, const dflow::Dataflow &dataflow) : graph_(graph), dataflow_(dataflow) {}
 
     /**
      * Performs structural analysis on the graph.

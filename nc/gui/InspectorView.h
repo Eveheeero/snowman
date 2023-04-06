@@ -38,13 +38,13 @@ QT_END_NAMESPACE
 namespace nc {
 
 namespace core {
-    namespace arch {
-        class Instruction;
-    }
-    namespace likec {
-        class TreeNode;
-    }
+namespace arch {
+class Instruction;
 }
+namespace likec {
+class TreeNode;
+}
+} // namespace core
 
 namespace gui {
 
@@ -53,11 +53,10 @@ class InspectorModel;
 /**
  * Dock widget for showing decompiler's internal data structures in a tree form.
  */
-class InspectorView: public QDockWidget {
+class InspectorView : public QDockWidget {
     Q_OBJECT
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -85,7 +84,7 @@ class InspectorView: public QDockWidget {
      */
     const std::vector<const core::arch::Instruction *> &selectedInstructions() const { return selectedInstructions_; }
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     /**
      * Sets the model being viewed.
@@ -101,14 +100,14 @@ class InspectorView: public QDockWidget {
      */
     void highlightNodes(const std::vector<const core::likec::TreeNode *> &nodes);
 
-    private Q_SLOTS:
+private Q_SLOTS:
 
     /**
      * Updates information about current selections.
      */
     void updateSelection();
 
-    Q_SIGNALS:
+Q_SIGNALS:
 
     /**
      * Signal emitted when the set of currently selected LikeC tree nodes is changed.
@@ -120,12 +119,10 @@ class InspectorView: public QDockWidget {
      */
     void instructionSelectionChanged();
 
-    protected:
-
+protected:
     virtual bool eventFilter(QObject *watched, QEvent *event) override;
 
-    private:
-
+private:
     /** QTreeView instance used for showing the tree. */
     QTreeView *treeView_;
 
@@ -139,6 +136,7 @@ class InspectorView: public QDockWidget {
     std::vector<const core::arch::Instruction *> selectedInstructions_;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

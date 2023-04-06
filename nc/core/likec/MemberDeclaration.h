@@ -36,7 +36,7 @@ class Type;
 /**
  * Declaration of a struct or union member.
  */
-class MemberDeclaration: public Declaration {
+class MemberDeclaration : public Declaration {
     const Type *type_; ///< Type.
 
 public:
@@ -46,9 +46,8 @@ public:
      * \param[in] identifier Name of this field.
      * \param[in] type Valid pointer to the type of this variable.
      */
-    MemberDeclaration(const QString &identifier, const Type *type):
-        Declaration(MEMBER_DECLARATION, identifier), type_(type)
-    {
+    MemberDeclaration(const QString &identifier, const Type *type)
+        : Declaration(MEMBER_DECLARATION, identifier), type_(type) {
         assert(type);
     }
 
@@ -62,6 +61,7 @@ public:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::MemberDeclaration, nc::core::likec::Declaration::MEMBER_DECLARATION)
+NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::MemberDeclaration,
+            nc::core::likec::Declaration::MEMBER_DECLARATION)
 
 /* vim:set et sts=4 sw=4: */

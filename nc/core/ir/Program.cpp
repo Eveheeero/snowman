@@ -76,9 +76,9 @@ BasicBlock *Program::createBasicBlock(ByteAddr address) {
     } else if (BasicBlock *basicBlock = getBasicBlockCovering(address)) {
         removeRange(basicBlock);
 
-        auto iterator = std::find_if(basicBlock->statements().begin(), basicBlock->statements().end(), [address](const Statement *statement) {
-            return statement->instruction()->addr() >= address;
-        });
+        auto iterator =
+            std::find_if(basicBlock->statements().begin(), basicBlock->statements().end(),
+                         [address](const Statement *statement) { return statement->instruction()->addr() >= address; });
 
         BasicBlock *result = takeOwnership(basicBlock->split(iterator, address));
 

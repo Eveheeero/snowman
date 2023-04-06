@@ -41,7 +41,7 @@ namespace image {
 /**
  * Section of an executable file.
  */
-class Section: public ByteSource {
+class Section : public ByteSource {
     QString name_; ///< Name of the section.
 
     ByteAddr addr_; ///< Linear address of section start.
@@ -49,15 +49,15 @@ class Section: public ByteSource {
 
     bool isAllocated_; ///< True if the section is mapped to the memory when the program is executed.
 
-    bool isReadable_; ///< True if the section is readable.
-    bool isWritable_; ///< True if the section is writable.
+    bool isReadable_;   ///< True if the section is readable.
+    bool isWritable_;   ///< True if the section is writable.
     bool isExecutable_; ///< True if the section is executable.
 
     bool isCode_; ///< True if the section contains code.
     bool isData_; ///< True if the section contains data.
-    bool isBss_; ///< True if the section is bss.
+    bool isBss_;  ///< True if the section is bss.
 
-    QByteArray content_; ///< Data contained in the section.
+    QByteArray content_;                             ///< Data contained in the section.
     std::unique_ptr<ByteSource> externalByteSource_; ///< External source of this section's bytes.
 
 public:

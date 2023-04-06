@@ -36,7 +36,7 @@ namespace ir {
 /**
  * Constant integer.
  */
-class Constant: public Term {
+class Constant : public Term {
     ConstantValue value_; ///< Value of the constant.
 
 public:
@@ -45,7 +45,7 @@ public:
      *
      * \param[in] value Value of the constant.
      */
-    Constant(const SizedValue &value): Term(INT_CONST, value.size()), value_(value.value()) {}
+    Constant(const SizedValue &value) : Term(INT_CONST, value.size()), value_(value.value()) {}
 
     /**
      * \return Value of the constant.
@@ -69,18 +69,18 @@ protected:
 /**
  * Term representing a special value.
  */
-class Intrinsic: public Term {
-    int intrinsicKind_;     ///< Kind of this intrinsic.
+class Intrinsic : public Term {
+    int intrinsicKind_; ///< Kind of this intrinsic.
 
 public:
     /**
      * Intrinsic kinds.
      */
     enum {
-        UNKNOWN,            ///< Unknown intrinsic.
-        UNDEFINED,          ///< Undefined value, generally not a stack offset.
-        ZERO_STACK_OFFSET,  ///< Undefined value, zero stack offset.
-        RETURN_ADDRESS,     ///< Return address (e.g. saved by a call instruction).
+        UNKNOWN,           ///< Unknown intrinsic.
+        UNDEFINED,         ///< Undefined value, generally not a stack offset.
+        ZERO_STACK_OFFSET, ///< Undefined value, zero stack offset.
+        RETURN_ADDRESS,    ///< Return address (e.g. saved by a call instruction).
     };
 
     /**
@@ -89,9 +89,7 @@ public:
      * \param[in] intrinsicKind Type of this intrinsic.
      * \param[in] size          Size of this term's value in bits.
      */
-    Intrinsic(int intrinsicKind, SmallBitSize size):
-        Term(INTRINSIC, size), intrinsicKind_(intrinsicKind)
-    {}
+    Intrinsic(int intrinsicKind, SmallBitSize size) : Term(INTRINSIC, size), intrinsicKind_(intrinsicKind) {}
 
     /**
      * \return Kind of this intrinsic.
@@ -108,7 +106,7 @@ protected:
 /**
  * Reference to some abstract memory location (e.g. register).
  */
-class MemoryLocationAccess: public Term {
+class MemoryLocationAccess : public Term {
     MemoryLocation memoryLocation_; ///< Accessed memory location.
 
 public:
@@ -134,8 +132,8 @@ protected:
 /**
  * Dereference of a memory address.
  */
-class Dereference: public Term {
-    Domain domain_; ///< Domain the address belongs to.
+class Dereference : public Term {
+    Domain domain_;                 ///< Domain the address belongs to.
     std::unique_ptr<Term> address_; ///< Address to be dereferenced.
 
 public:
@@ -173,21 +171,21 @@ protected:
 /**
  * Unary operator.
  */
-class UnaryOperator: public Term {
+class UnaryOperator : public Term {
 public:
     /**
      * Unary operator kinds.
      */
     enum OperatorKind {
-        NOT, ///< Bitwise NOT.
-        NEGATION, ///< Integer negation.
+        NOT,         ///< Bitwise NOT.
+        NEGATION,    ///< Integer negation.
         SIGN_EXTEND, ///< Sign extend.
         ZERO_EXTEND, ///< Zero extend.
-        TRUNCATE, ///< Truncate.
+        TRUNCATE,    ///< Truncate.
     };
 
 private:
-    int operatorKind_; ///< Operator kind.
+    int operatorKind_;              ///< Operator kind.
     std::unique_ptr<Term> operand_; ///< Operand.
 
 public:
@@ -229,35 +227,35 @@ protected:
 /**
  * Binary operator.
  */
-class BinaryOperator: public Term {
+class BinaryOperator : public Term {
 public:
     /**
      * Binary operator kinds.
      */
     enum OperatorKind {
-        AND, ///< Bitwise AND.
-        OR,  ///< Bitwise OR.
-        XOR, ///< Bitwise XOR.
-        SHL, ///< Bit shift left.
-        SHR, ///< Bit shift right.
-        SAR, ///< Arithmetic bit shift right.
-        ADD, ///< Integer addition.
-        SUB, ///< Integer subtraction.
-        MUL, ///< Integer multiplication.
-        SIGNED_DIV, ///< Signed integer division.
-        SIGNED_REM, ///< Signed integer remainder.
-        UNSIGNED_DIV, ///< Unsigned integer division.
-        UNSIGNED_REM, ///< Unsigned integer remainder.
-        EQUAL, ///< Equality.
-        SIGNED_LESS, ///< Integer signed less.
-        SIGNED_LESS_OR_EQUAL, ///< Integer signed less or equal.
-        UNSIGNED_LESS, ///< Integer unsigned less.
+        AND,                    ///< Bitwise AND.
+        OR,                     ///< Bitwise OR.
+        XOR,                    ///< Bitwise XOR.
+        SHL,                    ///< Bit shift left.
+        SHR,                    ///< Bit shift right.
+        SAR,                    ///< Arithmetic bit shift right.
+        ADD,                    ///< Integer addition.
+        SUB,                    ///< Integer subtraction.
+        MUL,                    ///< Integer multiplication.
+        SIGNED_DIV,             ///< Signed integer division.
+        SIGNED_REM,             ///< Signed integer remainder.
+        UNSIGNED_DIV,           ///< Unsigned integer division.
+        UNSIGNED_REM,           ///< Unsigned integer remainder.
+        EQUAL,                  ///< Equality.
+        SIGNED_LESS,            ///< Integer signed less.
+        SIGNED_LESS_OR_EQUAL,   ///< Integer signed less or equal.
+        UNSIGNED_LESS,          ///< Integer unsigned less.
         UNSIGNED_LESS_OR_EQUAL, ///< Integer unsigned less or equal.
     };
 
 private:
-    int operatorKind_; ///< Operator kind.
-    std::unique_ptr<Term> left_; ///< Left operand.
+    int operatorKind_;            ///< Operator kind.
+    std::unique_ptr<Term> left_;  ///< Left operand.
     std::unique_ptr<Term> right_; ///< Right operand.
 
 public:
@@ -314,13 +312,27 @@ protected:
  * Term implementation follows.
  */
 
-const Constant *Term::asConstant() const { return as<Constant>(); }
-const Intrinsic *Term::asIntrinsic() const { return as<Intrinsic>(); }
-const MemoryLocationAccess *Term::asMemoryLocationAccess() const { return as<MemoryLocationAccess>(); }
-const Dereference *Term::asDereference() const { return as<Dereference>(); }
-const UnaryOperator *Term::asUnaryOperator() const { return as<UnaryOperator>(); }
-const BinaryOperator *Term::asBinaryOperator() const { return as<BinaryOperator>(); }
+const Constant *Term::asConstant() const {
+    return as<Constant>();
+}
+const Intrinsic *Term::asIntrinsic() const {
+    return as<Intrinsic>();
+}
+const MemoryLocationAccess *Term::asMemoryLocationAccess() const {
+    return as<MemoryLocationAccess>();
+}
+const Dereference *Term::asDereference() const {
+    return as<Dereference>();
+}
+const UnaryOperator *Term::asUnaryOperator() const {
+    return as<UnaryOperator>();
+}
+const BinaryOperator *Term::asBinaryOperator() const {
+    return as<BinaryOperator>();
+}
 
-}}} // namespace nc::core::ir
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

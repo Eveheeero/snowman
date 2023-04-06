@@ -56,10 +56,12 @@ private:
     MemoryLocation stackPointer_; ///< Memory location of stack pointer register.
 
     BitSize firstArgumentOffset_; ///< Offset of the first argument in a function's stack frame.
-    BitSize argumentAlignment_; ///< Alignment of stack arguments in bits.
+    BitSize argumentAlignment_;   ///< Alignment of stack arguments in bits.
 
-    std::vector<std::vector<MemoryLocation>> argumentGroups_; ///< Groups of locations through which arguments of different kinds can be passed.
-    std::vector<MemoryLocation> returnValueLocations_; ///< List of memory locations that can be used for passing return values.
+    std::vector<std::vector<MemoryLocation>>
+        argumentGroups_; ///< Groups of locations through which arguments of different kinds can be passed.
+    std::vector<MemoryLocation>
+        returnValueLocations_; ///< List of memory locations that can be used for passing return values.
 
     bool calleeCleanup_; ///< Callee cleans up arguments.
 
@@ -151,7 +153,7 @@ public:
      * \return True if callee cleans up arguments.
      */
     bool calleeCleanup() const { return calleeCleanup_; }
-    
+
     /**
      * Statements executed when a function is entered.
      *

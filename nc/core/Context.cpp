@@ -44,10 +44,7 @@
 namespace nc {
 namespace core {
 
-Context::Context():
-    image_(std::make_shared<image::Image>()),
-    instructions_(std::make_shared<arch::Instructions>())
-{}
+Context::Context() : image_(std::make_shared<image::Image>()), instructions_(std::make_shared<arch::Instructions>()) {}
 
 Context::~Context() {}
 

@@ -34,9 +34,9 @@ namespace likec {
 /**
  * Continue statement.
  */
-class Continue: public Statement {
+class Continue : public Statement {
 public:
-    Continue(): Statement(CONTINUE) {}
+    Continue() : Statement(CONTINUE) {}
 };
 
 } // namespace likec

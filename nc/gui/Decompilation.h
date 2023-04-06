@@ -32,7 +32,7 @@
 namespace nc {
 
 namespace core {
-    class Context;
+class Context;
 }
 
 namespace gui {
@@ -40,14 +40,13 @@ namespace gui {
 /**
  * Activity doing the actual decompilation.
  */
-class Decompilation: public Activity {
+class Decompilation : public Activity {
     Q_OBJECT
 
     /** Context. */
     std::shared_ptr<core::Context> context_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -60,11 +59,11 @@ class Decompilation: public Activity {
      */
     ~Decompilation();
 
-    protected:
-
+protected:
     void work() override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

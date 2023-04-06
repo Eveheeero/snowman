@@ -40,17 +40,16 @@ namespace nc {
  *
  * \tparam T Type of disjoint set element.
  */
-template<class T>
+template <class T>
 class DisjointSet {
     mutable DisjointSet<T> *parent_; ///< Disjoint set parent.
-    int rank_; ///< Disjoint set rank.
+    int rank_;                       ///< Disjoint set rank.
 
-    public:
-
+public:
     /**
      * Class constructor.
      */
-    DisjointSet(): parent_(this), rank_(0) {}
+    DisjointSet() : parent_(this), rank_(0) {}
 
     /**
      * Creates a singleton.
@@ -65,18 +64,14 @@ class DisjointSet {
      *
      * \return The representative.
      */
-    T *findSet() {
-        return static_cast<T *>(findSetImpl());
-    }
+    T *findSet() { return static_cast<T *>(findSetImpl()); }
 
     /**
      * Finds a representative of the set.
      *
      * \return The representative.
      */
-    const T *findSet() const {
-        return static_cast<const T *>(findSetImpl());
-    }
+    const T *findSet() const { return static_cast<const T *>(findSetImpl()); }
 
     /**
      * Unions this set with the given one using weighted union algorithm.
@@ -97,8 +92,7 @@ class DisjointSet {
         }
     }
 
-    private:
-
+private:
     /**
      * Finds a representative of the set using path compression.
      *

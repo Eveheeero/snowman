@@ -69,13 +69,11 @@ void X86MasterAnalyzer::createProgram(core::Context &context) const {
                 if (auto assignment = statement->asAssignment()) {
                     if (auto access = assignment->left()->asMemoryLocationAccess()) {
                         if (minDomain <= access->memoryLocation().domain() &&
-                            access->memoryLocation().domain() <= maxDomain &&
-                            access->memoryLocation().addr() == 0 &&
-                            access->memoryLocation().size() == 32)
-                        {
+                            access->memoryLocation().domain() <= maxDomain && access->memoryLocation().addr() == 0 &&
+                            access->memoryLocation().size() == 32) {
                             auto patch = std::make_unique<core::ir::Assignment>(
-                                    std::make_unique<core::ir::MemoryLocationAccess>(access->memoryLocation().shifted(32)),
-                                    std::make_unique<core::ir::Constant>(SizedValue(32, 0)));
+                                std::make_unique<core::ir::MemoryLocationAccess>(access->memoryLocation().shifted(32)),
+                                std::make_unique<core::ir::Constant>(SizedValue(32, 0)));
                             patch->setInstruction(statement->instruction());
 
                             basicBlock->insertAfter(statement, std::move(patch));
@@ -157,7 +155,8 @@ void X86MasterAnalyzer::detectCallingConventions(core::Context &context) const {
     }
 }
 
-void X86MasterAnalyzer::detectCallingConvention(core::Context &context, const core::ir::calling::CalleeId &calleeId) const {
+void X86MasterAnalyzer::detectCallingConvention(core::Context &context,
+                                                const core::ir::calling::CalleeId &calleeId) const {
     const auto &platform = context.image()->platform();
     auto architecture = platform.architecture();
 
@@ -166,19 +165,19 @@ void X86MasterAnalyzer::detectCallingConvention(core::Context &context, const co
     };
 
     switch (architecture->bitness()) {
-        case 16:
-            setConvention("cdecl16");
-            break;
-        case 32:
-            setConvention("cdecl32");
-            break;
-        case 64:
-            if (platform.operatingSystem() == core::image::Platform::Windows) {
-                setConvention("microsoft64");
-            } else {
-                setConvention("amd64");
-            }
-            break;
+    case 16:
+        setConvention("cdecl16");
+        break;
+    case 32:
+        setConvention("cdecl32");
+        break;
+    case 64:
+        if (platform.operatingSystem() == core::image::Platform::Windows) {
+            setConvention("microsoft64");
+        } else {
+            setConvention("amd64");
+        }
+        break;
     }
 }
 

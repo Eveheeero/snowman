@@ -7,12 +7,14 @@
 
 #include <nc/core/arch/Registers.h>
 
-namespace nc { namespace arch { namespace x86 {
+namespace nc {
+namespace arch {
+namespace x86 {
 
 /**
  * Container class for x86 registers.
  */
-class X86Registers: public core::arch::StaticRegisters<X86Registers> {
+class X86Registers : public core::arch::StaticRegisters<X86Registers> {
 public:
     X86Registers();
 
@@ -20,6 +22,8 @@ public:
 #include <nc/core/arch/Registers.i>
 };
 
-}}} // namespace nc::arch::x86
+} // namespace x86
+} // namespace arch
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

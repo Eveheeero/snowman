@@ -34,19 +34,19 @@
 namespace nc {
 
 namespace core {
-    class Context;
+class Context;
 
-    namespace image {
-        class ByteSource;
-    }
+namespace image {
+class ByteSource;
 }
+} // namespace core
 
 namespace gui {
 
 /**
  * Activity doing the actual decompilation.
  */
-class Disassembly: public Activity {
+class Disassembly : public Activity {
     Q_OBJECT
 
     /** Context. */
@@ -61,8 +61,7 @@ class Disassembly: public Activity {
     /** Last address in the range to be disassembled. */
     ByteAddr end_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -71,18 +70,19 @@ class Disassembly: public Activity {
      * \param begin First address in the range.
      * \param end First address past the range.
      */
-    Disassembly(const std::shared_ptr<core::Context> &context, const core::image::ByteSource *source, ByteAddr begin, ByteAddr end);
+    Disassembly(const std::shared_ptr<core::Context> &context, const core::image::ByteSource *source, ByteAddr begin,
+                ByteAddr end);
 
     /**
      * Destructor.
      */
     ~Disassembly();
 
-    protected:
-
+protected:
     void work() override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

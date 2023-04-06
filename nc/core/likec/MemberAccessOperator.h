@@ -37,20 +37,20 @@ namespace likec {
 /**
  * Access to a struct or union member.
  */
-class MemberAccessOperator: public Expression {
+class MemberAccessOperator : public Expression {
 public:
     /**
      * Operator id.
      */
     enum AccessKind {
-        ARROW,  ///< a->b
-        DOT,    ///< a.b
+        ARROW, ///< a->b
+        DOT,   ///< a.b
     };
 
 private:
-    AccessKind accessKind_; ///< Operator id.
+    AccessKind accessKind_;                ///< Operator id.
     std::unique_ptr<Expression> compound_; ///< Accessed struct or union.
-    const MemberDeclaration *member_; ///< Accessed member.
+    const MemberDeclaration *member_;      ///< Accessed member.
 
 public:
     /**
@@ -60,9 +60,9 @@ public:
      * \param[in] compound Accessed struct or union.
      * \param[in] member Accessed member.
      */
-    MemberAccessOperator(AccessKind accessKind, std::unique_ptr<Expression> compound, const MemberDeclaration *member):
-        Expression(MEMBER_ACCESS_OPERATOR), accessKind_(accessKind), compound_(std::move(compound)), member_(member)
-    {}
+    MemberAccessOperator(AccessKind accessKind, std::unique_ptr<Expression> compound, const MemberDeclaration *member)
+        : Expression(MEMBER_ACCESS_OPERATOR), accessKind_(accessKind), compound_(std::move(compound)), member_(member) {
+    }
 
     /**
      * \return Operator id.
@@ -97,6 +97,7 @@ protected:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::MemberAccessOperator, nc::core::likec::Expression::MEMBER_ACCESS_OPERATOR)
+NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::MemberAccessOperator,
+            nc::core::likec::Expression::MEMBER_ACCESS_OPERATOR)
 
 /* vim:set et sts=4 sw=4: */

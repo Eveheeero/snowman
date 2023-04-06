@@ -32,9 +32,7 @@
 namespace nc {
 namespace gui {
 
-Decompilation::Decompilation(const std::shared_ptr<core::Context> &context):
-    context_(context)
-{
+Decompilation::Decompilation(const std::shared_ptr<core::Context> &context) : context_(context) {
     assert(context);
 }
 
@@ -48,6 +46,7 @@ void Decompilation::work() {
     }
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

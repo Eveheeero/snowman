@@ -34,10 +34,9 @@ namespace nc {
 namespace core {
 namespace ir {
 
-Jump::Jump(std::unique_ptr<Term> condition, JumpTarget thenTarget, JumpTarget elseTarget):
-    Statement(JUMP), condition_(std::move(condition)),
-    thenTarget_(std::move(thenTarget)), elseTarget_(std::move(elseTarget))
-{
+Jump::Jump(std::unique_ptr<Term> condition, JumpTarget thenTarget, JumpTarget elseTarget)
+    : Statement(JUMP), condition_(std::move(condition)), thenTarget_(std::move(thenTarget)),
+      elseTarget_(std::move(elseTarget)) {
     assert(condition_ != nullptr && "Jump condition must be not nullptr.");
     assert(thenTarget_ && "Then target must be valid.");
     assert(elseTarget_ && "Else target must be valid.");
@@ -52,9 +51,7 @@ Jump::Jump(std::unique_ptr<Term> condition, JumpTarget thenTarget, JumpTarget el
     }
 }
 
-Jump::Jump(JumpTarget thenTarget):
-    Statement(JUMP), thenTarget_(std::move(thenTarget))
-{
+Jump::Jump(JumpTarget thenTarget) : Statement(JUMP), thenTarget_(std::move(thenTarget)) {
     assert(thenTarget_ && "Jump target must be valid.");
 
     if (thenTarget_.address()) {

@@ -31,7 +31,9 @@
 #include <nc/core/image/Image.h>
 #include <nc/core/input/ParseError.h>
 
-namespace nc { namespace core { namespace input {
+namespace nc {
+namespace core {
+namespace input {
 
 bool Parser::canParse(QIODevice *source) const {
     assert(source != nullptr);
@@ -57,6 +59,8 @@ void Parser::parse(QIODevice *source, image::Image *image, const LogToken &log) 
     assert(image->platform().architecture() && "The parser must set the architecture.");
 }
 
-}}} // namespace nc::core::input
+} // namespace input
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

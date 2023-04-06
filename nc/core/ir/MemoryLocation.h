@@ -36,21 +36,23 @@
 
 #include "MemoryDomain.h"
 
-namespace nc { namespace core { namespace ir {
+namespace nc {
+namespace core {
+namespace ir {
 
 /**
  * Some abstract memory location.
  */
-class MemoryLocation: public boost::equality_comparable1<MemoryLocation>, public PrintableBase<MemoryLocation> {
+class MemoryLocation : public boost::equality_comparable1<MemoryLocation>, public PrintableBase<MemoryLocation> {
     Domain domain_; ///< Id of the universe where the memory region is located.
-    BitAddr addr_; ///< Address of the memory region in bits.
-    BitSize size_; ///< Size of the memory region in bits.
+    BitAddr addr_;  ///< Address of the memory region in bits.
+    BitSize size_;  ///< Size of the memory region in bits.
 
 public:
     /**
      * Class default constructor.
      */
-    MemoryLocation(): domain_(MemoryDomain::UNKNOWN), addr_(0), size_(0) {}
+    MemoryLocation() : domain_(MemoryDomain::UNKNOWN), addr_(0), size_(0) {}
 
     /**
      * Class constructor.
@@ -59,9 +61,7 @@ public:
      * \param[in] addr Address of the memory region in bits.
      * \param[in] size Size of the memory region in bits.
      */
-    MemoryLocation(Domain domain, BitAddr addr, BitSize size):
-        domain_(domain), addr_(addr), size_(size)
-    {
+    MemoryLocation(Domain domain, BitAddr addr, BitSize size) : domain_(domain), addr_(addr), size_(size) {
         assert(size_ > 0);
     }
 
@@ -83,7 +83,7 @@ public:
     /**
      * \return Size of the memory region in bits, safely converted to type T.
      */
-    template<class T>
+    template <class T>
     T size() const {
         return checked_cast<T>(size_);
     }
@@ -109,17 +109,13 @@ public:
      * \param offset Offset in bits.
      * \return New memory location.
      */
-    MemoryLocation shifted(BitSize offset) const {
-        return MemoryLocation(domain_, addr_ + offset, size_);
-    }
+    MemoryLocation shifted(BitSize offset) const { return MemoryLocation(domain_, addr_ + offset, size_); }
 
     /**
      * \param size New size.
      * \return New memory location.
      */
-    MemoryLocation resized(BitSize size) const {
-        return MemoryLocation(domain_, addr_, size);
-    }
+    MemoryLocation resized(BitSize size) const { return MemoryLocation(domain_, addr_, size); }
 
     /**
      * \param that Memory location.
@@ -160,9 +156,7 @@ public:
         }
     }
 
-    void merge(const MemoryLocation &that) {
-        *this = merge(*this, that);
-    }
+    void merge(const MemoryLocation &that) { *this = merge(*this, that); }
 
     static MemoryLocation intersect(const MemoryLocation &a, const MemoryLocation &b) {
         if (!a || !b || a.domain() != b.domain()) {
@@ -194,30 +188,34 @@ inline bool operator==(const MemoryLocation &a, const MemoryLocation &b) {
  * \param[in] a Memory location.
  * \param[in] b Memory location.
  *
- * \return True if (a.domain(), a.addr(), b.size()) is lexicographically smaller than (a.domain(), a.addr(), b.size()), false otherwise.
+ * \return True if (a.domain(), a.addr(), b.size()) is lexicographically smaller than (a.domain(), a.addr(), b.size()),
+ * false otherwise.
  */
 inline bool operator<(const MemoryLocation &a, const MemoryLocation &b) {
-    return a.domain() < b.domain() || (a.domain() == b.domain() && (a.addr() < b.addr() || (a.addr() == b.addr() && a.size() < b.size())));
+    return a.domain() < b.domain() ||
+           (a.domain() == b.domain() && (a.addr() < b.addr() || (a.addr() == b.addr() && a.size() < b.size())));
 }
 
-}}} // namespace nc::core::ir
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 namespace std {
 
 /**
  * Specialization of std::hash for memory locations.
- * 
+ *
  * This makes it possible to use memory locations as keys in hash maps.
  */
-template<>
-struct hash<nc::core::ir::MemoryLocation>: public unary_function<nc::core::ir::MemoryLocation, size_t> {
+template <>
+struct hash<nc::core::ir::MemoryLocation> : public unary_function<nc::core::ir::MemoryLocation, size_t> {
 public:
     result_type operator()(const argument_type &location) const {
         return hash_value(location.domain()) ^ hash_value(location.addr()) ^ hash_value(location.size());
     }
 
 protected:
-    template<class T>
+    template <class T>
     result_type hash_value(const T &value) const {
         return hash<T>()(value);
     }
@@ -225,7 +223,9 @@ protected:
 
 } // namespace std
 
-namespace nc { namespace core { namespace ir {
+namespace nc {
+namespace core {
+namespace ir {
 /**
  * Qt hash function for memory locations.
  */
@@ -240,6 +240,8 @@ inline std::size_t hash_value(const MemoryLocation &value) {
     return std::hash<MemoryLocation>()(value);
 }
 
-}}} // namespace nc::core::ir
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

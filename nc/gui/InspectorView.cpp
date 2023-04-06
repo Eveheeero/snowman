@@ -35,10 +35,7 @@
 namespace nc {
 namespace gui {
 
-InspectorView::InspectorView(QWidget *parent):
-    QDockWidget(tr("Inspector"), parent),
-    model_(nullptr)
-{
+InspectorView::InspectorView(QWidget *parent) : QDockWidget(tr("Inspector"), parent), model_(nullptr) {
     treeView_ = new QTreeView(this);
     treeView_->setHeaderHidden(true);
     treeView_->setSelectionMode(QAbstractItemView::ExtendedSelection);
@@ -53,7 +50,7 @@ bool InspectorView::eventFilter(QObject *watched, QEvent *event) {
     if (watched == treeView_) {
         /* Forbid expanding all children. */
         if (event->type() == QEvent::KeyPress) {
-            QKeyEvent *keyEvent = static_cast<QKeyEvent*>(event);
+            QKeyEvent *keyEvent = static_cast<QKeyEvent *>(event);
             return keyEvent->key() == Qt::Key_Asterisk;
         }
     }
@@ -104,7 +101,7 @@ void InspectorView::updateSelection() {
 
 namespace {
 
-template<class T>
+template <class T>
 InspectorItem *findDescendant(InspectorItem *item, int maxDepth, T match) {
     if (match(item)) {
         return item;
@@ -145,7 +142,7 @@ void InspectorView::highlightNodes(const std::vector<const core::likec::TreeNode
         InspectorItem *item = model()->root();
         reverse_foreach(const core::likec::TreeNode *node, path) {
             model()->expand(item);
-            item = findDescendant(item, 2, [node](InspectorItem *x) { return x->node() == node; } );
+            item = findDescendant(item, 2, [node](InspectorItem *x) { return x->node() == node; });
             if (!item) {
                 break;
             }
@@ -163,12 +160,13 @@ void InspectorView::highlightNodes(const std::vector<const core::likec::TreeNode
 
     treeView_->scrollTo(index);
 
-    connect(treeView_->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)),
-            this, SLOT(updateSelection()));
+    connect(treeView_->selectionModel(), SIGNAL(selectionChanged(const QItemSelection &, const QItemSelection &)), this,
+            SLOT(updateSelection()));
 
     updateSelection();
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

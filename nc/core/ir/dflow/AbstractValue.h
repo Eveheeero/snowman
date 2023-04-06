@@ -22,15 +22,15 @@ namespace dflow {
  * An integer value of a variable size with bits taking values from the power set of {0, 1}.
  */
 class AbstractValue {
-    SmallBitSize size_;         ///< Size of the abstract value.
-    ConstantValue zeroBits_;    ///< Bit mask of positions that can be zero.
-    ConstantValue oneBits_;     ///< Bit mask of positions that can be one.
+    SmallBitSize size_;      ///< Size of the abstract value.
+    ConstantValue zeroBits_; ///< Bit mask of positions that can be zero.
+    ConstantValue oneBits_;  ///< Bit mask of positions that can be one.
 
 public:
     /**
      * Constructs a value of zero size.
      */
-    AbstractValue(): size_(0), zeroBits_(0), oneBits_(0) {}
+    AbstractValue() : size_(0), zeroBits_(0), oneBits_(0) {}
 
     /**
      * Constructor.
@@ -41,9 +41,8 @@ public:
      *
      * Given bit masks are truncated to the given size.
      */
-    AbstractValue(SmallBitSize size, ConstantValue zeroBits, ConstantValue oneBits):
-        size_(size), zeroBits_(bitTruncate(zeroBits, size_)), oneBits_(bitTruncate(oneBits, size_))
-    {
+    AbstractValue(SmallBitSize size, ConstantValue zeroBits, ConstantValue oneBits)
+        : size_(size), zeroBits_(bitTruncate(zeroBits, size_)), oneBits_(bitTruncate(oneBits, size_)) {
         assert(size >= 0);
     }
 
@@ -69,9 +68,8 @@ public:
      *
      * Given bit masks are truncated to the given size.
      */
-    AbstractValue(SmallBitSize size, ConstantValue zeroBits, ConstantValue oneBits, Exact exact):
-        size_(size), zeroBits_(zeroBits), oneBits_(oneBits)
-    {
+    AbstractValue(SmallBitSize size, ConstantValue zeroBits, ConstantValue oneBits, Exact exact)
+        : size_(size), zeroBits_(zeroBits), oneBits_(oneBits) {
         NC_UNUSED(exact);
         assert(size >= 0);
         assert(bitTruncate(zeroBits, size) == zeroBits);
@@ -83,9 +81,8 @@ public:
      *
      * \param x Sized value.
      */
-    AbstractValue(const SizedValue &x):
-        size_(x.size()), zeroBits_(x.value() ^ bitMask<ConstantValue>(size_)), oneBits_(x.value())
-    {}
+    AbstractValue(const SizedValue &x)
+        : size_(x.size()), zeroBits_(x.value() ^ bitMask<ConstantValue>(size_)), oneBits_(x.value()) {}
 
     /**
      * \return Size of the abstract value.
@@ -102,7 +99,7 @@ public:
     AbstractValue &resize(SmallBitSize size) {
         if (size < size_) {
             zeroBits_ = bitTruncate(zeroBits_, size);
-            oneBits_  = bitTruncate(oneBits_,  size);
+            oneBits_ = bitTruncate(oneBits_, size);
         }
         size_ = size;
         return *this;
@@ -132,7 +129,10 @@ public:
      * \return Concrete value of this abstract value, if this value is concrete.
      *         Otherwise, the behavior is undefined.
      */
-    SizedValue asConcrete() const { assert(isConcrete()); return SizedValue(size_, oneBits_, SizedValue::exact); }
+    SizedValue asConcrete() const {
+        assert(isConcrete());
+        return SizedValue(size_, oneBits_, SizedValue::exact);
+    }
 
     /**
      * Shifts the value by the given number of bits.
@@ -148,7 +148,7 @@ public:
     AbstractValue &shift(int nbits) {
         size_ = std::max(size_ + nbits, 0);
         zeroBits_ = bitShift(zeroBits_, nbits);
-        oneBits_  = bitShift(oneBits_,  nbits);
+        oneBits_ = bitShift(oneBits_, nbits);
         return *this;
     }
 
@@ -161,7 +161,7 @@ public:
      */
     AbstractValue &project(ConstantValue mask) {
         zeroBits_ &= mask;
-        oneBits_  &= mask;
+        oneBits_ &= mask;
         return *this;
     }
 
@@ -209,19 +209,19 @@ private:
     /**
      * Helper template class for disambiguating operations on abstract values.
      */
-    template<class T>
-    class SignedT: public T {
+    template <class T>
+    class SignedT : public T {
     public:
-        SignedT(const T& that): T(that) {}
+        SignedT(const T &that) : T(that) {}
     };
 
     /**
      * Helper template class for disambiguating operations on abstract values.
      */
-    template<class T>
-    class UnsignedT: public T {
+    template <class T>
+    class UnsignedT : public T {
     public:
-        UnsignedT(const T& that): T(that) {}
+        UnsignedT(const T &that) : T(that) {}
     };
 
 public:
@@ -231,76 +231,62 @@ public:
     /**
      * \return This abstract value being a subject to signed operations.
      */
-    Signed asSigned() const {
-        return Signed(*this);
-    }
+    Signed asSigned() const { return Signed(*this); }
 
     /**
      * \return This abstract value being a subject to unsigned operations.
      */
-    Unsigned asUnsigned() const {
-        return Unsigned(*this);
-    }
+    Unsigned asUnsigned() const { return Unsigned(*this); }
 };
 
-inline
-AbstractValue operator&(const AbstractValue &a, const AbstractValue &b) {
+inline AbstractValue operator&(const AbstractValue &a, const AbstractValue &b) {
     assert(a.size() == b.size());
     return AbstractValue(a.size(), a.zeroBits() | b.zeroBits(), a.oneBits() & b.oneBits(), AbstractValue::exact);
 }
 
-inline
-AbstractValue operator|(const AbstractValue &a, const AbstractValue &b) {
+inline AbstractValue operator|(const AbstractValue &a, const AbstractValue &b) {
     assert(a.size() == b.size());
     return AbstractValue(a.size(), a.zeroBits() & b.zeroBits(), a.oneBits() | b.oneBits(), AbstractValue::exact);
 }
 
-inline
-AbstractValue operator^(const AbstractValue &a, const AbstractValue &b) {
+inline AbstractValue operator^(const AbstractValue &a, const AbstractValue &b) {
     assert(a.size() == b.size());
-    return AbstractValue(a.size(),
-        (a.zeroBits() & b.zeroBits()) | (a.oneBits() & b.oneBits()),
-        (a.oneBits() & b.zeroBits()) | (a.zeroBits() & b.oneBits()),
-        AbstractValue::exact);
+    return AbstractValue(a.size(), (a.zeroBits() & b.zeroBits()) | (a.oneBits() & b.oneBits()),
+                         (a.oneBits() & b.zeroBits()) | (a.zeroBits() & b.oneBits()), AbstractValue::exact);
 }
 
-inline
-AbstractValue operator~(const AbstractValue &a) {
+inline AbstractValue operator~(const AbstractValue &a) {
     return AbstractValue(a.size(), a.oneBits(), a.zeroBits());
 }
 
-inline
-AbstractValue operator<<(const AbstractValue &a, const AbstractValue &b) {
+inline AbstractValue operator<<(const AbstractValue &a, const AbstractValue &b) {
     if (b.isConcrete()) {
         auto nbits = b.asConcrete().value();
-        return AbstractValue(a.size(),
-            shiftLeft(a.zeroBits(), nbits) | bitMask<ConstantValue>(nbits),
-            shiftLeft(a.oneBits(), nbits));
+        return AbstractValue(a.size(), shiftLeft(a.zeroBits(), nbits) | bitMask<ConstantValue>(nbits),
+                             shiftLeft(a.oneBits(), nbits));
     } else {
         return AbstractValue(a.size(), -1, -1);
     }
 }
 
-inline
-AbstractValue operator>>(const AbstractValue::Unsigned &a, const AbstractValue &b) {
+inline AbstractValue operator>>(const AbstractValue::Unsigned &a, const AbstractValue &b) {
     if (b.isConcrete()) {
         auto nbits = b.asConcrete().value();
 
-        return AbstractValue(a.size(),
-            shiftRight(a.zeroBits(), nbits) | shiftLeft(bitMask<ConstantValue>(nbits), a.size() - nbits),
+        return AbstractValue(
+            a.size(), shiftRight(a.zeroBits(), nbits) | shiftLeft(bitMask<ConstantValue>(nbits), a.size() - nbits),
             shiftRight(a.oneBits(), nbits));
     } else {
         return AbstractValue(a.size(), -1, -1);
     }
 }
 
-inline
-AbstractValue operator>>(const AbstractValue::Signed &a, const AbstractValue &b) {
+inline AbstractValue operator>>(const AbstractValue::Signed &a, const AbstractValue &b) {
     if (b.isConcrete()) {
         auto nbits = b.asConcrete().value();
 
         auto zeroBits = shiftRight(a.zeroBits(), nbits);
-        auto oneBits  = shiftRight(a.oneBits(), nbits);
+        auto oneBits = shiftRight(a.oneBits(), nbits);
 
         auto signBitMask = shiftLeft<ConstantValue>(1, a.size() - 1);
         auto signExtendMask = shiftLeft(bitMask<ConstantValue>(nbits), a.size() - nbits);
@@ -318,8 +304,7 @@ AbstractValue operator>>(const AbstractValue::Signed &a, const AbstractValue &b)
     }
 }
 
-inline
-AbstractValue operator+(const AbstractValue &a, const AbstractValue &b) {
+inline AbstractValue operator+(const AbstractValue &a, const AbstractValue &b) {
     assert(a.size() == b.size());
 
     if (a.isConcrete() && b.isConcrete()) {
@@ -333,13 +318,11 @@ AbstractValue operator+(const AbstractValue &a, const AbstractValue &b) {
     }
 }
 
-inline
-AbstractValue operator-(const AbstractValue &a) {
+inline AbstractValue operator-(const AbstractValue &a) {
     return ~a + AbstractValue(a.size(), 0, 1);
 }
 
-inline
-AbstractValue operator-(const AbstractValue &a, const AbstractValue &b) {
+inline AbstractValue operator-(const AbstractValue &a, const AbstractValue &b) {
     assert(a.size() == b.size());
 
     if (a.isConcrete() && b.isConcrete()) {
@@ -353,8 +336,7 @@ AbstractValue operator-(const AbstractValue &a, const AbstractValue &b) {
     }
 }
 
-inline
-AbstractValue operator*(const AbstractValue &a, const AbstractValue &b) {
+inline AbstractValue operator*(const AbstractValue &a, const AbstractValue &b) {
     assert(a.size() == b.size());
 
     if (a.isConcrete() && b.isConcrete()) {
@@ -372,8 +354,7 @@ AbstractValue operator*(const AbstractValue &a, const AbstractValue &b) {
     }
 }
 
-inline
-AbstractValue operator/(const AbstractValue::Unsigned &a, const AbstractValue::Unsigned &b) {
+inline AbstractValue operator/(const AbstractValue::Unsigned &a, const AbstractValue::Unsigned &b) {
     assert(a.size() == b.size());
 
     if (b.isConcrete() && b.asConcrete().value() == 0) {
@@ -389,8 +370,7 @@ AbstractValue operator/(const AbstractValue::Unsigned &a, const AbstractValue::U
     }
 }
 
-inline
-AbstractValue operator/(const AbstractValue::Signed &a, const AbstractValue::Signed &b) {
+inline AbstractValue operator/(const AbstractValue::Signed &a, const AbstractValue::Signed &b) {
     assert(a.size() == b.size());
 
     if (b.isConcrete() && b.asConcrete().value() == 0) {
@@ -406,8 +386,7 @@ AbstractValue operator/(const AbstractValue::Signed &a, const AbstractValue::Sig
     }
 }
 
-inline
-AbstractValue operator%(const AbstractValue::Unsigned &a, const AbstractValue::Unsigned &b) {
+inline AbstractValue operator%(const AbstractValue::Unsigned &a, const AbstractValue::Unsigned &b) {
     assert(a.size() == b.size());
 
     if (b.isConcrete() && b.asConcrete().value() == 0) {
@@ -423,8 +402,7 @@ AbstractValue operator%(const AbstractValue::Unsigned &a, const AbstractValue::U
     }
 }
 
-inline
-AbstractValue operator%(const AbstractValue::Signed &a, const AbstractValue::Signed &b) {
+inline AbstractValue operator%(const AbstractValue::Signed &a, const AbstractValue::Signed &b) {
     assert(a.size() == b.size());
 
     if (b.isConcrete() && b.asConcrete().value() == 0) {
@@ -440,18 +418,16 @@ AbstractValue operator%(const AbstractValue::Signed &a, const AbstractValue::Sig
     }
 }
 
-inline
-AbstractValue operator==(const AbstractValue &a, const AbstractValue &b) {
+inline AbstractValue operator==(const AbstractValue &a, const AbstractValue &b) {
     assert(a.size() == b.size());
 
-    return AbstractValue(1,
-        (a.zeroBits() & b.oneBits()) || (a.oneBits() & b.zeroBits()),
-        ((a.zeroBits() & b.zeroBits()) | (a.oneBits() & b.oneBits())) == bitMask<ConstantValue>(a.size()),
-        AbstractValue::exact);
+    return AbstractValue(1, (a.zeroBits() & b.oneBits()) || (a.oneBits() & b.zeroBits()),
+                         ((a.zeroBits() & b.zeroBits()) | (a.oneBits() & b.oneBits())) ==
+                             bitMask<ConstantValue>(a.size()),
+                         AbstractValue::exact);
 }
 
-inline
-AbstractValue operator<(const AbstractValue::Signed &a, const AbstractValue::Signed &b) {
+inline AbstractValue operator<(const AbstractValue::Signed &a, const AbstractValue::Signed &b) {
     if (a.isConcrete() && b.isConcrete()) {
         return SizedValue(1, a.asConcrete().signedValue() < b.asConcrete().signedValue(), SizedValue::exact);
     } else {
@@ -459,8 +435,7 @@ AbstractValue operator<(const AbstractValue::Signed &a, const AbstractValue::Sig
     }
 }
 
-inline
-AbstractValue operator<=(const AbstractValue::Signed &a, const AbstractValue::Signed &b) {
+inline AbstractValue operator<=(const AbstractValue::Signed &a, const AbstractValue::Signed &b) {
     if (a.isConcrete() && b.isConcrete()) {
         return SizedValue(1, a.asConcrete().signedValue() <= b.asConcrete().signedValue(), SizedValue::exact);
     } else {
@@ -468,8 +443,7 @@ AbstractValue operator<=(const AbstractValue::Signed &a, const AbstractValue::Si
     }
 }
 
-inline
-AbstractValue operator<(const AbstractValue::Unsigned &a, const AbstractValue::Unsigned &b) {
+inline AbstractValue operator<(const AbstractValue::Unsigned &a, const AbstractValue::Unsigned &b) {
     if (a.isConcrete() && b.isConcrete()) {
         return SizedValue(1, a.asConcrete().value() < b.asConcrete().value(), SizedValue::exact);
     } else {
@@ -477,8 +451,7 @@ AbstractValue operator<(const AbstractValue::Unsigned &a, const AbstractValue::U
     }
 }
 
-inline
-AbstractValue operator<=(const AbstractValue::Unsigned &a, const AbstractValue::Unsigned &b) {
+inline AbstractValue operator<=(const AbstractValue::Unsigned &a, const AbstractValue::Unsigned &b) {
     if (a.isConcrete() && b.isConcrete()) {
         return SizedValue(1, a.asConcrete().value() <= b.asConcrete().value(), SizedValue::exact);
     } else {

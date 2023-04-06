@@ -34,7 +34,7 @@ class Jump;
 class Term;
 
 namespace dflow {
-    class Dataflow;
+class Dataflow;
 }
 
 namespace misc {
@@ -66,6 +66,9 @@ ArrayAccess recognizeArrayAccess(const Term *term, const dflow::Dataflow &datafl
  */
 BoundsCheck recognizeBoundsCheck(const Jump *jump, const BasicBlock *ifPassed, const dflow::Dataflow &dataflow);
 
-}}}} // namespace nc::core::ir::misc
+} // namespace misc
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

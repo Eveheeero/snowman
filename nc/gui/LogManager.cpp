@@ -28,7 +28,8 @@
 
 #include <QtGlobal> /* qInstallMsgHandler() */
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 namespace {
 
@@ -85,6 +86,7 @@ void LogManager::log(const QString &text) {
     Q_EMIT message(text);
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

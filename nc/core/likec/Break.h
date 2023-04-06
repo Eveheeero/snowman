@@ -34,9 +34,9 @@ namespace likec {
 /**
  * Break statement.
  */
-class Break: public Statement {
+class Break : public Statement {
 public:
-    Break(): Statement(BREAK) {}
+    Break() : Statement(BREAK) {}
 };
 
 } // namespace likec

@@ -36,7 +36,7 @@ namespace likec {
 /**
  * C string.
  */
-class String: public Expression {
+class String : public Expression {
     QString characters_; ///< Characters of the string.
 
 public:
@@ -45,9 +45,7 @@ public:
      *
      * \param[in] characters Characters of the string.
      */
-    explicit String(QString characters):
-        Expression(STRING), characters_(std::move(characters))
-    {}
+    explicit String(QString characters) : Expression(STRING), characters_(std::move(characters)) {}
 
     /**
      * \return Characters of the string.

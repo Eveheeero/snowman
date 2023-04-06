@@ -30,10 +30,10 @@
 namespace nc {
 
 namespace core {
-    namespace image {
-        class ByteSource;
-    }
+namespace image {
+class ByteSource;
 }
+} // namespace core
 
 namespace gui {
 
@@ -42,7 +42,7 @@ class Project;
 /**
  * 'Disassemble an address range' command.
  */
-class Disassemble: public Command {
+class Disassemble : public Command {
     Q_OBJECT
 
     /** Project. */
@@ -57,8 +57,7 @@ class Disassemble: public Command {
     /** Last address in the range to be disassembled. */
     ByteAddr end_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -72,7 +71,7 @@ class Disassemble: public Command {
     void work() override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */
-

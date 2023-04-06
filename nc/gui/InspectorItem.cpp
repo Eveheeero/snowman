@@ -78,6 +78,7 @@ InspectorItem *InspectorItem::addChild(const QString &text, const core::likec::T
     return addChild(child.release());
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

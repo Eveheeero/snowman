@@ -45,7 +45,7 @@ public:
      *
      * \param[in] comment Comment.
      */
-    explicit Commentable(const QString &comment = QString()): comment_(comment) {}
+    explicit Commentable(const QString &comment = QString()) : comment_(comment) {}
 
     /**
      * Virtual destructor.

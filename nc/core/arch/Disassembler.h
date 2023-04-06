@@ -18,9 +18,9 @@ class CancellationToken;
 namespace core {
 
 namespace image {
-    class ByteSource;
-    class Image;
-}
+class ByteSource;
+class Image;
+} // namespace image
 
 namespace arch {
 
@@ -39,11 +39,7 @@ public:
      *
      * \param architecture Valid pointer to the architecture.
      */
-    Disassembler(const Architecture *architecture):
-        architecture_(architecture)
-    {
-        assert(architecture);
-    }
+    Disassembler(const Architecture *architecture) : architecture_(architecture) { assert(architecture); }
 
     /**
      * Virtual destructor.
@@ -61,7 +57,8 @@ public:
      * \param callback Function being called for each disassembled instruction.
      * \param canceled Cancellation token.
      */
-    virtual void disassemble(const image::Image *image, const image::ByteSource *source, ByteAddr begin, ByteAddr end, const InstructionCallback &callback, const CancellationToken &canceled);
+    virtual void disassemble(const image::Image *image, const image::ByteSource *source, ByteAddr begin, ByteAddr end,
+                             const InstructionCallback &callback, const CancellationToken &canceled);
 
     /**
      * Disassembles a single instruction.
@@ -72,7 +69,8 @@ public:
      *
      * \return Pointer to the instruction disassembled from the buffer if disassembling succeeded, nullptr otherwise.
      */
-    virtual std::shared_ptr<Instruction> disassembleSingleInstruction(ByteAddr pc, const void *buffer, ByteSize size) = 0;
+    virtual std::shared_ptr<Instruction> disassembleSingleInstruction(ByteAddr pc, const void *buffer,
+                                                                      ByteSize size) = 0;
 
     /**
      * Disassembles a single instruction.

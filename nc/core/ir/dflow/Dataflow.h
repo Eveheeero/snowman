@@ -162,7 +162,9 @@ public:
     /**
      * \return Mapping from a term to its reaching definitions.
      */
-    const boost::unordered_map<const Term *, ReachingDefinitions> &term2definitions() const { return term2definitions_; }
+    const boost::unordered_map<const Term *, ReachingDefinitions> &term2definitions() const {
+        return term2definitions_;
+    }
 
     /**
      * \param[in] statement Valid pointer to a read statement.

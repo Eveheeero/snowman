@@ -25,8 +25,8 @@
 
 #include <nc/config.h>
 
-#include <vector>
 #include <memory>
+#include <vector>
 
 #include "ArgumentDeclaration.h"
 #include "Commentable.h"
@@ -41,9 +41,9 @@ namespace likec {
 /**
  * Function declaration.
  */
-class FunctionDeclaration: public Declaration, public Commentable {
-    std::unique_ptr<FunctionPointerType> type_; ///< Type of pointer to this function.
-    std::vector<std::unique_ptr<ArgumentDeclaration> > arguments_; ///< Function arguments.
+class FunctionDeclaration : public Declaration, public Commentable {
+    std::unique_ptr<FunctionPointerType> type_;                   ///< Type of pointer to this function.
+    std::vector<std::unique_ptr<ArgumentDeclaration>> arguments_; ///< Function arguments.
     std::unique_ptr<FunctionIdentifier> functionIdentifier_;
 
 public:
@@ -67,7 +67,8 @@ protected:
      * \param[in] returnType Function return type.
      * \param[in] variadic Whether function has variable number of arguments.
      */
-    FunctionDeclaration(Tree &tree, int declarationKind, QString identifier, const Type *returnType, bool variadic = false);
+    FunctionDeclaration(Tree &tree, int declarationKind, QString identifier, const Type *returnType,
+                        bool variadic = false);
 
 public:
     /**
@@ -110,6 +111,7 @@ protected:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::FunctionDeclaration, nc::core::likec::Declaration::FUNCTION_DECLARATION)
+NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::FunctionDeclaration,
+            nc::core::likec::Declaration::FUNCTION_DECLARATION)
 
 /* vim:set et sts=4 sw=4: */

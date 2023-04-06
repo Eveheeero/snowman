@@ -38,7 +38,7 @@ namespace likec {
 /**
  * Declaration of structural type.
  */
-class StructTypeDeclaration: public Declaration {
+class StructTypeDeclaration : public Declaration {
     StructType type_; ///< Declared structural type.
 
 public:
@@ -47,9 +47,8 @@ public:
      *
      * \param[in] identifier Struct tag/id.
      */
-    explicit StructTypeDeclaration(QString identifier):
-        Declaration(STRUCT_TYPE_DECLARATION, std::move(identifier)), type_(this)
-    {}
+    explicit StructTypeDeclaration(QString identifier)
+        : Declaration(STRUCT_TYPE_DECLARATION, std::move(identifier)), type_(this) {}
 
     /**
      * \return Declared structural type.
@@ -66,6 +65,7 @@ public:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::StructTypeDeclaration, nc::core::likec::Declaration::STRUCT_TYPE_DECLARATION)
+NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::StructTypeDeclaration,
+            nc::core::likec::Declaration::STRUCT_TYPE_DECLARATION)
 
 /* vim:set et sts=4 sw=4: */

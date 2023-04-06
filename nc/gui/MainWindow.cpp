@@ -69,11 +69,10 @@
 #include "SymbolsModel.h"
 #include "SymbolsView.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-MainWindow::MainWindow(Branding branding, QWidget *parent):
-    QMainWindow(parent), branding_(std::move(branding))
-{
+MainWindow::MainWindow(Branding branding, QWidget *parent) : QMainWindow(parent), branding_(std::move(branding)) {
     setDockNestingEnabled(true);
     setTabPosition(Qt::AllDockWidgetAreas, QTabWidget::North);
 
@@ -114,7 +113,8 @@ void MainWindow::createWidgets() {
     connect(instructionsView_, SIGNAL(instructionSelectionChanged()), this, SLOT(highlightInstructionsInCxx()));
     connect(instructionsView_, SIGNAL(deleteSelectedInstructions()), this, SLOT(deleteSelectedInstructions()));
     connect(instructionsView_, SIGNAL(decompileSelectedInstructions()), this, SLOT(decompileSelectedInstructions()));
-    connect(instructionsView_, SIGNAL(contextMenuCreated(QMenu *)), this, SLOT(populateInstructionsContextMenu(QMenu *)));
+    connect(instructionsView_, SIGNAL(contextMenuCreated(QMenu *)), this,
+            SLOT(populateInstructionsContextMenu(QMenu *)));
 
     cxxView_ = new CxxView(this);
     cxxView_->setDocument(new CxxDocument(this));
@@ -166,7 +166,7 @@ void MainWindow::createWidgets() {
     progressDialog_->setRange(0, 0);
     progressDialog_->setWindowModality(Qt::WindowModal);
     progressDialog_->setWindowTitle(windowTitle());
-#if QT_VERSION > QT_VERSION_CHECK(5,4,0) //https://bugreports.qt.io/browse/QTBUG-47042
+#if QT_VERSION > QT_VERSION_CHECK(5, 4, 0) // https://bugreports.qt.io/browse/QTBUG-47042
     progressDialog_->reset();
 #endif
 }
@@ -286,11 +286,13 @@ void MainWindow::loadSettings() {
     foreach (QObject *child, children()) {
         if (auto textView = qobject_cast<TextView *>(child)) {
             if (!textView->objectName().isEmpty()) {
-                textView->setDocumentFont(settings_->value(textView->objectName() + ".font", textView->documentFont()).value<QFont>());
+                textView->setDocumentFont(
+                    settings_->value(textView->objectName() + ".font", textView->documentFont()).value<QFont>());
             }
         } else if (auto treeView = qobject_cast<TreeView *>(child)) {
             if (!treeView->objectName().isEmpty()) {
-                treeView->setDocumentFont(settings_->value(treeView->objectName() + ".font", treeView->documentFont()).value<QFont>());
+                treeView->setDocumentFont(
+                    settings_->value(treeView->objectName() + ".font", treeView->documentFont()).value<QFont>());
             }
         }
     }
@@ -492,11 +494,13 @@ void MainWindow::exportCfg() {
     std::shared_ptr<const core::Context> context = project()->context();
 
     if (!context->program()) {
-        QMessageBox::critical(this, tr("Error"), tr("Sorry, no control flow graph was built yet. Try to decompile something first."));
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Sorry, no control flow graph was built yet. Try to decompile something first."));
         return;
     }
 
-    QString filename = QFileDialog::getSaveFileName(this, tr("Where should I save the control flow graph?"), QString(), tr("Graphviz (*.dot);;All Files(*)"));
+    QString filename = QFileDialog::getSaveFileName(this, tr("Where should I save the control flow graph?"), QString(),
+                                                    tr("Graphviz (*.dot);;All Files(*)"));
     if (!filename.isEmpty()) {
         QFile file(filename);
 
@@ -510,10 +514,12 @@ void MainWindow::exportCfg() {
 }
 
 void MainWindow::loadStyleSheet() {
-    QString filename = QFileDialog::getOpenFileName(this, tr("What Qt style sheet file should I load?"), QString(), tr("Style sheets (*.qss *.css);;All Files(*)"));
+    QString filename = QFileDialog::getOpenFileName(this, tr("What Qt style sheet file should I load?"), QString(),
+                                                    tr("Style sheets (*.qss *.css);;All Files(*)"));
 
     if (filename.isEmpty()) {
-        if (QMessageBox::question(this, tr("Question"), tr("Do you want me to load an empty style sheet?"), QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
+        if (QMessageBox::question(this, tr("Question"), tr("Do you want me to load an empty style sheet?"),
+                                  QMessageBox::Yes | QMessageBox::No) == QMessageBox::Yes) {
             setStyleSheetFile(filename);
         }
     } else {
@@ -543,7 +549,9 @@ void MainWindow::disassemble() {
         return;
     }
     if (project()->image()->sections().empty()) {
-        QMessageBox::critical(this, tr("Error"), tr("Sorry, the file you are currently working on does not contain any information about sections. There is nothing I could disassemble."));
+        QMessageBox::critical(this, tr("Error"),
+                              tr("Sorry, the file you are currently working on does not contain any information about "
+                                 "sections. There is nothing I could disassemble."));
         return;
     }
     disassemblyDialog_->show();
@@ -556,7 +564,8 @@ void MainWindow::disassembleSelectedSectionRange() {
     if (decompileAutomatically()) {
         project()->cancelAll();
     }
-    project()->disassemble(disassemblyDialog_->selectedSection(), *disassemblyDialog_->startAddress(), *disassemblyDialog_->endAddress());
+    project()->disassemble(disassemblyDialog_->selectedSection(), *disassemblyDialog_->startAddress(),
+                           *disassemblyDialog_->endAddress());
     if (decompileAutomatically()) {
         project()->decompile();
     }
@@ -686,29 +695,31 @@ void MainWindow::setStatusText(const QString &text) {
 }
 
 void MainWindow::about() {
-    QMessageBox::about(this, tr("About %1").arg(branding_.applicationName()), tr(
-        "<h3>About %1</h3>"
-        "<p>%1 is a native code to C/C++ decompiler.</p>"
-        "<p>This is version %2.</p>"
-        "<p>%1 supports the following architectures:<ul>"
-        "<li>ARM (little endian, big endian, powered by <a href=\"http://www.capstone-engine.org/\">Capstone</a>),</li>"
-        "<li>Intel x86,</li>"
-        "<li>Intel x86-64.</li>"
-        "</ul></p>"
-        "<p>%1 supports the following input file formats:<ul>"
-        "<li>ELF,</li>"
-        "<li>Mach-O,</li>"
-        "<li>PE.</li>"
-        "</ul></p>"
-        "<p>Report bugs to <a href=\"%3\">%3</a>.</p>"
-        "<p>The software is distributed under the terms of <a href=\"%5\">%4</a>.</p>")
-        .arg(branding_.applicationName())
-        .arg(branding_.applicationVersion())
-        .arg(branding_.reportBugsTo())
-        .arg(branding_.licenseName())
-        .arg(branding_.licenseUrl()));
+    QMessageBox::about(this, tr("About %1").arg(branding_.applicationName()),
+                       tr("<h3>About %1</h3>"
+                          "<p>%1 is a native code to C/C++ decompiler.</p>"
+                          "<p>This is version %2.</p>"
+                          "<p>%1 supports the following architectures:<ul>"
+                          "<li>ARM (little endian, big endian, powered by <a "
+                          "href=\"http://www.capstone-engine.org/\">Capstone</a>),</li>"
+                          "<li>Intel x86,</li>"
+                          "<li>Intel x86-64.</li>"
+                          "</ul></p>"
+                          "<p>%1 supports the following input file formats:<ul>"
+                          "<li>ELF,</li>"
+                          "<li>Mach-O,</li>"
+                          "<li>PE.</li>"
+                          "</ul></p>"
+                          "<p>Report bugs to <a href=\"%3\">%3</a>.</p>"
+                          "<p>The software is distributed under the terms of <a href=\"%5\">%4</a>.</p>")
+                           .arg(branding_.applicationName())
+                           .arg(branding_.applicationVersion())
+                           .arg(branding_.reportBugsTo())
+                           .arg(branding_.licenseName())
+                           .arg(branding_.licenseUrl()));
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

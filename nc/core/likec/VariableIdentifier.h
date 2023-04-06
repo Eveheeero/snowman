@@ -36,7 +36,7 @@ class VariableDeclaration;
 /**
  * Variable identifier.
  */
-class VariableIdentifier: public Expression {
+class VariableIdentifier : public Expression {
     VariableDeclaration *declaration_; ///< Variable declaration.
 
 public:
@@ -45,9 +45,8 @@ public:
      *
      * \param[in] declaration Variable declaration.
      */
-    explicit VariableIdentifier(VariableDeclaration *declaration):
-        Expression(VARIABLE_IDENTIFIER), declaration_(declaration)
-    {}
+    explicit VariableIdentifier(VariableDeclaration *declaration)
+        : Expression(VARIABLE_IDENTIFIER), declaration_(declaration) {}
 
     /**
      * \return Variable declaration.
@@ -64,6 +63,7 @@ public:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::VariableIdentifier, nc::core::likec::Expression::VARIABLE_IDENTIFIER)
+NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::VariableIdentifier,
+            nc::core::likec::Expression::VARIABLE_IDENTIFIER)
 
 /* vim:set et sts=4 sw=4: */

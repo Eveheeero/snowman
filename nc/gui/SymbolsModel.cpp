@@ -11,19 +11,13 @@
 #include <nc/core/image/Image.h>
 #include <nc/core/image/Section.h>
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-enum SymbolsModelColumns {
-    COL_NAME,
-    COL_TYPE,
-    COL_VALUE,
-    COL_SECTION,
-    COL_COUNT
-};
+enum SymbolsModelColumns { COL_NAME, COL_TYPE, COL_VALUE, COL_SECTION, COL_COUNT };
 
-SymbolsModel::SymbolsModel(QObject *parent, std::shared_ptr<const core::image::Image> image):
-    QAbstractItemModel(parent), image_(std::move(image))
-{}
+SymbolsModel::SymbolsModel(QObject *parent, std::shared_ptr<const core::image::Image> image)
+    : QAbstractItemModel(parent), image_(std::move(image)) {}
 
 const core::image::Symbol *SymbolsModel::getSymbol(const QModelIndex &index) const {
     return static_cast<const core::image::Symbol *>(index.internalPointer());
@@ -65,25 +59,25 @@ QVariant SymbolsModel::data(const QModelIndex &index, int role) const {
         assert(symbol);
 
         switch (index.column()) {
-            case COL_NAME:
-                return symbol->name();
-            case COL_TYPE:
-                return symbol->type().getName();
-            case COL_VALUE: {
-                if (symbol->value()) {
-                    if (role == Qt::DisplayRole) {
-                        return QString("%1").arg(*symbol->value(), 0, 16);
-                    } else {
-                        return static_cast<qlonglong>(*symbol->value());
-                    }
+        case COL_NAME:
+            return symbol->name();
+        case COL_TYPE:
+            return symbol->type().getName();
+        case COL_VALUE: {
+            if (symbol->value()) {
+                if (role == Qt::DisplayRole) {
+                    return QString("%1").arg(*symbol->value(), 0, 16);
                 } else {
-                    return tr("Undefined");
+                    return static_cast<qlonglong>(*symbol->value());
                 }
+            } else {
+                return tr("Undefined");
             }
-            case COL_SECTION:
-                return symbol->section() ? symbol->section()->name() : QString();
-            default:
-                unreachable();
+        }
+        case COL_SECTION:
+            return symbol->section() ? symbol->section()->name() : QString();
+        default:
+            unreachable();
         }
     }
     return QVariant();
@@ -93,16 +87,22 @@ QVariant SymbolsModel::headerData(int section, Qt::Orientation orientation, int 
     if (orientation == Qt::Horizontal) {
         if (role == Qt::DisplayRole) {
             switch (section) {
-                case COL_NAME: return tr("Name");
-                case COL_TYPE: return tr("Type");
-                case COL_VALUE: return tr("Value");
-                case COL_SECTION: return tr("Section");
-                default: unreachable();
+            case COL_NAME:
+                return tr("Name");
+            case COL_TYPE:
+                return tr("Type");
+            case COL_VALUE:
+                return tr("Value");
+            case COL_SECTION:
+                return tr("Section");
+            default:
+                unreachable();
             }
         }
     }
     return QAbstractItemModel::headerData(section, orientation, role);
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 /* vim:set et sts=4 sw=4: */

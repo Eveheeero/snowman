@@ -35,7 +35,7 @@ class X86Architecture;
 
 class X86InstructionAnalyzerImpl;
 
-class X86InstructionAnalyzer: public core::irgen::InstructionAnalyzer {
+class X86InstructionAnalyzer : public core::irgen::InstructionAnalyzer {
     /** The object actually doing all the work. */
     std::unique_ptr<X86InstructionAnalyzerImpl> impl_;
 
@@ -55,7 +55,6 @@ public:
 protected:
     virtual void doCreateStatements(const core::arch::Instruction *instruction, core::ir::Program *program) override;
 };
-
 
 } // namespace x86
 } // namespace arch

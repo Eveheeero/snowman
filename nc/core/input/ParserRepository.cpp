@@ -30,13 +30,15 @@
 #include <nc/common/make_unique.h>
 
 #include <nc/input/elf/ElfParser.h>
+#include <nc/input/le/LeParser.h>
 #include <nc/input/mach-o/MachOParser.h>
 #include <nc/input/pe/PeParser.h>
-#include <nc/input/le/LeParser.h>
 
 #include "Parser.h"
 
-namespace nc { namespace core { namespace input {
+namespace nc {
+namespace core {
+namespace input {
 
 namespace {
 
@@ -76,6 +78,8 @@ const std::vector<const Parser *> &ParserRepository::parsers() const {
     return reinterpret_cast<const std::vector<const Parser *> &>(parsers_);
 }
 
-}}} // namespace nc::core::input
+} // namespace input
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

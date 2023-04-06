@@ -14,7 +14,7 @@ namespace arm {
 /**
  * 32-bit ARM Architecture.
  */
-class ArmArchitecture: public nc::core::arch::Architecture {
+class ArmArchitecture : public nc::core::arch::Architecture {
     ByteOrder byteOrder_;
 
 public:
@@ -23,8 +23,7 @@ public:
      *
      * \param byteOrder Byte order of the main memory.
      */
-    explicit
-    ArmArchitecture(ByteOrder byteOrder);
+    explicit ArmArchitecture(ByteOrder byteOrder);
 
     virtual ~ArmArchitecture();
 
@@ -38,6 +37,8 @@ public:
     std::unique_ptr<core::irgen::InstructionAnalyzer> createInstructionAnalyzer() const override;
 };
 
-}}} // namespace nc::arch::arm
+} // namespace arm
+} // namespace arch
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

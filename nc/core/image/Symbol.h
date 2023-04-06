@@ -40,7 +40,7 @@ public:
      *
      * \param type Symbol type value.
      */
-    SymbolType(Type type = NOTYPE): type_(type) {}
+    SymbolType(Type type = NOTYPE) : type_(type) {}
 
     /**
      * \return Symbol type value.
@@ -65,10 +65,10 @@ private:
 
 class Symbol {
 private:
-    SymbolType type_; ///< Type of the symbol.
-    QString name_; ///< Name of the symbol.
+    SymbolType type_;                      ///< Type of the symbol.
+    QString name_;                         ///< Name of the symbol.
     boost::optional<ConstantValue> value_; ///< Value of the symbol.
-    const Section *section_; ///< Section referenced by the symbol.
+    const Section *section_;               ///< Section referenced by the symbol.
 
 public:
     /**
@@ -79,9 +79,8 @@ public:
      * \param value Value of the symbol.
      * \param section Pointer to the section referenced by the symbol.
      */
-    Symbol(SymbolType type, QString name, const boost::optional<ConstantValue> &value, const Section *section = nullptr):
-        type_(type), name_(std::move(name)), value_(value), section_(section)
-    {}
+    Symbol(SymbolType type, QString name, const boost::optional<ConstantValue> &value, const Section *section = nullptr)
+        : type_(type), name_(std::move(name)), value_(value), section_(section) {}
 
     /**
      * \return Type of the symbol.

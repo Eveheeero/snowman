@@ -33,16 +33,16 @@ class QStringListModel;
 class QPlainTextEdit;
 QT_END_NAMESPACE
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * Widget providing the functionality of moving to the line with a given number in a QPlainTextEdit.
  */
-class GotoLineWidget: public QWidget {
+class GotoLineWidget : public QWidget {
     Q_OBJECT
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -56,7 +56,7 @@ class GotoLineWidget: public QWidget {
      */
     QPlainTextEdit *textEdit() const { return textEdit_; }
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     /**
      * Shows the widget and sets input focus into it.
@@ -68,7 +68,7 @@ class GotoLineWidget: public QWidget {
      */
     void deactivate();
 
-    private Q_SLOTS:
+private Q_SLOTS:
 
     /**
      * Moves the cursor in the associated QPlainTextEdit to the line with the entered number.
@@ -87,8 +87,7 @@ class GotoLineWidget: public QWidget {
      */
     void rememberCompletion();
 
-    private:
-
+private:
     /** Associated QPlainTextEdit instance. */
     QPlainTextEdit *textEdit_;
 
@@ -105,6 +104,7 @@ class GotoLineWidget: public QWidget {
     QPalette notFoundPalette_;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

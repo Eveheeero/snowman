@@ -40,7 +40,7 @@ class Switch;
 /**
  * Region is a set of nodes with a single entry and possibly multiple exits.
  */
-class Region: public Node {
+class Region : public Node {
     NC_BASE_CLASS(Region, regionKind)
 
 public:
@@ -48,30 +48,29 @@ public:
      * Region kind.
      */
     enum RegionKind {
-        UNKNOWN, ///< Unknown region.
-        BLOCK, ///< Sequence of consecutive nodes.
+        UNKNOWN,            ///< Unknown region.
+        BLOCK,              ///< Sequence of consecutive nodes.
         COMPOUND_CONDITION, ///< Short-circuit computation of && or ||.
-        IF_THEN, ///< If-then.
-        IF_THEN_ELSE, ///< If-then-else.
-        LOOP, ///< General loop.
-        WHILE, ///< Loop with precondition.
-        DO_WHILE, ///< Loop with postcondition.
-        SWITCH ///< Switch.
+        IF_THEN,            ///< If-then.
+        IF_THEN_ELSE,       ///< If-then-else.
+        LOOP,               ///< General loop.
+        WHILE,              ///< Loop with precondition.
+        DO_WHILE,           ///< Loop with postcondition.
+        SWITCH              ///< Switch.
     };
 
 private:
-    Node *entry_; ///< Region's entry node.
-    std::vector<Node *> nodes_; ///< Nodes of the region.
+    Node *entry_;                      ///< Region's entry node.
+    std::vector<Node *> nodes_;        ///< Nodes of the region.
     const BasicBlock *exitBasicBlock_; ///< Exit basic block.
-    Node *loopCondition_; ///< Node with the loop condition.
+    Node *loopCondition_;              ///< Node with the loop condition.
 
 public:
     /**
      * \param regionKind    Region kind.
      */
-    Region(RegionKind regionKind):
-        Node(REGION), regionKind_(regionKind), entry_(nullptr), exitBasicBlock_(nullptr), loopCondition_(nullptr)
-    {}
+    Region(RegionKind regionKind)
+        : Node(REGION), regionKind_(regionKind), entry_(nullptr), exitBasicBlock_(nullptr), loopCondition_(nullptr) {}
 
     /**
      * Sets region kind.

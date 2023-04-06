@@ -31,9 +31,7 @@
 namespace nc {
 namespace gui {
 
-CommandQueue::CommandQueue(QObject *parent):
-    QObject(parent)
-{}
+CommandQueue::CommandQueue(QObject *parent) : QObject(parent) {}
 
 CommandQueue::~CommandQueue() {
     cancel();
@@ -91,6 +89,7 @@ void CommandQueue::commandFinished() {
     executeNext();
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

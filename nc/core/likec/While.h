@@ -38,9 +38,9 @@ class Expression;
 /**
  * While loop.
  */
-class While: public Statement {
+class While : public Statement {
     std::unique_ptr<Expression> condition_; ///< Loop condition.
-    std::unique_ptr<Statement> body_; ///< Loop body.
+    std::unique_ptr<Statement> body_;       ///< Loop body.
 
 public:
     /**
@@ -49,9 +49,8 @@ public:
      * \param[in] condition Valid pointer to the loop condition.
      * \param[in] body Valid pointer to the loop body.
      */
-    While(std::unique_ptr<Expression> condition, std::unique_ptr<Statement> body):
-        Statement(WHILE), condition_(std::move(condition)), body_(std::move(body))
-    {}
+    While(std::unique_ptr<Expression> condition, std::unique_ptr<Statement> body)
+        : Statement(WHILE), condition_(std::move(condition)), body_(std::move(body)) {}
 
     /**
      * \return Loop condition.

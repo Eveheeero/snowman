@@ -39,7 +39,7 @@ namespace nc {
 namespace core {
 
 namespace arch {
-    class Instruction;
+class Instruction;
 }
 
 namespace ir {
@@ -47,7 +47,7 @@ namespace ir {
 /**
  * Intermediate representation of a program.
  */
-class Program: public PrintableBase<Program>, boost::noncopyable {
+class Program : public PrintableBase<Program>, boost::noncopyable {
 public:
     typedef nc::ilist<BasicBlock> BasicBlocks;
 
@@ -56,14 +56,14 @@ private:
 
     class ToTheLeft {
     public:
-        bool operator()(const AddrRange &a, const AddrRange &b) const {
-            return a.end() <= b.start() && a != b;
-        }
+        bool operator()(const AddrRange &a, const AddrRange &b) const { return a.end() <= b.start() && a != b; }
     };
 
     BasicBlocks basicBlocks_; ///< Basic blocks.
-    std::map<AddrRange, BasicBlock *, ToTheLeft> range2basicBlock_; ///< Mapping of a range of addresses to the basic block covering the range.
-    boost::unordered_map<ByteAddr, BasicBlock *> start2basicBlock_; ///< Mapping of an address to the basic block at this address.
+    std::map<AddrRange, BasicBlock *, ToTheLeft>
+        range2basicBlock_; ///< Mapping of a range of addresses to the basic block covering the range.
+    boost::unordered_map<ByteAddr, BasicBlock *>
+        start2basicBlock_;                           ///< Mapping of an address to the basic block at this address.
     boost::unordered_set<ByteAddr> calledAddresses_; ///< Addresses having calls to them.
 
 public:

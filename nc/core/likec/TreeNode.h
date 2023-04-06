@@ -39,7 +39,7 @@ class Tree;
 /**
  * Base class for tree nodes.
  */
-class TreeNode: public PrintableBase<TreeNode> {
+class TreeNode : public PrintableBase<TreeNode> {
     NC_BASE_CLASS(TreeNode, nodeKind)
 
 public:
@@ -58,7 +58,7 @@ public:
      *
      * \param[in] nodeKind Node kind.
      */
-    explicit TreeNode(int nodeKind): nodeKind_(nodeKind) {}
+    explicit TreeNode(int nodeKind) : nodeKind_(nodeKind) {}
 
     /**
      * Virtual destructor.

@@ -33,13 +33,13 @@
 namespace nc {
 namespace gui {
 
-Command::Command():
+Command::Command()
+    :
 #ifdef NC_USE_THREADS
-    threadPool_(QThreadPool::globalInstance()),
+      threadPool_(QThreadPool::globalInstance()),
 #endif
-    activityCount_(0),
-    isBackground_(false)
-{}
+      activityCount_(0), isBackground_(false) {
+}
 
 Command::~Command() {
     cancel();
@@ -78,6 +78,7 @@ void Command::activityFinished() {
     }
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

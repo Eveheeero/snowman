@@ -10,15 +10,13 @@ namespace core {
 namespace ir {
 namespace vars {
 
-Variable::Variable(Scope scope, std::vector<TermAndLocation> termsAndLocations):
-    scope_(scope), termsAndLocations_(std::move(termsAndLocations))
-{
+Variable::Variable(Scope scope, std::vector<TermAndLocation> termsAndLocations)
+    : scope_(scope), termsAndLocations_(std::move(termsAndLocations)) {
     assert(!termsAndLocations_.empty());
 
-    memoryLocation_ = std::accumulate(termsAndLocations_.begin(), termsAndLocations_.end(), MemoryLocation(),
-        [](const MemoryLocation &a, const TermAndLocation &b) {
-            return MemoryLocation::merge(a, b.location);
-    });
+    memoryLocation_ = std::accumulate(
+        termsAndLocations_.begin(), termsAndLocations_.end(), MemoryLocation(),
+        [](const MemoryLocation &a, const TermAndLocation &b) { return MemoryLocation::merge(a, b.location); });
 }
 
 } // namespace vars

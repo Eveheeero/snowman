@@ -29,8 +29,8 @@
 
 #include <boost/exception/all.hpp>
 
-#include <QString>
 #include <QByteArray>
+#include <QString>
 
 namespace nc {
 
@@ -39,10 +39,10 @@ typedef boost::error_info<struct MessageTag, QString> ExceptionMessage;
 
 /**
  * Base exception class for all nocode exceptions.
- * 
+ *
  * Provides unicode error messages via unicodeWhat() function.
  */
-class Exception: virtual public std::exception, virtual public boost::exception {
+class Exception : virtual public std::exception, virtual public boost::exception {
 public:
     /**
      * Constructor.
@@ -54,8 +54,7 @@ public:
      *
      * \param message Exception message.
      */
-    explicit
-    Exception(const QString &message);
+    explicit Exception(const QString &message);
 
     /**
      * Virtual destructor.

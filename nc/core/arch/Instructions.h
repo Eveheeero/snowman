@@ -35,7 +35,9 @@
 
 #include "Instruction.h"
 
-namespace nc { namespace core { namespace arch {
+namespace nc {
+namespace core {
+namespace arch {
 
 class Instruction;
 
@@ -111,6 +113,8 @@ public:
     void print(QTextStream &out, PrintCallback<const Instruction *> *callback = nullptr) const;
 };
 
-}}} // namespace nc::core::arch
+} // namespace arch
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

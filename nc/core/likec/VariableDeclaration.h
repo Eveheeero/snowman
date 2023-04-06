@@ -42,10 +42,10 @@ class Type;
 /**
  * Variable declaration.
  */
-class VariableDeclaration: public Declaration, public Commentable {
-    const Type *type_; ///< Type of this variable.
+class VariableDeclaration : public Declaration, public Commentable {
+    const Type *type_;                                       ///< Type of this variable.
     std::unique_ptr<VariableIdentifier> variableIdentifier_; ///< Variable identifier node. Needed for refactoring.
-    std::unique_ptr<Expression> initialValue_; ///< Initial value of this variable.
+    std::unique_ptr<Expression> initialValue_;               ///< Initial value of this variable.
 
 public:
     /**
@@ -89,6 +89,7 @@ protected:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::VariableDeclaration, nc::core::likec::Declaration::VARIABLE_DECLARATION)
+NC_SUBCLASS(nc::core::likec::Declaration, nc::core::likec::VariableDeclaration,
+            nc::core::likec::Declaration::VARIABLE_DECLARATION)
 
 /* vim:set et sts=4 sw=4: */

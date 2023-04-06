@@ -38,7 +38,7 @@ class Expression;
 /**
  * Return statement with optional returned value.
  */
-class Return: public Statement {
+class Return : public Statement {
     std::unique_ptr<Expression> returnValue_; ///< Returned value.
 
 public:
@@ -47,8 +47,8 @@ public:
      *
      * \param[in] returnValue Returned value. Can be nullptr.
      */
-    explicit Return(std::unique_ptr<Expression> returnValue = nullptr):
-        Statement(RETURN), returnValue_(std::move(returnValue)) {}
+    explicit Return(std::unique_ptr<Expression> returnValue = nullptr)
+        : Statement(RETURN), returnValue_(std::move(returnValue)) {}
 
     /**
      * \return Returned value. Can be nullptr.

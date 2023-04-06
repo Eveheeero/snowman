@@ -34,11 +34,11 @@
 #include "Relocation.h"
 #include "Section.h"
 
-namespace nc { namespace core { namespace image {
+namespace nc {
+namespace core {
+namespace image {
 
-Image::Image():
-    demangler_(new mangling::DefaultDemangler())
-{}
+Image::Image() : demangler_(new mangling::DefaultDemangler()) {}
 
 Image::~Image() {}
 
@@ -108,6 +108,8 @@ void Image::setDemangler(std::unique_ptr<mangling::Demangler> demangler) {
     demangler_ = std::move(demangler);
 }
 
-}}} // namespace nc::core::image
+} // namespace image
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

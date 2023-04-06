@@ -36,14 +36,15 @@
 #include "Platform.h"
 #include "Symbol.h"
 
-namespace nc { namespace core {
+namespace nc {
+namespace core {
 
 namespace arch {
-    class Architecture;
+class Architecture;
 }
 
 namespace mangling {
-    class Demangler;
+class Demangler;
 }
 
 namespace image {
@@ -54,15 +55,16 @@ class Relocation;
 /**
  * An executable image.
  */
-class Image: public ByteSource {
+class Image : public ByteSource {
     Platform platform_;
-    std::vector<std::unique_ptr<Section>> sections_; ///< The list of sections.
-    std::vector<std::unique_ptr<Symbol>> symbols_; ///< The list of symbols.
+    std::vector<std::unique_ptr<Section>> sections_;             ///< The list of sections.
+    std::vector<std::unique_ptr<Symbol>> symbols_;               ///< The list of symbols.
     boost::unordered_map<ConstantValue, Symbol *> value2symbol_; ///< Mapping from value to the symbol with this value.
-    std::vector<std::unique_ptr<Relocation>> relocations_; ///< The list of relocations.
-    boost::unordered_map<ByteAddr, Relocation *> address2relocation_; ///< Mapping from an address to the relocation with this address.
+    std::vector<std::unique_ptr<Relocation>> relocations_;       ///< The list of relocations.
+    boost::unordered_map<ByteAddr, Relocation *>
+        address2relocation_;                         ///< Mapping from an address to the relocation with this address.
     std::unique_ptr<mangling::Demangler> demangler_; ///< Demangler.
-    boost::optional<ByteAddr> entrypoint_; ///< Entrypoint of image.
+    boost::optional<ByteAddr> entrypoint_;           ///< Entrypoint of image.
 
 public:
     /**
@@ -95,9 +97,7 @@ public:
     /**
      * \return List of all sections.
      */
-    const std::vector<Section *> &sections() {
-        return reinterpret_cast<const std::vector<Section *> &>(sections_);
-    }
+    const std::vector<Section *> &sections() { return reinterpret_cast<const std::vector<Section *> &>(sections_); }
 
     /**
      * \return List of all sections.
@@ -194,6 +194,8 @@ public:
     const boost::optional<ByteAddr> &entrypoint() const { return entrypoint_; }
 };
 
-}}} // namespace nc::core::image
+} // namespace image
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

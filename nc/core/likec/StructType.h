@@ -40,9 +40,9 @@ class StructTypeDeclaration;
 /**
  * Structural type.
  */
-class StructType: public Type {
+class StructType : public Type {
     std::vector<std::unique_ptr<MemberDeclaration>> members_; ///< Members of struct.
-    const StructTypeDeclaration *typeDeclaration_; ///< Type declaration.
+    const StructTypeDeclaration *typeDeclaration_;            ///< Type declaration.
 
 public:
     /**
@@ -50,7 +50,8 @@ public:
      *
      * \param[in] typeDeclaration Structural type declaration.
      */
-    StructType(const StructTypeDeclaration *typeDeclaration): Type(0, STRUCT_TYPE), typeDeclaration_(typeDeclaration) {}
+    StructType(const StructTypeDeclaration *typeDeclaration)
+        : Type(0, STRUCT_TYPE), typeDeclaration_(typeDeclaration) {}
 
     /**
      * \return Members of struct.

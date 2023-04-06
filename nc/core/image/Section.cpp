@@ -28,12 +28,9 @@ namespace nc {
 namespace core {
 namespace image {
 
-Section::Section(const QString &name, ByteAddr addr, ByteSize size):
-    name_(name), addr_(addr), size_(size),
-    isAllocated_(false),
-    isReadable_(false), isWritable_(false), isExecutable_(false),
-    isCode_(false), isData_(false), isBss_(false)
-{}
+Section::Section(const QString &name, ByteAddr addr, ByteSize size)
+    : name_(name), addr_(addr), size_(size), isAllocated_(false), isReadable_(false), isWritable_(false),
+      isExecutable_(false), isCode_(false), isData_(false), isBss_(false) {}
 
 ByteSize Section::readBytes(ByteAddr addr, void *buf, ByteSize size) const {
     auto offset = addr - addr_;

@@ -36,14 +36,13 @@ namespace likec {
 /**
  * Base class for binary operators.
  */
-class BinaryOperator: public Expression {
+class BinaryOperator : public Expression {
     NC_BASE_CLASS(BinaryOperator, operatorKind)
 
-    std::unique_ptr<Expression> left_; ///< Left operand.
+    std::unique_ptr<Expression> left_;  ///< Left operand.
     std::unique_ptr<Expression> right_; ///< Right operand.
-    
-    public:
 
+public:
     /**
      * Operator id.
      */
@@ -78,9 +77,8 @@ class BinaryOperator: public Expression {
      * \param[in] left Left operand.
      * \param[in] right Right operand.
      */
-    BinaryOperator(int operatorKind, std::unique_ptr<Expression> left, std::unique_ptr<Expression> right):
-        Expression(BINARY_OPERATOR), operatorKind_(operatorKind), left_(std::move(left)), right_(std::move(right))
-    {}
+    BinaryOperator(int operatorKind, std::unique_ptr<Expression> left, std::unique_ptr<Expression> right)
+        : Expression(BINARY_OPERATOR), operatorKind_(operatorKind), left_(std::move(left)), right_(std::move(right)) {}
 
     /**
      * Sets operator's kind.

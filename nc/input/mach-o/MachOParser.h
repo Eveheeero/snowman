@@ -14,7 +14,7 @@ namespace mach_o {
 /**
  * Parser for the Mach-O file format.
  */
-class MachOParser: public core::input::Parser {
+class MachOParser : public core::input::Parser {
 public:
     MachOParser();
 

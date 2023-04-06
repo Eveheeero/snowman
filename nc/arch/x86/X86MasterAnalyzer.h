@@ -31,7 +31,7 @@ namespace nc {
 namespace arch {
 namespace x86 {
 
-class X86MasterAnalyzer: public core::MasterAnalyzer {
+class X86MasterAnalyzer : public core::MasterAnalyzer {
 public:
     void createProgram(core::Context &context) const override;
     void detectCallingConventions(core::Context &context) const override;

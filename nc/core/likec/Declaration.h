@@ -36,23 +36,22 @@ namespace likec {
 /**
  * Declaration of an identifier (variable, function, type, whatever).
  */
-class Declaration: public TreeNode {
+class Declaration : public TreeNode {
     NC_BASE_CLASS(Declaration, declarationKind)
 
     const QString identifier_;
 
 public:
-
     /**
      * Declaration kind.
      */
     enum {
-        FUNCTION_DECLARATION,           ///< Function declaration.
-        FUNCTION_DEFINITION,            ///< Function definition.
-        LABEL_DECLARATION,              ///< Label declaration.
-        MEMBER_DECLARATION,             ///< Declaration of a struct or union member.
-        STRUCT_TYPE_DECLARATION,        ///< Declaration of structural type.
-        VARIABLE_DECLARATION,           ///< Variable declaration.
+        FUNCTION_DECLARATION,    ///< Function declaration.
+        FUNCTION_DEFINITION,     ///< Function definition.
+        LABEL_DECLARATION,       ///< Label declaration.
+        MEMBER_DECLARATION,      ///< Declaration of a struct or union member.
+        STRUCT_TYPE_DECLARATION, ///< Declaration of structural type.
+        VARIABLE_DECLARATION,    ///< Variable declaration.
     };
 
     /**
@@ -61,9 +60,8 @@ public:
      * \param[in] declarationKind Declaration kind.
      * \param[in] identifier Name of declared entity.
      */
-    Declaration(int declarationKind, QString identifier):
-        TreeNode(DECLARATION), declarationKind_(declarationKind), identifier_(std::move(identifier))
-    {}
+    Declaration(int declarationKind, QString identifier)
+        : TreeNode(DECLARATION), declarationKind_(declarationKind), identifier_(std::move(identifier)) {}
 
     /**
      * \return Name of declared entity.

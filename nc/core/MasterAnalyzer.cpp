@@ -40,15 +40,15 @@
 #include <nc/core/ir/calling/Hooks.h>
 #include <nc/core/ir/calling/SignatureAnalyzer.h>
 #include <nc/core/ir/calling/Signatures.h>
-#include <nc/core/ir/cflow/Graphs.h>
 #include <nc/core/ir/cflow/GraphBuilder.h>
+#include <nc/core/ir/cflow/Graphs.h>
 #include <nc/core/ir/cflow/StructureAnalyzer.h>
 #include <nc/core/ir/cgen/CodeGenerator.h>
 #include <nc/core/ir/cgen/NameGenerator.h>
-#include <nc/core/ir/dflow/Dataflows.h>
 #include <nc/core/ir/dflow/DataflowAnalyzer.h>
-#include <nc/core/ir/liveness/Livenesses.h>
+#include <nc/core/ir/dflow/Dataflows.h>
 #include <nc/core/ir/liveness/LivenessAnalyzer.h>
+#include <nc/core/ir/liveness/Livenesses.h>
 #include <nc/core/ir/types/TypeAnalyzer.h>
 #include <nc/core/ir/types/Types.h>
 #include <nc/core/ir/vars/VariableAnalyzer.h>
@@ -69,8 +69,8 @@ void MasterAnalyzer::createProgram(Context &context) const {
 
     /* 프로그램 소스코드를 받아와서  */
     core::irgen::IRGenerator(context.image().get(), context.instructions().get(), program.get(),
-        context.cancellationToken(), context.logToken())
-    .generate();
+                             context.cancellationToken(), context.logToken())
+        .generate();
 
     context.setProgram(std::move(program));
 }
@@ -92,9 +92,8 @@ void MasterAnalyzer::createHooks(Context &context) const {
     context.setConventions(std::make_unique<ir::calling::Conventions>());
     context.setHooks(std::make_unique<ir::calling::Hooks>(*context.conventions(), *context.signatures()));
 
-    context.hooks()->setConventionDetector([this, &context](const ir::calling::CalleeId &calleeId) {
-        this->detectCallingConvention(context, calleeId);
-    });
+    context.hooks()->setConventionDetector(
+        [this, &context](const ir::calling::CalleeId &calleeId) { this->detectCallingConvention(context, calleeId); });
 }
 
 void MasterAnalyzer::detectCallingConventions(Context &) const {
@@ -103,7 +102,8 @@ void MasterAnalyzer::detectCallingConventions(Context &) const {
 
 void MasterAnalyzer::detectCallingConvention(Context &context, const ir::calling::CalleeId &calleeId) const {
     if (!context.image()->platform().architecture()->conventions().empty()) {
-        context.conventions()->setConvention(calleeId, context.image()->platform().architecture()->conventions().front());
+        context.conventions()->setConvention(calleeId,
+                                             context.image()->platform().architecture()->conventions().front());
     }
 }
 
@@ -126,7 +126,8 @@ void MasterAnalyzer::dataflowAnalysis(Context &context, ir::Function *function) 
     context.hooks()->instrument(function, dataflow.get());
 
     ir::dflow::DataflowAnalyzer(*dataflow, context.image()->platform().architecture(), context.cancellationToken(),
-                                context.logToken()).analyze(ir::CFG(function->basicBlocks()));
+                                context.logToken())
+        .analyze(ir::CFG(function->basicBlocks()));
 
     context.dataflows()->emplace(function, std::move(dataflow));
 }
@@ -134,8 +135,8 @@ void MasterAnalyzer::dataflowAnalysis(Context &context, ir::Function *function) 
 void MasterAnalyzer::reconstructSignatures(Context &context) const {
     context.logToken().info(tr("Reconstructing function signatures."));
 
-    ir::calling::SignatureAnalyzer(*context.signatures(), *context.dataflows(), *context.hooks(),
-        *context.livenesses(), context.cancellationToken(), context.logToken())
+    ir::calling::SignatureAnalyzer(*context.signatures(), *context.dataflows(), *context.hooks(), *context.livenesses(),
+                                   context.cancellationToken(), context.logToken())
         .analyze();
 }
 
@@ -144,8 +145,7 @@ void MasterAnalyzer::reconstructVariables(Context &context) const {
 
     std::unique_ptr<ir::vars::Variables> variables(new ir::vars::Variables());
 
-    ir::vars::VariableAnalyzer(*variables, *context.dataflows(), context.image()->platform().architecture())
-        .analyze();
+    ir::vars::VariableAnalyzer(*variables, *context.dataflows(), context.image()->platform().architecture()).analyze();
 
     context.setVariables(std::move(variables));
 }
@@ -165,11 +165,11 @@ void MasterAnalyzer::livenessAnalysis(Context &context, const ir::Function *func
 
     std::unique_ptr<ir::liveness::Liveness> liveness(new ir::liveness::Liveness());
 
-    ir::liveness::LivenessAnalyzer(*liveness, function,
-        *context.dataflows()->at(function), context.image()->platform().architecture(),
-        context.graphs() ? context.graphs()->at(function).get() : nullptr, *context.hooks(),
-        context.signatures(), context.logToken())
-    .analyze();
+    ir::liveness::LivenessAnalyzer(*liveness, function, *context.dataflows()->at(function),
+                                   context.image()->platform().architecture(),
+                                   context.graphs() ? context.graphs()->at(function).get() : nullptr, *context.hooks(),
+                                   context.signatures(), context.logToken())
+        .analyze();
 
     context.livenesses()->emplace(function, std::move(liveness));
 }
@@ -179,11 +179,9 @@ void MasterAnalyzer::reconstructTypes(Context &context) const {
 
     std::unique_ptr<ir::types::Types> types(new ir::types::Types());
 
-    ir::types::TypeAnalyzer(
-        *types, *context.functions(), *context.dataflows(), *context.variables(),
-        *context.livenesses(), *context.hooks(), *context.signatures(),
-        context.cancellationToken())
-    .analyze();
+    ir::types::TypeAnalyzer(*types, *context.functions(), *context.dataflows(), *context.variables(),
+                            *context.livenesses(), *context.hooks(), *context.signatures(), context.cancellationToken())
+        .analyze();
 
     context.setTypes(std::move(types));
 }
@@ -215,9 +213,9 @@ void MasterAnalyzer::generateTree(Context &context) const {
 
     auto tree = std::make_unique<nc::core::likec::Tree>();
 
-    ir::cgen::CodeGenerator(*tree, *context.image(), *context.functions(), *context.hooks(),
-        *context.signatures(), *context.dataflows(), *context.variables(), *context.graphs(),
-        *context.livenesses(), *context.types(), context.cancellationToken())
+    ir::cgen::CodeGenerator(*tree, *context.image(), *context.functions(), *context.hooks(), *context.signatures(),
+                            *context.dataflows(), *context.variables(), *context.graphs(), *context.livenesses(),
+                            *context.types(), context.cancellationToken())
         .makeCompilationUnit();
 
     context.setTree(std::move(tree));

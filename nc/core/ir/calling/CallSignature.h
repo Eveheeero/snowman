@@ -20,7 +20,7 @@ namespace calling {
  */
 class CallSignature {
     std::vector<std::shared_ptr<const Term>> arguments_; ///< Terms representing the arguments.
-    std::shared_ptr<const Term> returnValue_; ///< Terms representing the return value.
+    std::shared_ptr<const Term> returnValue_;            ///< Terms representing the return value.
 
 public:
     /**
@@ -52,4 +52,3 @@ public:
 } // namespace nc
 
 /* vim:set et sts=4 sw=4: */
-

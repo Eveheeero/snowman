@@ -10,6 +10,7 @@ namespace gui {
 
 const auto highlightColor = Qt::lightGray;
 
-}} // namespace nc::gui
+}
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

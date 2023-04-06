@@ -41,21 +41,14 @@ public:
     /**
      * Log level values.
      */
-    enum Level {
-        DEBUG,
-        INFO,
-        WARNING,
-        ERROR,
-        LOWEST = DEBUG,
-        HIGHEST = ERROR
-    };
+    enum Level { DEBUG, INFO, WARNING, ERROR, LOWEST = DEBUG, HIGHEST = ERROR };
 
     /**
      * Constructor.
      *
      * \param level Log level value.
      */
-    LogLevel(Level level): level_(level) {}
+    LogLevel(Level level) : level_(level) {}
 
     /**
      * \return Log level value.

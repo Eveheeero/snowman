@@ -14,7 +14,7 @@ namespace arm {
 class ArmArchitecture;
 class ArmInstructionAnalyzerImpl;
 
-class ArmInstructionAnalyzer: public core::irgen::InstructionAnalyzer {
+class ArmInstructionAnalyzer : public core::irgen::InstructionAnalyzer {
     std::unique_ptr<ArmInstructionAnalyzerImpl> impl_;
 
 public:
@@ -26,6 +26,8 @@ protected:
     virtual void doCreateStatements(const core::arch::Instruction *instruction, core::ir::Program *program) override;
 };
 
-}}} // namespace nc::arch::arm
+} // namespace arm
+} // namespace arch
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

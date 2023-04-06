@@ -27,16 +27,16 @@
 
 #include "TextView.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * Log window.
  */
-class LogView: public TextView {
+class LogView : public TextView {
     Q_OBJECT
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -44,7 +44,7 @@ class LogView: public TextView {
      */
     explicit LogView(QWidget *parent = 0);
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     /**
      * Shows given log message.
@@ -54,6 +54,7 @@ class LogView: public TextView {
     void log(const QString &text);
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -47,7 +47,7 @@ public:
     /**
      * Constructs an invalid indexing expression.
      */
-    ArrayAccess(): index_(nullptr) {}
+    ArrayAccess() : index_(nullptr) {}
 
     /**
      * Constructs a valid indexing expression.
@@ -56,34 +56,45 @@ public:
      * \param stride    Stride value.
      * \param index     Valid pointer to the index term.
      */
-    ArrayAccess(ConstantValue base, ConstantValue stride, const Term *index):
-        base_(base), stride_(stride), index_(index)
-    {
+    ArrayAccess(ConstantValue base, ConstantValue stride, const Term *index)
+        : base_(base), stride_(stride), index_(index) {
         assert(index_ != nullptr);
     }
 
     /**
      * \return Base, i.e. the constant offset in the expression.
      */
-    ConstantValue base() const { assert(*this); return base_; }
+    ConstantValue base() const {
+        assert(*this);
+        return base_;
+    }
 
     /**
      * \return Stride, i.e. the constant multiplier in the expression.
      */
-    ConstantValue stride() const { assert(*this); return stride_; }
+    ConstantValue stride() const {
+        assert(*this);
+        return stride_;
+    }
 
     /**
      * \return Valid pointer to the term serving as an index, i.e. the non-constant
      *         multiplier in the expression.
      */
-    const Term *index() const { assert(*this); return index_; }
+    const Term *index() const {
+        assert(*this);
+        return index_;
+    }
 
     /**
      * \return A non-nullptr pointer if and only if the descriptor is valid.
      */
-    operator const void*() const { return index_; }
+    operator const void *() const { return index_; }
 };
 
-}}}} // namespace nc::core::ir::misc
+} // namespace misc
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -24,23 +24,27 @@
 
 #include "ParseError.h"
 
-namespace nc { namespace core { namespace input {
+namespace nc {
+namespace core {
+namespace input {
 
 QString ParseError::unicodeWhat() const noexcept {
-        const int *line = boost::get_error_info<ErrorLine>(*this);
-        const int *column = boost::get_error_info<ErrorColumn>(*this);
+    const int *line = boost::get_error_info<ErrorLine>(*this);
+    const int *column = boost::get_error_info<ErrorColumn>(*this);
 
-        if (line && column) {
-            return tr("%1:%2: %3").arg(*line).arg(*column).arg(Exception::unicodeWhat());
-        }
+    if (line && column) {
+        return tr("%1:%2: %3").arg(*line).arg(*column).arg(Exception::unicodeWhat());
+    }
 
-        if (const ByteSize *offset = boost::get_error_info<ErrorOffset>(*this)) {
-            return tr("offset 0x%1: %2").arg(*offset, 0, 16).arg(Exception::unicodeWhat());
-        }
+    if (const ByteSize *offset = boost::get_error_info<ErrorOffset>(*this)) {
+        return tr("offset 0x%1: %2").arg(*offset, 0, 16).arg(Exception::unicodeWhat());
+    }
 
-        return Exception::unicodeWhat();
+    return Exception::unicodeWhat();
 }
 
-}}} // namespace nc::core::input
+} // namespace input
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

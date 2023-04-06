@@ -35,9 +35,7 @@ namespace arch {
 const std::shared_ptr<const Instruction> &Instructions::getCovering(ByteAddr addr) const {
     auto i = address2instruction_.lower_bound(addr);
 
-    if (i != address2instruction_.end() &&
-        i->second->addr() <= addr && addr < i->second->endAddr())
-    {
+    if (i != address2instruction_.end() && i->second->addr() <= addr && addr < i->second->endAddr()) {
         return i->second;
     } else {
         static const std::shared_ptr<const Instruction> null;

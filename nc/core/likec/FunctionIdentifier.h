@@ -36,16 +36,15 @@ class FunctionDeclaration;
 /**
  * Function identifier.
  */
-class FunctionIdentifier: public Expression {
+class FunctionIdentifier : public Expression {
     FunctionDeclaration *declaration_; ///< Declaration of accessed function.
 
 public:
     /**
      * \param[in] declaration Valid pointer to a function declaration.
      */
-    explicit FunctionIdentifier(FunctionDeclaration *declaration):
-        Expression(FUNCTION_IDENTIFIER), declaration_(declaration)
-    {
+    explicit FunctionIdentifier(FunctionDeclaration *declaration)
+        : Expression(FUNCTION_IDENTIFIER), declaration_(declaration) {
         assert(declaration != nullptr);
     }
 
@@ -72,6 +71,7 @@ public:
 } // namespace core
 } // namespace nc
 
-NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::FunctionIdentifier, nc::core::likec::Expression::FUNCTION_IDENTIFIER)
+NC_SUBCLASS(nc::core::likec::Expression, nc::core::likec::FunctionIdentifier,
+            nc::core::likec::Expression::FUNCTION_IDENTIFIER)
 
 /* vim:set et sts=4 sw=4: */

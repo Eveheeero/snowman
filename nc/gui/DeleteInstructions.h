@@ -33,10 +33,10 @@
 namespace nc {
 
 namespace core {
-    namespace arch {
-        class Instruction;
-    }
+namespace arch {
+class Instruction;
 }
+} // namespace core
 
 namespace gui {
 
@@ -45,7 +45,7 @@ class Project;
 /**
  * Command for decompiling the project.
  */
-class DeleteInstructions: public Command {
+class DeleteInstructions : public Command {
     Q_OBJECT
 
     /** Project. */
@@ -54,8 +54,7 @@ class DeleteInstructions: public Command {
     /** Instructions to be removed. */
     std::vector<std::shared_ptr<const core::arch::Instruction>> instructions_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -67,6 +66,7 @@ class DeleteInstructions: public Command {
     void work() override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

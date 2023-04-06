@@ -35,7 +35,7 @@ namespace nc {
 namespace core {
 
 namespace arch {
-    class Architecture;
+class Architecture;
 }
 
 namespace ir {
@@ -46,16 +46,16 @@ class Statement;
 class Term;
 
 namespace calling {
-    class Hooks;
-    class Signatures;
-}
+class Hooks;
+class Signatures;
+} // namespace calling
 
 namespace cflow {
-    class Graph;
+class Graph;
 }
 
 namespace dflow {
-    class Dataflow;
+class Dataflow;
 }
 
 namespace liveness {
@@ -99,10 +99,9 @@ public:
      * \param[in]  log          Log token.
      * \param[in]  signatures   Pointer to the function signatures. Can be NULL.
      */
-    LivenessAnalyzer(Liveness &liveness, const Function *function,
-        const dflow::Dataflow &dataflow, const arch::Architecture *architecture, 
-        const cflow::Graph *regionGraph, const calling::Hooks &hooks,
-        const calling::Signatures *signatures, const LogToken &log);
+    LivenessAnalyzer(Liveness &liveness, const Function *function, const dflow::Dataflow &dataflow,
+                     const arch::Architecture *architecture, const cflow::Graph *regionGraph,
+                     const calling::Hooks &hooks, const calling::Signatures *signatures, const LogToken &log);
 
     /**
      * Computes the set of used terms.

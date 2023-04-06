@@ -35,13 +35,13 @@ namespace likec {
 namespace {
 
 struct IsNull {
-    template<class T>
-    bool operator()(const T& item) const {
+    template <class T>
+    bool operator()(const T &item) const {
         return !item;
     }
 };
 
-template<class T, class U>
+template <class T, class U>
 std::unique_ptr<T> as(std::unique_ptr<U> ptr) {
     assert(ptr);
     auto result = std::unique_ptr<T>(ptr.release()->template as<T>());
@@ -51,8 +51,7 @@ std::unique_ptr<T> as(std::unique_ptr<U> ptr) {
 
 } // anonymous namespace
 
-Simplifier::Simplifier(Tree &tree) : typeCalculator_(tree) {
-}
+Simplifier::Simplifier(Tree &tree) : typeCalculator_(tree) {}
 
 std::unique_ptr<CompilationUnit> Simplifier::simplify(std::unique_ptr<CompilationUnit> node) {
     node->declarations() = simplify(std::move(node->declarations()));
@@ -61,18 +60,18 @@ std::unique_ptr<CompilationUnit> Simplifier::simplify(std::unique_ptr<Compilatio
 
 std::unique_ptr<Declaration> Simplifier::simplify(std::unique_ptr<Declaration> node) {
     switch (node->declarationKind()) {
-        case Declaration::FUNCTION_DECLARATION:
-            return node;
-        case Declaration::FUNCTION_DEFINITION:
-            return simplify(as<FunctionDefinition>(std::move(node)));
-        case Declaration::LABEL_DECLARATION:
-            return simplify(as<LabelDeclaration>(std::move(node)));
-        case Declaration::MEMBER_DECLARATION:
-            return node;
-        case Declaration::STRUCT_TYPE_DECLARATION:
-            return node;
-        case Declaration::VARIABLE_DECLARATION:
-            return simplify(as<VariableDeclaration>(std::move(node)));
+    case Declaration::FUNCTION_DECLARATION:
+        return node;
+    case Declaration::FUNCTION_DEFINITION:
+        return simplify(as<FunctionDefinition>(std::move(node)));
+    case Declaration::LABEL_DECLARATION:
+        return simplify(as<LabelDeclaration>(std::move(node)));
+    case Declaration::MEMBER_DECLARATION:
+        return node;
+    case Declaration::STRUCT_TYPE_DECLARATION:
+        return node;
+    case Declaration::VARIABLE_DECLARATION:
+        return simplify(as<VariableDeclaration>(std::move(node)));
     }
     unreachable();
 }
@@ -96,28 +95,28 @@ std::unique_ptr<VariableDeclaration> Simplifier::simplify(std::unique_ptr<Variab
 
 std::unique_ptr<Expression> Simplifier::simplify(std::unique_ptr<Expression> node) {
     switch (node->expressionKind()) {
-        case Expression::BINARY_OPERATOR:
-            return simplify(as<BinaryOperator>(std::move(node)));
-        case Expression::CALL_OPERATOR:
-            return simplify(as<CallOperator>(std::move(node)));
-        case Expression::FUNCTION_IDENTIFIER:
-            return node;
-        case Expression::INTEGER_CONSTANT:
-            return node;
-        case Expression::LABEL_IDENTIFIER:
-            return node;
-        case Expression::MEMBER_ACCESS_OPERATOR:
-            return simplify(as<MemberAccessOperator>(std::move(node)));
-        case Expression::STRING:
-            return node;
-        case Expression::TYPECAST:
-            return simplify(as<Typecast>(std::move(node)));
-        case Expression::UNARY_OPERATOR:
-            return simplify(as<UnaryOperator>(std::move(node)));
-        case Expression::VARIABLE_IDENTIFIER:
-            return node;
-        case Expression::UNDECLARED_IDENTIFIER:
-            return node;
+    case Expression::BINARY_OPERATOR:
+        return simplify(as<BinaryOperator>(std::move(node)));
+    case Expression::CALL_OPERATOR:
+        return simplify(as<CallOperator>(std::move(node)));
+    case Expression::FUNCTION_IDENTIFIER:
+        return node;
+    case Expression::INTEGER_CONSTANT:
+        return node;
+    case Expression::LABEL_IDENTIFIER:
+        return node;
+    case Expression::MEMBER_ACCESS_OPERATOR:
+        return simplify(as<MemberAccessOperator>(std::move(node)));
+    case Expression::STRING:
+        return node;
+    case Expression::TYPECAST:
+        return simplify(as<Typecast>(std::move(node)));
+    case Expression::UNARY_OPERATOR:
+        return simplify(as<UnaryOperator>(std::move(node)));
+    case Expression::VARIABLE_IDENTIFIER:
+        return node;
+    case Expression::UNDECLARED_IDENTIFIER:
+        return node;
     }
     unreachable();
 }
@@ -128,28 +127,28 @@ std::unique_ptr<Expression> Simplifier::simplify(std::unique_ptr<BinaryOperator>
 
     /* Remove typecasts of operands if this won't change anything. */
     switch (node->operatorKind()) {
-        case BinaryOperator::ADD:
-        case BinaryOperator::SUB:
-        case BinaryOperator::MUL:
-        case BinaryOperator::DIV:
-        case BinaryOperator::REM: {
-            auto rewrite = [&](std::unique_ptr<Expression> &left, std::unique_ptr<Expression> &right) {
-                if (auto typecast = left->as<Typecast>()) {
-                    if (typecast->type()->size() >= typeCalculator_.getType(typecast->operand().get())->size()) {
-                        if (typeCalculator_.getType(node.get()) ==
-                            typeCalculator_.getBinaryOperatorType(node->operatorKind(), typecast->operand().get(),
-                                                                  right.get())) {
-                            left = std::move(typecast->operand());
-                        }
+    case BinaryOperator::ADD:
+    case BinaryOperator::SUB:
+    case BinaryOperator::MUL:
+    case BinaryOperator::DIV:
+    case BinaryOperator::REM: {
+        auto rewrite = [&](std::unique_ptr<Expression> &left, std::unique_ptr<Expression> &right) {
+            if (auto typecast = left->as<Typecast>()) {
+                if (typecast->type()->size() >= typeCalculator_.getType(typecast->operand().get())->size()) {
+                    if (typeCalculator_.getType(node.get()) ==
+                        typeCalculator_.getBinaryOperatorType(node->operatorKind(), typecast->operand().get(),
+                                                              right.get())) {
+                        left = std::move(typecast->operand());
                     }
                 }
-            };
-            rewrite(node->left(), node->right());
-            rewrite(node->right(), node->left());
-            break;
-        }
-        default:
-            break;
+            }
+        };
+        rewrite(node->left(), node->right());
+        rewrite(node->right(), node->left());
+        break;
+    }
+    default:
+        break;
     }
 
     /* Rewrite computing of member address. */
@@ -207,104 +206,104 @@ std::unique_ptr<Expression> Simplifier::simplify(std::unique_ptr<BinaryOperator>
     };
 
     switch (node->operatorKind()) {
-        case BinaryOperator::ADD:
-            if (auto result = rewritePointerArithmetic(node->left().get(), node->right().get())) {
-                return simplify(std::move(result));
-            }
-            if (auto result = rewritePointerArithmetic(node->right().get(), node->left().get())) {
-                return simplify(std::move(result));
-            }
-            break;
-        case BinaryOperator::SUB:
-            if (auto result = rewritePointerArithmetic(node->left().get(), node->right().get())) {
-                return simplify(std::move(result));
-            }
-            break;
-        default:
-            break;
+    case BinaryOperator::ADD:
+        if (auto result = rewritePointerArithmetic(node->left().get(), node->right().get())) {
+            return simplify(std::move(result));
+        }
+        if (auto result = rewritePointerArithmetic(node->right().get(), node->left().get())) {
+            return simplify(std::move(result));
+        }
+        break;
+    case BinaryOperator::SUB:
+        if (auto result = rewritePointerArithmetic(node->left().get(), node->right().get())) {
+            return simplify(std::move(result));
+        }
+        break;
+    default:
+        break;
     }
 
     /*
      * Handle mathematical identities.
      */
     switch (node->operatorKind()) {
-        case BinaryOperator::ADD: {
-            if (isZero(node->left().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right())));
-            }
-            if (isZero(node->right().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
-            }
-            break;
+    case BinaryOperator::ADD: {
+        if (isZero(node->left().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right())));
         }
-        case BinaryOperator::SUB: {
-            if (isZero(node->right().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
-            }
-            if (isZero(node->left().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<UnaryOperator>(
-                    UnaryOperator::NEGATION,
-                    std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right()))));
-            }
-            break;
+        if (isZero(node->right().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
         }
-        case BinaryOperator::MUL: {
-            if (isOne(node->left().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right())));
-            }
-            if (isOne(node->right().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
-            }
-            break;
+        break;
+    }
+    case BinaryOperator::SUB: {
+        if (isZero(node->right().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
         }
-        case BinaryOperator::SHL:
-        case BinaryOperator::SHR: {
-            if (isZero(node->right().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
-            }
-            break;
+        if (isZero(node->left().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<UnaryOperator>(
+                UnaryOperator::NEGATION,
+                std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right()))));
         }
-        case BinaryOperator::BITWISE_OR:
-        case BinaryOperator::BITWISE_XOR:
-        case BinaryOperator::LOGICAL_OR: {
-            if (isZero(node->left().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right())));
-            }
-            if (isZero(node->right().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
-            }
-            break;
+        break;
+    }
+    case BinaryOperator::MUL: {
+        if (isOne(node->left().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right())));
         }
-        case BinaryOperator::LOGICAL_AND: {
-            if (isOne(node->right().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
-            }
-            if (isOne(node->left().get())) {
-                auto type = typeCalculator_.getType(node.get());
-                return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right())));
-            }
-            break;
+        if (isOne(node->right().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
         }
+        break;
+    }
+    case BinaryOperator::SHL:
+    case BinaryOperator::SHR: {
+        if (isZero(node->right().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
+        }
+        break;
+    }
+    case BinaryOperator::BITWISE_OR:
+    case BinaryOperator::BITWISE_XOR:
+    case BinaryOperator::LOGICAL_OR: {
+        if (isZero(node->left().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right())));
+        }
+        if (isZero(node->right().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
+        }
+        break;
+    }
+    case BinaryOperator::LOGICAL_AND: {
+        if (isOne(node->right().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->left())));
+        }
+        if (isOne(node->left().get())) {
+            auto type = typeCalculator_.getType(node.get());
+            return simplify(std::make_unique<Typecast>(Typecast::STATIC_CAST, type, std::move(node->right())));
+        }
+        break;
+    }
     }
 
     /* Simplifying boolean subexpressions. */
     switch (node->operatorKind()) {
-        case BinaryOperator::LOGICAL_OR:
-        case BinaryOperator::LOGICAL_AND: {
-            node->left() = simplifyBooleanExpression(std::move(node->left()));
-            node->right() = simplifyBooleanExpression(std::move(node->right()));
-            break;
-        }
+    case BinaryOperator::LOGICAL_OR:
+    case BinaryOperator::LOGICAL_AND: {
+        node->left() = simplifyBooleanExpression(std::move(node->left()));
+        node->right() = simplifyBooleanExpression(std::move(node->right()));
+        break;
+    }
     }
 
     /*
@@ -312,30 +311,30 @@ std::unique_ptr<Expression> Simplifier::simplify(std::unique_ptr<BinaryOperator>
      * a - -1 -> a + 1
      */
     switch (node->operatorKind()) {
-        case BinaryOperator::ADD: {
-            if (auto constant = node->left()->as<IntegerConstant>()) {
-                if (constant->type()->isSigned() && constant->value().size() > 1 && constant->value().signedValue() < 0) {
-                    node->setOperatorKind(BinaryOperator::SUB);
-                    constant->setValue(SizedValue(constant->value().size(), constant->value().absoluteValue()));
-                }
+    case BinaryOperator::ADD: {
+        if (auto constant = node->left()->as<IntegerConstant>()) {
+            if (constant->type()->isSigned() && constant->value().size() > 1 && constant->value().signedValue() < 0) {
+                node->setOperatorKind(BinaryOperator::SUB);
+                constant->setValue(SizedValue(constant->value().size(), constant->value().absoluteValue()));
             }
-            if (auto constant = node->right()->as<IntegerConstant>()) {
-                if (constant->type()->isSigned() && constant->value().size() > 1 && constant->value().signedValue() < 0) {
-                    node->setOperatorKind(BinaryOperator::SUB);
-                    constant->setValue(SizedValue(constant->value().size(), constant->value().absoluteValue()));
-                }
-            }
-            break;
         }
-        case BinaryOperator::SUB: {
-            if (auto constant = node->right()->as<IntegerConstant>()) {
-                if (constant->type()->isSigned() && constant->value().size() > 1 && constant->value().signedValue() < 0) {
-                    node->setOperatorKind(BinaryOperator::ADD);
-                    constant->setValue(SizedValue(constant->value().size(), constant->value().absoluteValue()));
-                }
+        if (auto constant = node->right()->as<IntegerConstant>()) {
+            if (constant->type()->isSigned() && constant->value().size() > 1 && constant->value().signedValue() < 0) {
+                node->setOperatorKind(BinaryOperator::SUB);
+                constant->setValue(SizedValue(constant->value().size(), constant->value().absoluteValue()));
             }
-            break;
         }
+        break;
+    }
+    case BinaryOperator::SUB: {
+        if (auto constant = node->right()->as<IntegerConstant>()) {
+            if (constant->type()->isSigned() && constant->value().size() > 1 && constant->value().signedValue() < 0) {
+                node->setOperatorKind(BinaryOperator::ADD);
+                constant->setValue(SizedValue(constant->value().size(), constant->value().absoluteValue()));
+            }
+        }
+        break;
+    }
     }
 
     /*
@@ -445,9 +444,8 @@ std::unique_ptr<Expression> Simplifier::simplify(std::unique_ptr<Typecast> node)
             if (const StructType *structType = pointerType->pointeeType()->as<StructType>()) {
                 if (const MemberDeclaration *member = structType->getMember(0)) {
                     node->operand() = std::make_unique<UnaryOperator>(
-                        UnaryOperator::REFERENCE,
-                        std::make_unique<MemberAccessOperator>(MemberAccessOperator::ARROW,
-                                                               std::move(node->operand()), member));
+                        UnaryOperator::REFERENCE, std::make_unique<MemberAccessOperator>(
+                                                      MemberAccessOperator::ARROW, std::move(node->operand()), member));
                 }
             }
         }
@@ -460,11 +458,8 @@ std::unique_ptr<Expression> Simplifier::simplify(std::unique_ptr<Typecast> node)
         if (auto typecast = node->operand()->as<Typecast>()) {
             auto operandType = typeCalculator_.getType(typecast->operand().get());
 
-            if (typecast->type()->isScalar() &&
-                operandType->isScalar() &&
-                node->type()->size() == typecast->type()->size() &&
-                typecast->type()->size() == operandType->size())
-            {
+            if (typecast->type()->isScalar() && operandType->isScalar() &&
+                node->type()->size() == typecast->type()->size() && typecast->type()->size() == operandType->size()) {
                 node->operand() = std::move(typecast->operand());
             }
         }
@@ -487,63 +482,63 @@ std::unique_ptr<Expression> Simplifier::simplify(std::unique_ptr<UnaryOperator> 
     }
 
     switch (node->operatorKind()) {
-        case UnaryOperator::DEREFERENCE: {
-            if (auto unary = node->operand()->as<UnaryOperator>()) {
-                if (unary->operatorKind() == UnaryOperator::REFERENCE) {
+    case UnaryOperator::DEREFERENCE: {
+        if (auto unary = node->operand()->as<UnaryOperator>()) {
+            if (unary->operatorKind() == UnaryOperator::REFERENCE) {
+                return std::move(unary->operand());
+            }
+        }
+        if (auto binary = node->operand()->as<BinaryOperator>()) {
+            if (binary->operatorKind() == BinaryOperator::ADD) {
+                if (typeCalculator_.getType(binary->left().get())->isPointer()) {
+                    return std::make_unique<BinaryOperator>(BinaryOperator::ARRAY_SUBSCRIPT, std::move(binary->left()),
+                                                            std::move(binary->right()));
+                } else if (typeCalculator_.getType(binary->right().get())->isPointer()) {
+                    return std::make_unique<BinaryOperator>(BinaryOperator::ARRAY_SUBSCRIPT, std::move(binary->right()),
+                                                            std::move(binary->left()));
+                }
+            }
+        }
+        break;
+    }
+    case UnaryOperator::LOGICAL_NOT: {
+        node->operand() = simplifyBooleanExpression(std::move(node->operand()));
+
+        if (auto binary = node->operand()->as<BinaryOperator>()) {
+            switch (binary->operatorKind()) {
+            case BinaryOperator::EQ:
+                binary->setOperatorKind(BinaryOperator::NEQ);
+                return std::move(node->operand());
+            case BinaryOperator::NEQ:
+                binary->setOperatorKind(BinaryOperator::EQ);
+                return std::move(node->operand());
+            case BinaryOperator::LT:
+                binary->setOperatorKind(BinaryOperator::GEQ);
+                return std::move(node->operand());
+            case BinaryOperator::LEQ:
+                binary->setOperatorKind(BinaryOperator::GT);
+                return std::move(node->operand());
+            case BinaryOperator::GT:
+                binary->setOperatorKind(BinaryOperator::LEQ);
+                return std::move(node->operand());
+            case BinaryOperator::GEQ:
+                binary->setOperatorKind(BinaryOperator::LT);
+                return std::move(node->operand());
+            default:
+                break;
+            }
+        }
+        if (auto unary = node->operand()->as<UnaryOperator>()) {
+            if (unary->operatorKind() == UnaryOperator::LOGICAL_NOT) {
+                if (typeCalculator_.getType(unary->operand().get())->size() == 1) {
                     return std::move(unary->operand());
                 }
             }
-            if (auto binary = node->operand()->as<BinaryOperator>()) {
-                if (binary->operatorKind() == BinaryOperator::ADD) {
-                    if (typeCalculator_.getType(binary->left().get())->isPointer()) {
-                        return std::make_unique<BinaryOperator>(BinaryOperator::ARRAY_SUBSCRIPT,
-                                                                std::move(binary->left()), std::move(binary->right()));
-                    } else if (typeCalculator_.getType(binary->right().get())->isPointer()) {
-                        return std::make_unique<BinaryOperator>(BinaryOperator::ARRAY_SUBSCRIPT,
-                                                                std::move(binary->right()), std::move(binary->left()));
-                    }
-                }
-            }
-            break;
         }
-        case UnaryOperator::LOGICAL_NOT: {
-            node->operand() = simplifyBooleanExpression(std::move(node->operand()));
-
-            if (auto binary = node->operand()->as<BinaryOperator>()) {
-                switch (binary->operatorKind()) {
-                    case BinaryOperator::EQ:
-                        binary->setOperatorKind(BinaryOperator::NEQ);
-                        return std::move(node->operand());
-                    case BinaryOperator::NEQ:
-                        binary->setOperatorKind(BinaryOperator::EQ);
-                        return std::move(node->operand());
-                    case BinaryOperator::LT:
-                        binary->setOperatorKind(BinaryOperator::GEQ);
-                        return std::move(node->operand());
-                    case BinaryOperator::LEQ:
-                        binary->setOperatorKind(BinaryOperator::GT);
-                        return std::move(node->operand());
-                    case BinaryOperator::GT:
-                        binary->setOperatorKind(BinaryOperator::LEQ);
-                        return std::move(node->operand());
-                    case BinaryOperator::GEQ:
-                        binary->setOperatorKind(BinaryOperator::LT);
-                        return std::move(node->operand());
-                    default:
-                        break;
-                }
-            }
-            if (auto unary = node->operand()->as<UnaryOperator>()) {
-                if (unary->operatorKind() == UnaryOperator::LOGICAL_NOT) {
-                    if (typeCalculator_.getType(unary->operand().get())->size() == 1) {
-                        return std::move(unary->operand());
-                    }
-                }
-            }
-            break;
-        }
-        default:
-            break;
+        break;
+    }
+    default:
+        break;
     }
 
     return node;
@@ -592,34 +587,34 @@ std::unique_ptr<Expression> Simplifier::simplifyBooleanExpression(std::unique_pt
 
 std::unique_ptr<Statement> Simplifier::simplify(std::unique_ptr<Statement> node) {
     switch (node->statementKind()) {
-        case Statement::BLOCK:
-            return simplify(as<Block>(std::move(node)));
-        case Statement::BREAK:
-            return node;
-        case Statement::CONTINUE:
-            return node;
-        case Statement::DO_WHILE:
-            return simplify(as<DoWhile>(std::move(node)));
-        case Statement::EXPRESSION_STATEMENT:
-            return simplify(as<ExpressionStatement>(std::move(node)));
-        case Statement::GOTO:
-            return simplify(as<Goto>(std::move(node)));
-        case Statement::IF:
-            return simplify(as<If>(std::move(node)));
-        case Statement::LABEL_STATEMENT:
-            return simplify(as<LabelStatement>(std::move(node)));
-        case Statement::RETURN:
-            return simplify(as<Return>(std::move(node)));
-        case Statement::WHILE:
-            return simplify(as<While>(std::move(node)));
-        case Statement::INLINE_ASSEMBLY:
-            return node;
-        case Statement::SWITCH:
-            return simplify(as<Switch>(std::move(node)));
-        case Statement::CASE_LABEL:
-            return node;
-        case Statement::DEFAULT_LABEL:
-            return node;
+    case Statement::BLOCK:
+        return simplify(as<Block>(std::move(node)));
+    case Statement::BREAK:
+        return node;
+    case Statement::CONTINUE:
+        return node;
+    case Statement::DO_WHILE:
+        return simplify(as<DoWhile>(std::move(node)));
+    case Statement::EXPRESSION_STATEMENT:
+        return simplify(as<ExpressionStatement>(std::move(node)));
+    case Statement::GOTO:
+        return simplify(as<Goto>(std::move(node)));
+    case Statement::IF:
+        return simplify(as<If>(std::move(node)));
+    case Statement::LABEL_STATEMENT:
+        return simplify(as<LabelStatement>(std::move(node)));
+    case Statement::RETURN:
+        return simplify(as<Return>(std::move(node)));
+    case Statement::WHILE:
+        return simplify(as<While>(std::move(node)));
+    case Statement::INLINE_ASSEMBLY:
+        return node;
+    case Statement::SWITCH:
+        return simplify(as<Switch>(std::move(node)));
+    case Statement::CASE_LABEL:
+        return node;
+    case Statement::DEFAULT_LABEL:
+        return node;
     }
     unreachable();
 }
@@ -700,7 +695,7 @@ std::unique_ptr<Switch> Simplifier::simplify(std::unique_ptr<Switch> node) {
     return node;
 }
 
-template<class T>
+template <class T>
 std::vector<T> Simplifier::simplify(std::vector<T> range) {
     foreach (auto &item, range) {
         item = simplify(std::move(item));

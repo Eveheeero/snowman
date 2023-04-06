@@ -48,7 +48,7 @@ class JumpTarget;
  * and contain information about the successors and predecessors of the
  * basic blocks.
  */
-class CFG: public PrintableBase<CFG> {
+class CFG : public PrintableBase<CFG> {
 public:
     typedef nc::ilist<BasicBlock> BasicBlocks;
 

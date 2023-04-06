@@ -42,15 +42,15 @@ namespace dflow {
 class Value {
     AbstractValue abstractValue_; ///< Abstract value of the term, in the host byte order.
 
-    bool isStackOffset_; ///< Value is a stack pointer with a known offset from the frame base.
+    bool isStackOffset_;    ///< Value is a stack pointer with a known offset from the frame base.
     bool isNotStackOffset_; ///< Value is not a stack pointer with a known offset from the frame base.
 
     SignedConstantValue stackOffset_; ///< Offset to stack frame base (in bytes), if the value is a stack pointer.
 
-    bool isProduct_; ///< Value was computed via multiplication.
+    bool isProduct_;    ///< Value was computed via multiplication.
     bool isNotProduct_; ///< Value was computed not via multiplication.
 
-    bool isReturnAddress_; ///< Value is a return address.
+    bool isReturnAddress_;    ///< Value is a return address.
     bool isNotReturnAddress_; ///< Value is not a return address.
 
 public:
@@ -102,7 +102,10 @@ public:
     /**
      * \return Offset to stack frame base (in bytes), if the value is a stack pointer.
      */
-    SignedConstantValue stackOffset() const { assert(isStackOffset()); return stackOffset_; }
+    SignedConstantValue stackOffset() const {
+        assert(isStackOffset());
+        return stackOffset_;
+    }
 
     /**
      * \return True, if the value has been computed via multiplication.

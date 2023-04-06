@@ -35,7 +35,7 @@ namespace nc {
 namespace core {
 
 namespace ir {
-    class Statement;
+class Statement;
 }
 
 namespace likec {
@@ -43,27 +43,27 @@ namespace likec {
 /**
  * Base class for statement node.
  */
-class Statement: public TreeNode {
+class Statement : public TreeNode {
     NC_BASE_CLASS(Statement, statementKind)
 
     const ir::Statement *statement_; ///< IR statement from which this statement was created.
 
 public:
     enum {
-        BLOCK,                          ///< Block.
-        BREAK,                          ///< Break.
-        CONTINUE,                       ///< Continue.
-        DO_WHILE,                       ///< Do-While loop.
-        EXPRESSION_STATEMENT,           ///< Expression statement.
-        GOTO,                           ///< Goto.
-        IF,                             ///< Conditional statement.
-        LABEL_STATEMENT,                ///< Label.
-        RETURN,                         ///< Return.
-        WHILE,                          ///< While loop.
-        INLINE_ASSEMBLY,                ///< Inline assembly.
-        SWITCH,                         ///< Switch.
-        CASE_LABEL,                     ///< Case label.
-        DEFAULT_LABEL,                  ///< Default case label.
+        BLOCK,                ///< Block.
+        BREAK,                ///< Break.
+        CONTINUE,             ///< Continue.
+        DO_WHILE,             ///< Do-While loop.
+        EXPRESSION_STATEMENT, ///< Expression statement.
+        GOTO,                 ///< Goto.
+        IF,                   ///< Conditional statement.
+        LABEL_STATEMENT,      ///< Label.
+        RETURN,               ///< Return.
+        WHILE,                ///< While loop.
+        INLINE_ASSEMBLY,      ///< Inline assembly.
+        SWITCH,               ///< Switch.
+        CASE_LABEL,           ///< Case label.
+        DEFAULT_LABEL,        ///< Default case label.
     };
 
     /**
@@ -71,9 +71,7 @@ public:
      *
      * \param[in] statementKind Statement kind.
      */
-    explicit Statement(int statementKind):
-        TreeNode(STATEMENT), statementKind_(statementKind), statement_(nullptr)
-    {}
+    explicit Statement(int statementKind) : TreeNode(STATEMENT), statementKind_(statementKind), statement_(nullptr) {}
 
     /**
      * \return Pointer to the IR statement from which this statement was created. Can be nullptr.

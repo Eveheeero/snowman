@@ -52,6 +52,9 @@ const Type *Types::getType(const Term *term) const {
     return const_cast<Types *>(this)->getType(term);
 }
 
-}}}} // namespace nc::core::ir::types
+} // namespace types
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -6,13 +6,11 @@
 #include <climits>
 #include <nc/core/arch/ArchitectureRepository.h>
 
-namespace nc { namespace core { namespace image {
+namespace nc {
+namespace core {
+namespace image {
 
-Platform::Platform():
-    architecture_(nullptr),
-    operatingSystem_(UnknownOS),
-    intSize_(sizeof(int) * CHAR_BIT)
-{}
+Platform::Platform() : architecture_(nullptr), operatingSystem_(UnknownOS), intSize_(sizeof(int) * CHAR_BIT) {}
 
 void Platform::setArchitecture(const QString &name) {
     setArchitecture(arch::ArchitectureRepository::instance()->getArchitecture(name));
@@ -26,6 +24,8 @@ void Platform::setOperatingSystem(OperatingSystem operatingSystem) {
     operatingSystem_ = operatingSystem;
 }
 
-}}} // namespace nc::core::image
+} // namespace image
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

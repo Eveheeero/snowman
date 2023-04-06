@@ -30,7 +30,7 @@
 namespace nc {
 
 namespace core {
-    class Instructions;
+class Instructions;
 }
 
 namespace gui {
@@ -40,14 +40,13 @@ class Project;
 /**
  * 'Decompile all' command.
  */
-class DecompileAll: public Command {
+class DecompileAll : public Command {
     Q_OBJECT
 
     /** Project. */
     Project *project_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -55,11 +54,11 @@ class DecompileAll: public Command {
      */
     explicit DecompileAll(Project *project);
 
-    protected:
-
+protected:
     void work() override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

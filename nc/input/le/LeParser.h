@@ -7,7 +7,7 @@ namespace nc {
 namespace input {
 namespace le {
 
-class LeParser: public core::input::Parser {
+class LeParser : public core::input::Parser {
 public:
     LeParser();
 

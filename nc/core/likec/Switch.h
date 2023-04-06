@@ -38,9 +38,9 @@ class Expression;
 /**
  * Switch.
  */
-class Switch: public Statement {
+class Switch : public Statement {
     std::unique_ptr<Expression> expression_; ///< Switch expression.
-    std::unique_ptr<Statement> body_; ///< Switch body.
+    std::unique_ptr<Statement> body_;        ///< Switch body.
 
 public:
     /**
@@ -49,9 +49,8 @@ public:
      * \param[in] expression Valid pointer to the switch expression.
      * \param[in] body Valid pointer to the switch body.
      */
-    Switch(std::unique_ptr<Expression> expression, std::unique_ptr<Statement> body):
-        Statement(SWITCH), expression_(std::move(expression)), body_(std::move(body))
-    {}
+    Switch(std::unique_ptr<Expression> expression, std::unique_ptr<Statement> body)
+        : Statement(SWITCH), expression_(std::move(expression)), body_(std::move(body)) {}
 
     /**
      * \return Switch expression.

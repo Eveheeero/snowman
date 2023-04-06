@@ -38,12 +38,13 @@ class QPlainTextEdit;
 class QTextDocument;
 QT_END_NAMESPACE
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * Dock widget for showing text.
  */
-class TextView: public QDockWidget {
+class TextView : public QDockWidget {
     Q_OBJECT
 
     QPlainTextEdit *textEdit_;
@@ -177,6 +178,7 @@ protected:
     bool eventFilter(QObject *watched, QEvent *event) override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

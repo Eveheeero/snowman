@@ -39,20 +39,20 @@ class Term;
 class UnaryOperator;
 
 namespace calling {
-    class Hooks;
-    class Signatures;
-}
+class Hooks;
+class Signatures;
+} // namespace calling
 
 namespace dflow {
-    class Dataflows;
+class Dataflows;
 }
 
 namespace liveness {
-    class Livenesses;
+class Livenesses;
 }
 
 namespace vars {
-    class Variables;
+class Variables;
 }
 
 namespace types {
@@ -63,13 +63,13 @@ class Types;
  * This class performs interprocedural reconstruction of types.
  */
 class TypeAnalyzer {
-    Types &types_; ///< Information about terms' types.
-    const Functions &functions_; ///< Intermediate representations of functions.
-    const dflow::Dataflows &dataflows_; ///< Dataflow information.
-    const vars::Variables &variables_; ///< Information about reconstructed variables.
+    Types &types_;                           ///< Information about terms' types.
+    const Functions &functions_;             ///< Intermediate representations of functions.
+    const dflow::Dataflows &dataflows_;      ///< Dataflow information.
+    const vars::Variables &variables_;       ///< Information about reconstructed variables.
     const liveness::Livenesses &livenesses_; ///< Set of terms producing actual high-level code.
-    const calling::Hooks &hooks_; ///< Hooks manager.
-    const calling::Signatures &signatures_; ///< Signatures of functions.
+    const calling::Hooks &hooks_;            ///< Hooks manager.
+    const calling::Signatures &signatures_;  ///< Signatures of functions.
     const CancellationToken &canceled_;
 
 public:
@@ -86,13 +86,10 @@ public:
      * \param[in] canceled Cancellation token.
      */
     TypeAnalyzer(Types &types, const Functions &functions, const dflow::Dataflows &dataflows,
-        const vars::Variables &variables, const liveness::Livenesses &livenesses,
-        const calling::Hooks &hooks, const calling::Signatures &signatures,
-        const CancellationToken &canceled
-    ):
-        types_(types), functions_(functions), dataflows_(dataflows), variables_(variables),
-        livenesses_(livenesses), hooks_(hooks), signatures_(signatures), canceled_(canceled)
-    {}
+                 const vars::Variables &variables, const liveness::Livenesses &livenesses, const calling::Hooks &hooks,
+                 const calling::Signatures &signatures, const CancellationToken &canceled)
+        : types_(types), functions_(functions), dataflows_(dataflows), variables_(variables), livenesses_(livenesses),
+          hooks_(hooks), signatures_(signatures), canceled_(canceled) {}
 
     /**
      * Computes type traits for all terms in all functions.
@@ -152,6 +149,9 @@ private:
     void analyze(const BinaryOperator *binary);
 };
 
-}}}} // namespace nc::core::ir::types
+} // namespace types
+} // namespace ir
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

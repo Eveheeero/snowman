@@ -163,6 +163,7 @@ std::vector<const RangeNode *> RangeTree::handleInsertion(int position, int ncha
     return result;
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

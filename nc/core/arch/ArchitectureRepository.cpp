@@ -8,12 +8,14 @@
 #include <nc/common/Foreach.h>
 #include <nc/common/make_unique.h>
 
-#include <nc/arch/x86/X86Architecture.h>
 #include <nc/arch/arm/ArmArchitecture.h>
+#include <nc/arch/x86/X86Architecture.h>
 
 #include "Architecture.h"
 
-namespace nc { namespace core { namespace arch {
+namespace nc {
+namespace core {
+namespace arch {
 
 namespace {
 
@@ -57,6 +59,8 @@ const std::vector<const Architecture *> &ArchitectureRepository::architectures()
     return reinterpret_cast<const std::vector<const Architecture *> &>(architectures_);
 }
 
-}}} // namespace nc::core::arch
+} // namespace arch
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

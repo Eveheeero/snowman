@@ -48,35 +48,35 @@ void Region::print(QTextStream &out) const {
     out << "node" << this << " [shape=box,label=\"";
 
     switch (regionKind_) {
-        case UNKNOWN:
-            out << "UNKNOWN";
-            break;
-        case BLOCK:
-            out << "BLOCK";
-            break;
-        case COMPOUND_CONDITION:
-            out << "COMPOUND_CONDITION";
-            break;
-        case IF_THEN:
-            out << "IF_THEN";
-            break;
-        case IF_THEN_ELSE:
-            out << "IF_THEN_ELSE";
-            break;
-        case LOOP:
-            out << "LOOP";
-            break;
-        case DO_WHILE:
-            out << "DO_WHILE";
-            break;
-        case WHILE:
-            out << "WHILE";
-            break;
-        case SWITCH:
-            out << "SWITCH";
-            break;
-        default:
-            unreachable();
+    case UNKNOWN:
+        out << "UNKNOWN";
+        break;
+    case BLOCK:
+        out << "BLOCK";
+        break;
+    case COMPOUND_CONDITION:
+        out << "COMPOUND_CONDITION";
+        break;
+    case IF_THEN:
+        out << "IF_THEN";
+        break;
+    case IF_THEN_ELSE:
+        out << "IF_THEN_ELSE";
+        break;
+    case LOOP:
+        out << "LOOP";
+        break;
+    case DO_WHILE:
+        out << "DO_WHILE";
+        break;
+    case WHILE:
+        out << "WHILE";
+        break;
+    case SWITCH:
+        out << "SWITCH";
+        break;
+    default:
+        unreachable();
     }
 
     out << "\"]" << '\n';
@@ -91,8 +91,8 @@ void Region::print(QTextStream &out) const {
     }
     out << '}' << '\n';
 
-    out << "node" << this << " -> node" << (entry() ? entry() : nodes()[0])
-        << " [color=\"blue\" lhead=\"cluster" << this << "\"]" << '\n';
+    out << "node" << this << " -> node" << (entry() ? entry() : nodes()[0]) << " [color=\"blue\" lhead=\"cluster"
+        << this << "\"]" << '\n';
 }
 
 } // namespace cflow

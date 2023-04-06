@@ -39,21 +39,20 @@
 #include <nc/core/ir/dflow/Utils.h>
 #include <nc/core/ir/dflow/Value.h>
 
-#include "Conventions.h"
 #include "CallHook.h"
 #include "Convention.h"
+#include "Conventions.h"
 #include "EntryHook.h"
-#include "Signatures.h"
 #include "ReturnHook.h"
+#include "Signatures.h"
 
 namespace nc {
 namespace core {
 namespace ir {
 namespace calling {
 
-Hooks::Hooks(const Conventions &conventions, const Signatures &signatures):
-    conventions_(conventions), signatures_(signatures)
-{}
+Hooks::Hooks(const Conventions &conventions, const Signatures &signatures)
+    : conventions_(conventions), signatures_(signatures) {}
 
 Hooks::~Hooks() {}
 
@@ -94,25 +93,23 @@ void Hooks::instrument(Function *function, const dflow::Dataflow *dataflow) {
     deinstrument(function);
 
     if (function->entry()) {
-        function2callback_[function] = function->entry()->pushFront(std::make_unique<Callback>([=](){
-            instrumentEntry(function);
-        }));
+        function2callback_[function] =
+            function->entry()->pushFront(std::make_unique<Callback>([=]() { instrumentEntry(function); }));
     }
 
     foreach (auto basicBlock, function->basicBlocks()) {
         foreach (auto statement, basicBlock->statements()) {
             if (auto call = statement->as<Call>()) {
-                call2callback_[call] = basicBlock->insertAfter(call, std::make_unique<Callback>([=](){
-                    instrumentCall(call, *dataflow);
-                }));
+                call2callback_[call] = basicBlock->insertAfter(
+                    call, std::make_unique<Callback>([=]() { instrumentCall(call, *dataflow); }));
             } else if (auto jump = statement->as<Jump>()) {
-                jump2callback_[jump] = basicBlock->insertBefore(jump, std::make_unique<Callback>([=](){
-                    if (dflow::isReturn(jump, *dataflow)) {
-                        instrumentReturn(jump);
-                    } else {
-                        deinstrumentReturn(jump);
-                    }
-                }));
+                jump2callback_[jump] = basicBlock->insertBefore(jump, std::make_unique<Callback>([=]() {
+                                                                    if (dflow::isReturn(jump, *dataflow)) {
+                                                                        instrumentReturn(jump);
+                                                                    } else {
+                                                                        deinstrumentReturn(jump);
+                                                                    }
+                                                                }));
             }
         }
     }

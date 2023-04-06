@@ -88,7 +88,7 @@ private:
      *
      * \param range A range of nodes.
      */
-    template<class T>
+    template <class T>
     std::vector<T> simplify(std::vector<T> range);
 };
 

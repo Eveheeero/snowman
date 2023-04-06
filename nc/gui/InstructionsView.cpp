@@ -30,12 +30,10 @@
 
 #include "InstructionsModel.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-InstructionsView::InstructionsView(QWidget *parent):
-    TreeView(tr("Instructions"), parent),
-    model_(nullptr)
-{
+InstructionsView::InstructionsView(QWidget *parent) : TreeView(tr("Instructions"), parent), model_(nullptr) {
     treeView()->setHeaderHidden(true);
     treeView()->setItemsExpandable(false);
     treeView()->setRootIsDecorated(false);
@@ -75,7 +73,8 @@ void InstructionsView::updateSelection() {
     }
 }
 
-void InstructionsView::highlightInstructions(const std::vector<const core::arch::Instruction *> &instructions, bool ensureVisible) {
+void InstructionsView::highlightInstructions(const std::vector<const core::arch::Instruction *> &instructions,
+                                             bool ensureVisible) {
     if (model()) {
         model()->setHighlightedInstructions(instructions);
 
@@ -85,6 +84,7 @@ void InstructionsView::highlightInstructions(const std::vector<const core::arch:
     }
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -25,14 +25,15 @@
 
 #include <QObject>
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 /**
  * Class for handling Qt debug messages.
  *
  * It converts the messages to Qt signals, so that LogView can subscribe to them.
  */
-class LogManager: public QObject {
+class LogManager : public QObject {
     Q_OBJECT
 
     /**
@@ -62,7 +63,7 @@ public:
      */
     void log(const QString &text);
 
-Q_SIGNAL
+    Q_SIGNAL
     /**
      * A signal emitted when there is a new message to be shown.
      *
@@ -71,6 +72,7 @@ Q_SIGNAL
     void message(const QString &text);
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

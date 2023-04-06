@@ -10,7 +10,9 @@
 
 #include <QString>
 
-namespace nc { namespace core { namespace arch {
+namespace nc {
+namespace core {
+namespace arch {
 
 class Architecture;
 
@@ -48,6 +50,8 @@ public:
     const std::vector<const Architecture *> &architectures() const;
 };
 
-}}} // namespace nc::core::arch
+} // namespace arch
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

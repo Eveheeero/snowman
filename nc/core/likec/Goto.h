@@ -37,18 +37,16 @@ namespace likec {
 /**
  * Goto statement.
  */
-class Goto: public Statement {
+class Goto : public Statement {
     std::unique_ptr<Expression> destination_; ///< Goto destination address.
 
-    public:
-
+public:
     /**
      * Class constructor.
      *
      * \param[in] destination Goto destination address.
      */
-    explicit Goto(std::unique_ptr<Expression> destination):
-        Statement(GOTO), destination_(std::move(destination)) {}
+    explicit Goto(std::unique_ptr<Expression> destination) : Statement(GOTO), destination_(std::move(destination)) {}
 
     /**
      * \return Goto destination address.

@@ -74,12 +74,9 @@ bool bitTwiddlingWorks = (NC_UNUSED(bitTwiddlingWorks), testBitTwiddling());
 } // anonymous namespace
 #endif
 
-Value::Value(SmallBitSize size):
-    abstractValue_(size, -1, -1),
-    isStackOffset_(false), isNotStackOffset_(false),
-    isProduct_(false), isNotProduct_(false),
-    isReturnAddress_(false), isNotReturnAddress_(false)
-{}
+Value::Value(SmallBitSize size)
+    : abstractValue_(size, -1, -1), isStackOffset_(false), isNotStackOffset_(false), isProduct_(false),
+      isNotProduct_(false), isReturnAddress_(false), isNotReturnAddress_(false) {}
 
 void Value::makeStackOffset(SignedConstantValue offset) {
     if (isStackOffset_) {

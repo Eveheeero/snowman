@@ -41,38 +41,38 @@ namespace core {
 class Instructions;
 
 namespace image {
-    class Image;
+class Image;
 }
 
 namespace input {
 
 /**
  * Input parser.
- * 
- * Note that this interface does not define the 'real' parser. 
+ *
+ * Note that this interface does not define the 'real' parser.
  * It defines a factory-like object that can be used to:
  * <ul>
  * <li>Create a 'real' parser and parse the given source using it.</li>
  * <li>Check whether the given source seems to be parsable by this parser.</li>
  * </ul>
- * 
+ *
  * This design was chosen over the classic abstract factory because there
  * are no practical advantages in separating the 'real' parser into an interface.
- * 
- * Input parser is expected to be stateless and can be accessed by multiple 
+ *
+ * Input parser is expected to be stateless and can be accessed by multiple
  * threads. In general, single instance of a concrete input parser should be
  * enough for the whole application.
  */
-class Parser: public QObject {
+class Parser : public QObject {
     QString name_; ///< Name of this parser.
 
 public:
     /**
      * Constructor.
-     * 
+     *
      * \param[in] name Name of this parser.
      */
-    Parser(QString name): name_(std::move(name)) {}
+    Parser(QString name) : name_(std::move(name)) {}
 
     /**
      * Virtual destructor.
@@ -120,6 +120,8 @@ protected:
     virtual void doParse(QIODevice *source, image::Image *image, const LogToken &log) const = 0;
 };
 
-}}} // namespace nc::core::input
+} // namespace input
+} // namespace core
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

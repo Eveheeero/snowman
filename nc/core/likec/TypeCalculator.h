@@ -30,7 +30,7 @@ class TypeCalculator {
     Tree &tree_;
 
 public:
-    explicit TypeCalculator(Tree &tree): tree_(tree) {}
+    explicit TypeCalculator(Tree &tree) : tree_(tree) {}
 
     const Type *getType(const Expression *node);
     const Type *getType(const BinaryOperator *node);

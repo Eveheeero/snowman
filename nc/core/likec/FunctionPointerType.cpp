@@ -42,7 +42,7 @@ void FunctionPointerType::print(QTextStream &out) const {
         }
         out << *type;
     }
-    
+
     out << ")";
 }
 

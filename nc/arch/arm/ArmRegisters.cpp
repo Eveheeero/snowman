@@ -3,13 +3,17 @@
 
 #include "ArmRegisters.h"
 
-namespace nc { namespace arch { namespace arm {
+namespace nc {
+namespace arch {
+namespace arm {
 
 ArmRegisters::ArmRegisters() {
 #define REGISTER_TABLE <nc/arch/arm/ArmRegisterTable.i>
 #include <nc/core/arch/RegistersConstructor.i>
 }
 
-}}} // namespace nc::arch::arm
+} // namespace arm
+} // namespace arch
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

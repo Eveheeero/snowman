@@ -97,7 +97,9 @@ public:
      * \return Mapping of the memory locations that can contain return values
      *         to terms representing writes to these locations.
      */
-    const std::vector<std::pair<MemoryLocation, const Term *>> &speculativeReturnValueTerms() const { return speculativeReturnValueTerms_; }
+    const std::vector<std::pair<MemoryLocation, const Term *>> &speculativeReturnValueTerms() const {
+        return speculativeReturnValueTerms_;
+    }
 };
 
 } // namespace calling

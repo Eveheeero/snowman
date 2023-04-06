@@ -20,7 +20,7 @@ namespace dflow {
 /**
  * Mapping from a function to its dataflow information.
  */
-class Dataflows: public boost::unordered_map<const Function *, std::unique_ptr<const Dataflow>> {};
+class Dataflows : public boost::unordered_map<const Function *, std::unique_ptr<const Dataflow>> {};
 
 } // namespace dflow
 } // namespace ir

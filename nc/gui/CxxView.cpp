@@ -39,12 +39,10 @@
 #include "CppSyntaxHighlighter.h"
 #include "CxxDocument.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-CxxView::CxxView(QWidget *parent):
-    TextView(tr("C++"), parent),
-    document_(nullptr)
-{
+CxxView::CxxView(QWidget *parent) : TextView(tr("C++"), parent), document_(nullptr) {
     highlighter_ = new CppSyntaxHighlighter(this, new CxxFormatting(this));
 
     gotoLabelAction_ = new QAction(tr("Go to Label"), this);
@@ -271,7 +269,8 @@ void CxxView::highlightNodes(const std::vector<const core::likec::TreeNode *> &n
     highlight(std::move(ranges), ensureVisible);
 }
 
-void CxxView::highlightInstructions(const std::vector<const core::arch::Instruction *> &instructions, bool ensureVisible) {
+void CxxView::highlightInstructions(const std::vector<const core::arch::Instruction *> &instructions,
+                                    bool ensureVisible) {
     if (!document()) {
         return;
     }
@@ -361,7 +360,7 @@ void CxxView::populateContextMenu(QMenu *menu) {
 bool CxxView::eventFilter(QObject *watched, QEvent *event) {
     if (watched == textEdit()->viewport()) {
         if (event->type() == QEvent::ToolTip) {
-            QHelpEvent *ev = static_cast<QHelpEvent*>(event);
+            QHelpEvent *ev = static_cast<QHelpEvent *>(event);
 
             textEdit()->setToolTip(getDeclarationTooltip(textEdit()->cursorForPosition(ev->pos()).position()));
         }
@@ -370,6 +369,7 @@ bool CxxView::eventFilter(QObject *watched, QEvent *event) {
     return TextView::eventFilter(watched, event);
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

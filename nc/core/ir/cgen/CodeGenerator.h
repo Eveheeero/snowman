@@ -41,18 +41,18 @@ class CancellationToken;
 namespace core {
 
 namespace image {
-    class Image;
+class Image;
 }
 
 namespace likec {
-    class FunctionDeclaration;
-    class FunctionDefinition;
-    class Expression;
-    class StructType;
-    class Tree;
-    class Type;
-    class VariableDeclaration;
-}
+class FunctionDeclaration;
+class FunctionDefinition;
+class Expression;
+class StructType;
+class Tree;
+class Type;
+class VariableDeclaration;
+} // namespace likec
 
 namespace ir {
 
@@ -61,40 +61,40 @@ class Functions;
 class Term;
 
 namespace calling {
-    class CalleeId;
-    class FunctionSignature;
-    class Hooks;
-    class Signatures;
-}
+class CalleeId;
+class FunctionSignature;
+class Hooks;
+class Signatures;
+} // namespace calling
 
 namespace cflow {
-    class Graphs;
+class Graphs;
 }
 
 namespace dflow {
-    class Dataflows;
+class Dataflows;
 }
 
 namespace liveness {
-    class Livenesses;
+class Livenesses;
 }
 
 namespace types {
-    class Type;
-    class Types;
-}
+class Type;
+class Types;
+} // namespace types
 
 namespace vars {
-    class Variable;
-    class Variables;
-}
+class Variable;
+class Variables;
+} // namespace vars
 
 namespace cgen {
 
 /**
  * LikeC code generator.
  */
-class CodeGenerator: boost::noncopyable {
+class CodeGenerator : boost::noncopyable {
     likec::Tree &tree_;
     const image::Image &image_;
     const Functions &functions_;
@@ -121,7 +121,6 @@ class CodeGenerator: boost::noncopyable {
     boost::unordered_map<const calling::FunctionSignature *, likec::FunctionDeclaration *> signature2declaration_;
 
 public:
-
     /**
      * Constructor.
      *
@@ -138,14 +137,12 @@ public:
      * \param[in] cancellationToken Cancellation token.
      */
     CodeGenerator(likec::Tree &tree, const image::Image &image, const Functions &functions, const calling::Hooks &hooks,
-        const calling::Signatures &signatures, const dflow::Dataflows &dataflows, const vars::Variables &variables,
-        const cflow::Graphs &graphs, const liveness::Livenesses &livenesses, const types::Types &types,
-        const CancellationToken &cancellationToken
-    ):
-        tree_(tree), image_(image), functions_(functions), hooks_(hooks), signatures_(signatures),
-        dataflows_(dataflows), variables_(variables), graphs_(graphs), livenesses_(livenesses),
-        types_(types), cancellationToken_(cancellationToken), nameGenerator_(image)
-    {}
+                  const calling::Signatures &signatures, const dflow::Dataflows &dataflows,
+                  const vars::Variables &variables, const cflow::Graphs &graphs, const liveness::Livenesses &livenesses,
+                  const types::Types &types, const CancellationToken &cancellationToken)
+        : tree_(tree), image_(image), functions_(functions), hooks_(hooks), signatures_(signatures),
+          dataflows_(dataflows), variables_(variables), graphs_(graphs), livenesses_(livenesses), types_(types),
+          cancellationToken_(cancellationToken), nameGenerator_(image) {}
 
     /**
      * \return Abstract syntax tree to generate code in.

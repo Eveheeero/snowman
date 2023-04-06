@@ -28,15 +28,13 @@ namespace nc {
 namespace core {
 namespace likec {
 
-IntegerConstant::IntegerConstant(const SizedValue &value, const IntegerType *type):
-    Expression(INTEGER_CONSTANT), value_(value), type_(type)
-{
+IntegerConstant::IntegerConstant(const SizedValue &value, const IntegerType *type)
+    : Expression(INTEGER_CONSTANT), value_(value), type_(type) {
     assert(value.size() == type->size());
 }
 
-IntegerConstant::IntegerConstant(ConstantValue value, const IntegerType *type):
-    Expression(INTEGER_CONSTANT), value_(SizedValue(type->size(), value)), type_(type)
-{}
+IntegerConstant::IntegerConstant(ConstantValue value, const IntegerType *type)
+    : Expression(INTEGER_CONSTANT), value_(SizedValue(type->size(), value)), type_(type) {}
 
 void IntegerConstant::setValue(const SizedValue &value) {
     assert(value.size() == type_->size());

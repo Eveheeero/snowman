@@ -35,9 +35,7 @@ namespace core {
 namespace ir {
 namespace cflow {
 
-LoopExplorer::LoopExplorer(Node *entry, const Dfs &dfs):
-    entry_(entry)
-{
+LoopExplorer::LoopExplorer(Node *entry, const Dfs &dfs) : entry_(entry) {
     assert(entry != nullptr);
 
     /*

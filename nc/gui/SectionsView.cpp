@@ -33,10 +33,7 @@
 namespace nc {
 namespace gui {
 
-SectionsView::SectionsView(QWidget *parent):
-    TreeView(tr("Sections"), parent),
-    model_(nullptr)
-{
+SectionsView::SectionsView(QWidget *parent) : TreeView(tr("Sections"), parent), model_(nullptr) {
     treeView()->setItemsExpandable(false);
     treeView()->setRootIsDecorated(false);
     treeView()->setSelectionBehavior(QAbstractItemView::SelectRows);

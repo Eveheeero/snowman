@@ -5,8 +5,8 @@
 
 #include <QStringList>
 
-#include <nc/common/Foreach.h>
 #include <nc/common/Escaping.h>
+#include <nc/common/Foreach.h>
 #include <nc/common/Unreachable.h>
 
 #include "ArgumentDeclaration.h"
@@ -64,111 +64,110 @@ int getPrecedence(const UnaryOperator *node);
 
 int getPrecedence(const Expression *node) {
     switch (node->expressionKind()) {
-        case Expression::BINARY_OPERATOR:
-            return getPrecedence(node->as<BinaryOperator>());
-        case Expression::CALL_OPERATOR:
-            return 2;
-        case Expression::FUNCTION_IDENTIFIER:
-            return 0;
-        case Expression::INTEGER_CONSTANT:
-            return 0;
-        case Expression::LABEL_IDENTIFIER:
-            return 0;
-        case Expression::MEMBER_ACCESS_OPERATOR:
-            return getPrecedence(node->as<MemberAccessOperator>());
-        case Expression::STRING:
-            return 0;
-        case Expression::TYPECAST:
-            return getPrecedence(node->as<Typecast>());
-        case Expression::UNARY_OPERATOR:
-            return getPrecedence(node->as<UnaryOperator>());
-        case Expression::VARIABLE_IDENTIFIER:
-            return 0;
-        case Expression::UNDECLARED_IDENTIFIER:
-            return 0;
+    case Expression::BINARY_OPERATOR:
+        return getPrecedence(node->as<BinaryOperator>());
+    case Expression::CALL_OPERATOR:
+        return 2;
+    case Expression::FUNCTION_IDENTIFIER:
+        return 0;
+    case Expression::INTEGER_CONSTANT:
+        return 0;
+    case Expression::LABEL_IDENTIFIER:
+        return 0;
+    case Expression::MEMBER_ACCESS_OPERATOR:
+        return getPrecedence(node->as<MemberAccessOperator>());
+    case Expression::STRING:
+        return 0;
+    case Expression::TYPECAST:
+        return getPrecedence(node->as<Typecast>());
+    case Expression::UNARY_OPERATOR:
+        return getPrecedence(node->as<UnaryOperator>());
+    case Expression::VARIABLE_IDENTIFIER:
+        return 0;
+    case Expression::UNDECLARED_IDENTIFIER:
+        return 0;
     }
     unreachable();
 }
 
 int getPrecedence(const BinaryOperator *node) {
     switch (node->operatorKind()) {
-        case BinaryOperator::ARRAY_SUBSCRIPT:
-            return 2;
-        case BinaryOperator::MUL:
-        case BinaryOperator::DIV:
-        case BinaryOperator::REM:
-            return 5;
-        case BinaryOperator::ADD:
-        case BinaryOperator::SUB:
-            return 6;
-        case BinaryOperator::SHL:
-        case BinaryOperator::SHR:
-            return 7;
-        case BinaryOperator::LT:
-        case BinaryOperator::LEQ:
-        case BinaryOperator::GT:
-        case BinaryOperator::GEQ:
-            return 8;
-        case BinaryOperator::EQ:
-        case BinaryOperator::NEQ:
-            return 9;
-        case BinaryOperator::BITWISE_AND:
-            return 10;
-        case BinaryOperator::BITWISE_XOR:
-            return 11;
-        case BinaryOperator::BITWISE_OR:
-            return 12;
-        case BinaryOperator::LOGICAL_AND:
-            return 13;
-        case BinaryOperator::LOGICAL_OR:
-            return 14;
-        case BinaryOperator::ASSIGN:
-            return -16;
-        case BinaryOperator::COMMA:
-            return 17;
+    case BinaryOperator::ARRAY_SUBSCRIPT:
+        return 2;
+    case BinaryOperator::MUL:
+    case BinaryOperator::DIV:
+    case BinaryOperator::REM:
+        return 5;
+    case BinaryOperator::ADD:
+    case BinaryOperator::SUB:
+        return 6;
+    case BinaryOperator::SHL:
+    case BinaryOperator::SHR:
+        return 7;
+    case BinaryOperator::LT:
+    case BinaryOperator::LEQ:
+    case BinaryOperator::GT:
+    case BinaryOperator::GEQ:
+        return 8;
+    case BinaryOperator::EQ:
+    case BinaryOperator::NEQ:
+        return 9;
+    case BinaryOperator::BITWISE_AND:
+        return 10;
+    case BinaryOperator::BITWISE_XOR:
+        return 11;
+    case BinaryOperator::BITWISE_OR:
+        return 12;
+    case BinaryOperator::LOGICAL_AND:
+        return 13;
+    case BinaryOperator::LOGICAL_OR:
+        return 14;
+    case BinaryOperator::ASSIGN:
+        return -16;
+    case BinaryOperator::COMMA:
+        return 17;
     }
     unreachable();
 }
 
 int getPrecedence(const MemberAccessOperator *node) {
     switch (node->accessKind()) {
-        case MemberAccessOperator::ARROW:
-        case MemberAccessOperator::DOT:
-            return 2;
+    case MemberAccessOperator::ARROW:
+    case MemberAccessOperator::DOT:
+        return 2;
     }
     unreachable();
 }
 
 int getPrecedence(const Typecast *node) {
     switch (node->castKind()) {
-        case Typecast::C_STYLE_CAST:
-            return -3;
-        case Typecast::STATIC_CAST: /* FALLTHROUGH */
-        case Typecast::REINTERPRET_CAST:
-            return 2;
+    case Typecast::C_STYLE_CAST:
+        return -3;
+    case Typecast::STATIC_CAST: /* FALLTHROUGH */
+    case Typecast::REINTERPRET_CAST:
+        return 2;
     }
     unreachable();
 }
 
 int getPrecedence(const UnaryOperator *node) {
     switch (node->operatorKind()) {
-        case UnaryOperator::DEREFERENCE:
-        case UnaryOperator::REFERENCE:
-        case UnaryOperator::BITWISE_NOT:
-        case UnaryOperator::LOGICAL_NOT:
-        case UnaryOperator::NEGATION:
-        case UnaryOperator::PREFIX_INCREMENT:
-        case UnaryOperator::PREFIX_DECREMENT:
-            return -3;
+    case UnaryOperator::DEREFERENCE:
+    case UnaryOperator::REFERENCE:
+    case UnaryOperator::BITWISE_NOT:
+    case UnaryOperator::LOGICAL_NOT:
+    case UnaryOperator::NEGATION:
+    case UnaryOperator::PREFIX_INCREMENT:
+    case UnaryOperator::PREFIX_DECREMENT:
+        return -3;
     }
     unreachable();
 }
 
 } // anonymous namespace
 
-TreePrinter::TreePrinter(QTextStream &out, PrintCallback<const TreeNode *> *callback):
-    out_(out), callback_(callback), indentStep_(4), indent_(0)
-{}
+TreePrinter::TreePrinter(QTextStream &out, PrintCallback<const TreeNode *> *callback)
+    : out_(out), callback_(callback), indentStep_(4), indent_(0) {}
 
 void TreePrinter::print(const TreeNode *node) {
     assert(node);
@@ -186,20 +185,20 @@ void TreePrinter::print(const TreeNode *node) {
 
 void TreePrinter::doPrint(const TreeNode *node) {
     switch (node->nodeKind()) {
-        case TreeNode::COMPILATION_UNIT:
-            doPrint(node->as<CompilationUnit>());
-            break;
-        case TreeNode::DECLARATION:
-            doPrint(node->as<Declaration>());
-            break;
-        case TreeNode::EXPRESSION:
-            doPrint(node->as<Expression>());
-            break;
-        case TreeNode::STATEMENT:
-            doPrint(node->as<Statement>());
-            break;
-        default:
-            unreachable();
+    case TreeNode::COMPILATION_UNIT:
+        doPrint(node->as<CompilationUnit>());
+        break;
+    case TreeNode::DECLARATION:
+        doPrint(node->as<Declaration>());
+        break;
+    case TreeNode::EXPRESSION:
+        doPrint(node->as<Expression>());
+        break;
+    case TreeNode::STATEMENT:
+        doPrint(node->as<Statement>());
+        break;
+    default:
+        unreachable();
     }
 }
 
@@ -214,25 +213,25 @@ void TreePrinter::doPrint(const CompilationUnit *node) {
 
 void TreePrinter::doPrint(const Declaration *node) {
     switch (node->declarationKind()) {
-        case Declaration::FUNCTION_DECLARATION:
-            doPrint(node->as<FunctionDeclaration>());
-            break;
-        case Declaration::FUNCTION_DEFINITION:
-            doPrint(node->as<FunctionDefinition>());
-            break;
-        case Declaration::LABEL_DECLARATION:
-            unreachable();
-        case Declaration::MEMBER_DECLARATION:
-            doPrint(node->as<MemberDeclaration>());
-            break;
-        case Declaration::STRUCT_TYPE_DECLARATION:
-            doPrint(node->as<StructTypeDeclaration>());
-            break;
-        case Declaration::VARIABLE_DECLARATION:
-            doPrint(node->as<VariableDeclaration>());
-            break;
-        default:
-            unreachable();
+    case Declaration::FUNCTION_DECLARATION:
+        doPrint(node->as<FunctionDeclaration>());
+        break;
+    case Declaration::FUNCTION_DEFINITION:
+        doPrint(node->as<FunctionDefinition>());
+        break;
+    case Declaration::LABEL_DECLARATION:
+        unreachable();
+    case Declaration::MEMBER_DECLARATION:
+        doPrint(node->as<MemberDeclaration>());
+        break;
+    case Declaration::STRUCT_TYPE_DECLARATION:
+        doPrint(node->as<StructTypeDeclaration>());
+        break;
+    case Declaration::VARIABLE_DECLARATION:
+        doPrint(node->as<VariableDeclaration>());
+        break;
+    default:
+        unreachable();
     }
 }
 
@@ -305,41 +304,41 @@ void TreePrinter::doPrint(const VariableDeclaration *node) {
 
 void TreePrinter::doPrint(const Expression *node) {
     switch (node->expressionKind()) {
-        case Expression::BINARY_OPERATOR:
-            doPrint(node->as<BinaryOperator>());
-            break;
-        case Expression::CALL_OPERATOR:
-            doPrint(node->as<CallOperator>());
-            break;
-        case Expression::FUNCTION_IDENTIFIER:
-            doPrint(node->as<FunctionIdentifier>());
-            break;
-        case Expression::INTEGER_CONSTANT:
-            doPrint(node->as<IntegerConstant>());
-            break;
-        case Expression::LABEL_IDENTIFIER:
-            doPrint(node->as<LabelIdentifier>());
-            break;
-        case Expression::MEMBER_ACCESS_OPERATOR:
-            doPrint(node->as<MemberAccessOperator>());
-            break;
-        case Expression::STRING:
-            doPrint(node->as<String>());
-            break;
-        case Expression::TYPECAST:
-            doPrint(node->as<Typecast>());
-            break;
-        case Expression::UNARY_OPERATOR:
-            doPrint(node->as<UnaryOperator>());
-            break;
-        case Expression::VARIABLE_IDENTIFIER:
-            doPrint(node->as<VariableIdentifier>());
-            break;
-        case Expression::UNDECLARED_IDENTIFIER:
-            doPrint(node->as<UndeclaredIdentifier>());
-            break;
-        default:
-            unreachable();
+    case Expression::BINARY_OPERATOR:
+        doPrint(node->as<BinaryOperator>());
+        break;
+    case Expression::CALL_OPERATOR:
+        doPrint(node->as<CallOperator>());
+        break;
+    case Expression::FUNCTION_IDENTIFIER:
+        doPrint(node->as<FunctionIdentifier>());
+        break;
+    case Expression::INTEGER_CONSTANT:
+        doPrint(node->as<IntegerConstant>());
+        break;
+    case Expression::LABEL_IDENTIFIER:
+        doPrint(node->as<LabelIdentifier>());
+        break;
+    case Expression::MEMBER_ACCESS_OPERATOR:
+        doPrint(node->as<MemberAccessOperator>());
+        break;
+    case Expression::STRING:
+        doPrint(node->as<String>());
+        break;
+    case Expression::TYPECAST:
+        doPrint(node->as<Typecast>());
+        break;
+    case Expression::UNARY_OPERATOR:
+        doPrint(node->as<UnaryOperator>());
+        break;
+    case Expression::VARIABLE_IDENTIFIER:
+        doPrint(node->as<VariableIdentifier>());
+        break;
+    case Expression::UNDECLARED_IDENTIFIER:
+        doPrint(node->as<UndeclaredIdentifier>());
+        break;
+    default:
+        unreachable();
     }
 }
 
@@ -349,8 +348,7 @@ void TreePrinter::doPrint(const BinaryOperator *node) {
 
     int absLeftPrecedence = std::abs(getPrecedence(node->left()));
     bool leftInBraces =
-        (absLeftPrecedence > absPrecedence) ||
-        ((absLeftPrecedence == absPrecedence) && (precedence < 0));
+        (absLeftPrecedence > absPrecedence) || ((absLeftPrecedence == absPrecedence) && (precedence < 0));
 
     if (leftInBraces) {
         out_ << '(';
@@ -368,74 +366,73 @@ void TreePrinter::doPrint(const BinaryOperator *node) {
     }
 
     switch (node->operatorKind()) {
-        case BinaryOperator::ASSIGN:
-            out_ << " = ";
-            break;
-        case BinaryOperator::ADD:
-            out_ << " + ";
-            break;
-        case BinaryOperator::SUB:
-            out_ << " - ";
-            break;
-        case BinaryOperator::MUL:
-            out_ << " * ";
-            break;
-        case BinaryOperator::DIV:
-            out_ << " / ";
-            break;
-        case BinaryOperator::REM:
-            out_ << " % ";
-            break;
-        case BinaryOperator::BITWISE_AND:
-            out_ << " & ";
-            break;
-        case BinaryOperator::LOGICAL_AND:
-            out_ << " && ";
-            break;
-        case BinaryOperator::BITWISE_OR:
-            out_ << " | ";
-            break;
-        case BinaryOperator::LOGICAL_OR:
-            out_ << " || ";
-            break;
-        case BinaryOperator::BITWISE_XOR:
-            out_ << " ^ ";
-            break;
-        case BinaryOperator::SHL:
-            out_ << " << ";
-            break;
-        case BinaryOperator::SHR:
-            out_ << " >> ";
-            break;
-        case BinaryOperator::EQ:
-            out_ << " == ";
-            break;
-        case BinaryOperator::NEQ:
-            out_ << " != ";
-            break;
-        case BinaryOperator::LT:
-            out_ << " < ";
-            break;
-        case BinaryOperator::LEQ:
-            out_ << " <= ";
-            break;
-        case BinaryOperator::GT:
-            out_ << " > ";
-            break;
-        case BinaryOperator::GEQ:
-            out_ << " >= ";
-            break;
-        case BinaryOperator::COMMA:
-            out_ << ", ";
-            break;
-        default:
-            unreachable();
+    case BinaryOperator::ASSIGN:
+        out_ << " = ";
+        break;
+    case BinaryOperator::ADD:
+        out_ << " + ";
+        break;
+    case BinaryOperator::SUB:
+        out_ << " - ";
+        break;
+    case BinaryOperator::MUL:
+        out_ << " * ";
+        break;
+    case BinaryOperator::DIV:
+        out_ << " / ";
+        break;
+    case BinaryOperator::REM:
+        out_ << " % ";
+        break;
+    case BinaryOperator::BITWISE_AND:
+        out_ << " & ";
+        break;
+    case BinaryOperator::LOGICAL_AND:
+        out_ << " && ";
+        break;
+    case BinaryOperator::BITWISE_OR:
+        out_ << " | ";
+        break;
+    case BinaryOperator::LOGICAL_OR:
+        out_ << " || ";
+        break;
+    case BinaryOperator::BITWISE_XOR:
+        out_ << " ^ ";
+        break;
+    case BinaryOperator::SHL:
+        out_ << " << ";
+        break;
+    case BinaryOperator::SHR:
+        out_ << " >> ";
+        break;
+    case BinaryOperator::EQ:
+        out_ << " == ";
+        break;
+    case BinaryOperator::NEQ:
+        out_ << " != ";
+        break;
+    case BinaryOperator::LT:
+        out_ << " < ";
+        break;
+    case BinaryOperator::LEQ:
+        out_ << " <= ";
+        break;
+    case BinaryOperator::GT:
+        out_ << " > ";
+        break;
+    case BinaryOperator::GEQ:
+        out_ << " >= ";
+        break;
+    case BinaryOperator::COMMA:
+        out_ << ", ";
+        break;
+    default:
+        unreachable();
     }
 
     int absRightPrecedence = std::abs(getPrecedence(node->right()));
     bool rightInBraces =
-        (absRightPrecedence > absPrecedence) ||
-        ((absRightPrecedence == absPrecedence) && (precedence > 0));
+        (absRightPrecedence > absPrecedence) || ((absRightPrecedence == absPrecedence) && (precedence > 0));
 
     if (rightInBraces) {
         out_ << '(';
@@ -482,8 +479,7 @@ void TreePrinter::doPrint(const LabelIdentifier *node) {
 }
 
 void TreePrinter::doPrint(const MemberAccessOperator *node) {
-    bool braces = node->compound()->is<UnaryOperator>() ||
-                  node->compound()->is<BinaryOperator>() ||
+    bool braces = node->compound()->is<UnaryOperator>() || node->compound()->is<BinaryOperator>() ||
                   node->compound()->is<Typecast>();
 
     if (braces) {
@@ -495,15 +491,15 @@ void TreePrinter::doPrint(const MemberAccessOperator *node) {
     }
 
     switch (node->accessKind()) {
-        case MemberAccessOperator::ARROW:
-            out_ << "->";
-            break;
-        case MemberAccessOperator::DOT:
-            out_ << '.';
-            break;
-        default:
-            unreachable();
-            break;
+    case MemberAccessOperator::ARROW:
+        out_ << "->";
+        break;
+    case MemberAccessOperator::DOT:
+        out_ << '.';
+        break;
+    default:
+        unreachable();
+        break;
     }
 
     out_ << node->member()->identifier();
@@ -515,70 +511,70 @@ void TreePrinter::doPrint(const String *node) {
 
 void TreePrinter::doPrint(const Typecast *node) {
     switch (node->castKind()) {
-        case Typecast::C_STYLE_CAST: {
-            int precedence = getPrecedence(node);
-            int operandPrecedence = getPrecedence(node->operand());
+    case Typecast::C_STYLE_CAST: {
+        int precedence = getPrecedence(node);
+        int operandPrecedence = getPrecedence(node->operand());
 
-            int absPrecedence = abs(precedence);
-            int absOperandPrecedence = abs(operandPrecedence);
+        int absPrecedence = abs(precedence);
+        int absOperandPrecedence = abs(operandPrecedence);
 
-            bool operandInBraces = absOperandPrecedence > absPrecedence;
+        bool operandInBraces = absOperandPrecedence > absPrecedence;
 
-            out_ << '(' << *node->type() << ')';
+        out_ << '(' << *node->type() << ')';
 
-            if (operandInBraces) {
-                out_ << '(';
-            }
-            print(node->operand());
-            if (operandInBraces) {
-                out_ << ')';
-            }
-            break;
+        if (operandInBraces) {
+            out_ << '(';
         }
-        case Typecast::STATIC_CAST: {
-            out_ << "static_cast<" << *node->type() << ">(";
-            print(node->operand());
+        print(node->operand());
+        if (operandInBraces) {
             out_ << ')';
-            break;
         }
-        case Typecast::REINTERPRET_CAST: {
-            out_ << "reinterpret_cast<" << *node->type() << ">(";
-            print(node->operand());
-            out_ << ')';
-            break;
-        }
-        default: {
-            unreachable();
-        }
+        break;
+    }
+    case Typecast::STATIC_CAST: {
+        out_ << "static_cast<" << *node->type() << ">(";
+        print(node->operand());
+        out_ << ')';
+        break;
+    }
+    case Typecast::REINTERPRET_CAST: {
+        out_ << "reinterpret_cast<" << *node->type() << ">(";
+        print(node->operand());
+        out_ << ')';
+        break;
+    }
+    default: {
+        unreachable();
+    }
     }
 }
 
 void TreePrinter::doPrint(const UnaryOperator *node) {
     switch (node->operatorKind()) {
-        case UnaryOperator::DEREFERENCE:
-            out_ << '*';
-            break;
-        case UnaryOperator::REFERENCE:
-            out_ << '&';
-            break;
-        case UnaryOperator::BITWISE_NOT:
-            out_ << '~';
-            break;
-        case UnaryOperator::LOGICAL_NOT:
-            out_ << '!';
-            break;
-        case UnaryOperator::NEGATION:
-            out_ << '-';
-            break;
-        case UnaryOperator::PREFIX_INCREMENT:
-            out_ << "++";
-            break;
-        case UnaryOperator::PREFIX_DECREMENT:
-            out_ << "--";
-            break;
-        default:
-            unreachable();
-            break;
+    case UnaryOperator::DEREFERENCE:
+        out_ << '*';
+        break;
+    case UnaryOperator::REFERENCE:
+        out_ << '&';
+        break;
+    case UnaryOperator::BITWISE_NOT:
+        out_ << '~';
+        break;
+    case UnaryOperator::LOGICAL_NOT:
+        out_ << '!';
+        break;
+    case UnaryOperator::NEGATION:
+        out_ << '-';
+        break;
+    case UnaryOperator::PREFIX_INCREMENT:
+        out_ << "++";
+        break;
+    case UnaryOperator::PREFIX_DECREMENT:
+        out_ << "--";
+        break;
+    default:
+        unreachable();
+        break;
     }
 
     int precedence = getPrecedence(node);
@@ -618,50 +614,50 @@ void TreePrinter::doPrint(const UndeclaredIdentifier *node) {
 
 void TreePrinter::doPrint(const Statement *node) {
     switch (node->statementKind()) {
-        case Statement::BLOCK:
-            doPrint(node->as<Block>());
-            break;
-        case Statement::BREAK:
-            doPrint(node->as<Break>());
-            break;
-        case Statement::CONTINUE:
-            doPrint(node->as<Continue>());
-            break;
-        case Statement::DO_WHILE:
-            doPrint(node->as<DoWhile>());
-            break;
-        case Statement::EXPRESSION_STATEMENT:
-            doPrint(node->as<ExpressionStatement>());
-            break;
-        case Statement::GOTO:
-            doPrint(node->as<Goto>());
-            break;
-        case Statement::IF:
-            doPrint(node->as<If>());
-            break;
-        case Statement::LABEL_STATEMENT:
-            doPrint(node->as<LabelStatement>());
-            break;
-        case Statement::RETURN:
-            doPrint(node->as<Return>());
-            break;
-        case Statement::WHILE:
-            doPrint(node->as<While>());
-            break;
-        case Statement::INLINE_ASSEMBLY:
-            doPrint(node->as<InlineAssembly>());
-            break;
-        case Statement::SWITCH:
-            doPrint(node->as<Switch>());
-            break;
-        case Statement::CASE_LABEL:
-            doPrint(node->as<CaseLabel>());
-            break;
-        case Statement::DEFAULT_LABEL:
-            doPrint(node->as<DefaultLabel>());
-            break;
-        default:
-            unreachable();
+    case Statement::BLOCK:
+        doPrint(node->as<Block>());
+        break;
+    case Statement::BREAK:
+        doPrint(node->as<Break>());
+        break;
+    case Statement::CONTINUE:
+        doPrint(node->as<Continue>());
+        break;
+    case Statement::DO_WHILE:
+        doPrint(node->as<DoWhile>());
+        break;
+    case Statement::EXPRESSION_STATEMENT:
+        doPrint(node->as<ExpressionStatement>());
+        break;
+    case Statement::GOTO:
+        doPrint(node->as<Goto>());
+        break;
+    case Statement::IF:
+        doPrint(node->as<If>());
+        break;
+    case Statement::LABEL_STATEMENT:
+        doPrint(node->as<LabelStatement>());
+        break;
+    case Statement::RETURN:
+        doPrint(node->as<Return>());
+        break;
+    case Statement::WHILE:
+        doPrint(node->as<While>());
+        break;
+    case Statement::INLINE_ASSEMBLY:
+        doPrint(node->as<InlineAssembly>());
+        break;
+    case Statement::SWITCH:
+        doPrint(node->as<Switch>());
+        break;
+    case Statement::CASE_LABEL:
+        doPrint(node->as<CaseLabel>());
+        break;
+    case Statement::DEFAULT_LABEL:
+        doPrint(node->as<DefaultLabel>());
+        break;
+    default:
+        unreachable();
     }
 }
 
@@ -680,9 +676,8 @@ void TreePrinter::doPrint(const Block *node) {
     }
 
     foreach (const auto &statement, node->statements()) {
-        bool isCaseLabel =
-            statement->statementKind() == Statement::CASE_LABEL ||
-            statement->statementKind() == Statement::DEFAULT_LABEL;
+        bool isCaseLabel = statement->statementKind() == Statement::CASE_LABEL ||
+                           statement->statementKind() == Statement::DEFAULT_LABEL;
 
         if (isCaseLabel) {
             indentLess();

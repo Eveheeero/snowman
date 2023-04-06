@@ -36,18 +36,15 @@ namespace nc {
  *
  * \tparam T Derived class.
  */
-template<class T>
+template <class T>
 class PrintableBase {
-    public:
-
+public:
     /**
      * Prints the object into a stream.
      *
      * \param out Output stream.
      */
-    void print(QTextStream &out) const {
-        static_cast<const T *>(this)->print(out);
-    }
+    void print(QTextStream &out) const { static_cast<const T *>(this)->print(out); }
 
     /**
      * \return String representation of the object.
@@ -67,9 +64,8 @@ class PrintableBase {
  *
  * Consider inheriting from PrintableBase for non-polymorphic classes.
  */
-class Printable: public PrintableBase<Printable> {
-    public:
-
+class Printable : public PrintableBase<Printable> {
+public:
     /**
      * Prints the object into a stream.
      *
@@ -91,7 +87,7 @@ class Printable: public PrintableBase<Printable> {
  *
  * \return The output stream.
  */
-template<class T>
+template <class T>
 inline QTextStream &operator<<(QTextStream &out, const PrintableBase<T> &entity) {
     entity.print(out);
     return out;

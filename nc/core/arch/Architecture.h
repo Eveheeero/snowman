@@ -41,15 +41,15 @@ namespace core {
 class MasterAnalyzer;
 
 namespace ir {
-    class MemoryLocation;
+class MemoryLocation;
 
-    namespace calling {
-        class Convention;
-    }
+namespace calling {
+class Convention;
 }
+} // namespace ir
 
 namespace irgen {
-    class InstructionAnalyzer;
+class InstructionAnalyzer;
 }
 
 namespace arch {
@@ -81,12 +81,18 @@ public:
     /**
      * \returns Architecture's bitness (data pointer size).
      */
-    SmallBitSize bitness() const { assert(mBitness); return mBitness; }
+    SmallBitSize bitness() const {
+        assert(mBitness);
+        return mBitness;
+    }
 
     /**
      * \return Maximal length of an instruction.
      */
-    SmallByteSize maxInstructionSize() const { assert(mMaxInstructionSize); return mMaxInstructionSize; }
+    SmallByteSize maxInstructionSize() const {
+        assert(mMaxInstructionSize);
+        return mMaxInstructionSize;
+    }
 
     /**
      * \returns Valid pointer to the disassembler for a single instruction.

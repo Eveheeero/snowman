@@ -39,11 +39,11 @@
 
 #include "Searcher.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-SearchWidget::SearchWidget(std::unique_ptr<Searcher> searcher, QWidget *parent):
-    QWidget(parent), searcher_(std::move(searcher))
-{
+SearchWidget::SearchWidget(std::unique_ptr<Searcher> searcher, QWidget *parent)
+    : QWidget(parent), searcher_(std::move(searcher)) {
     assert(searcher_ != nullptr);
 
     auto supportedFlags = searcher_->supportedFlags();
@@ -111,7 +111,7 @@ SearchWidget::SearchWidget(std::unique_ptr<Searcher> searcher, QWidget *parent):
     optionsButton->setMenu(optionsMenu);
     layout->addWidget(optionsButton);
 
-    normalPalette_  = lineEdit_->palette();
+    normalPalette_ = lineEdit_->palette();
     failurePalette_ = lineEdit_->palette();
     failurePalette_.setColor(QPalette::Base, QColor(255, 192, 192));
 
@@ -222,6 +222,7 @@ void SearchWidget::rememberCompletion() {
     }
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -48,19 +48,10 @@ class Region;
 class Dfs {
 public:
     /** Node color. */
-    enum NodeColor {
-        WHITE,
-        GRAY,
-        BLACK
-    };
+    enum NodeColor { WHITE, GRAY, BLACK };
 
     /** Edge type. */
-    enum EdgeType {
-        UNKNOWN,
-        FORWARD,
-        BACK,
-        CROSS
-    };
+    enum EdgeType { UNKNOWN, FORWARD, BACK, CROSS };
 
 private:
     /** List of region nodes in the order of discovery. */
@@ -76,7 +67,6 @@ private:
     boost::unordered_map<const Edge *, EdgeType> edge2type_;
 
 public:
-
     /**
      * Performs DFS in the given region.
      *
@@ -112,7 +102,6 @@ public:
     EdgeType getEdgeType(const Edge *edge) const { return nc::find(edge2type_, edge, UNKNOWN); }
 
 private:
-
     /**
      * Visits given node and all its unvisited successors.
      *

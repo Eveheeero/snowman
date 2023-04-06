@@ -48,7 +48,7 @@ namespace dflow {
 
 namespace {
 
-template<class Map, class Pred>
+template <class Map, class Pred>
 void remove_if(Map &map, Pred pred) {
     auto i = map.begin();
     auto iend = map.end();
@@ -131,11 +131,12 @@ void DataflowAnalyzer::analyze(const CFG &cfg) {
      * Remove information about terms that disappeared.
      * Terms can disappear if e.g. a call is deinstrumented during the analysis.
      */
-    auto disappeared = [](const Term *term){ return term->statement()->basicBlock() == nullptr; };
+    auto disappeared = [](const Term *term) { return term->statement()->basicBlock() == nullptr; };
 
     std::vector<const Term *> disappearedTerms;
     foreach (auto &termAndDefinitions, dataflow().term2definitions()) {
-        termAndDefinitions.second.filterOut([disappeared](const MemoryLocation &, const Term *term) { return disappeared(term); } );
+        termAndDefinitions.second.filterOut(
+            [disappeared](const MemoryLocation &, const Term *term) { return disappeared(term); });
     }
 
     remove_if(dataflow().term2value(), disappeared);
@@ -145,163 +146,161 @@ void DataflowAnalyzer::analyze(const CFG &cfg) {
 
 void DataflowAnalyzer::execute(const Statement *statement, ReachingDefinitions &definitions) {
     switch (statement->kind()) {
-        case Statement::INLINE_ASSEMBLY:
-            /*
-             * To be completely correct, one should clear reaching definitions.
-             * However, not doing this usually leads to better code.
-             */
-            break;
-        case Statement::ASSIGNMENT: {
-            auto assignment = statement->asAssignment();
-            computeValue(assignment->right(), definitions);
-            handleWrite(assignment->left(), computeMemoryLocation(assignment->left(), definitions), definitions);
-            break;
-        }
-        case Statement::JUMP: {
-            auto jump = statement->asJump();
+    case Statement::INLINE_ASSEMBLY:
+        /*
+         * To be completely correct, one should clear reaching definitions.
+         * However, not doing this usually leads to better code.
+         */
+        break;
+    case Statement::ASSIGNMENT: {
+        auto assignment = statement->asAssignment();
+        computeValue(assignment->right(), definitions);
+        handleWrite(assignment->left(), computeMemoryLocation(assignment->left(), definitions), definitions);
+        break;
+    }
+    case Statement::JUMP: {
+        auto jump = statement->asJump();
 
-            if (jump->condition()) {
-                computeValue(jump->condition(), definitions);
-            }
-            if (jump->thenTarget().address()) {
-                computeValue(jump->thenTarget().address(), definitions);
-            }
-            if (jump->elseTarget().address()) {
-                computeValue(jump->elseTarget().address(), definitions);
-            }
-            break;
+        if (jump->condition()) {
+            computeValue(jump->condition(), definitions);
         }
-        case Statement::CALL: {
-            auto call = statement->asCall();
-            computeValue(call->target(), definitions);
-            break;
+        if (jump->thenTarget().address()) {
+            computeValue(jump->thenTarget().address(), definitions);
         }
-        case Statement::HALT: {
-            break;
+        if (jump->elseTarget().address()) {
+            computeValue(jump->elseTarget().address(), definitions);
         }
-        case Statement::TOUCH: {
-            auto touch = statement->asTouch();
-            switch (touch->accessType()) {
-                case Term::READ:
-                    computeValue(touch->term(), definitions);
-                    break;
-                case Term::WRITE:
-                    handleWrite(touch->term(), computeMemoryLocation(touch->term(), definitions), definitions);
-                    break;
-                default:
-                    unreachable();
-            }
+        break;
+    }
+    case Statement::CALL: {
+        auto call = statement->asCall();
+        computeValue(call->target(), definitions);
+        break;
+    }
+    case Statement::HALT: {
+        break;
+    }
+    case Statement::TOUCH: {
+        auto touch = statement->asTouch();
+        switch (touch->accessType()) {
+        case Term::READ:
+            computeValue(touch->term(), definitions);
             break;
-        }
-        case Statement::CALLBACK: {
-            statement->asCallback()->function()();
+        case Term::WRITE:
+            handleWrite(touch->term(), computeMemoryLocation(touch->term(), definitions), definitions);
             break;
-        }
-        case Statement::REMEMBER_REACHING_DEFINITIONS: {
-            dataflow_.getDefinitions(statement) = definitions;
-            break;
-        }
         default:
-            log_.warning(tr("%1: Unknown statement kind: %2.").arg(Q_FUNC_INFO).arg(statement->kind()));
-            break;
+            unreachable();
+        }
+        break;
+    }
+    case Statement::CALLBACK: {
+        statement->asCallback()->function()();
+        break;
+    }
+    case Statement::REMEMBER_REACHING_DEFINITIONS: {
+        dataflow_.getDefinitions(statement) = definitions;
+        break;
+    }
+    default:
+        log_.warning(tr("%1: Unknown statement kind: %2.").arg(Q_FUNC_INFO).arg(statement->kind()));
+        break;
     }
 }
 
 Value *DataflowAnalyzer::computeValue(const Term *term, const ReachingDefinitions &definitions) {
     switch (term->kind()) {
-        case Term::INT_CONST: {
-            auto constant = term->asConstant();
-            Value *value = dataflow().getValue(constant);
-            value->setAbstractValue(constant->value());
+    case Term::INT_CONST: {
+        auto constant = term->asConstant();
+        Value *value = dataflow().getValue(constant);
+        value->setAbstractValue(constant->value());
+        value->makeNotStackOffset();
+        value->makeNotProduct();
+        value->makeNotReturnAddress();
+        return value;
+    }
+    case Term::INTRINSIC: {
+        auto intrinsic = term->asIntrinsic();
+        Value *value = dataflow().getValue(intrinsic);
+
+        switch (intrinsic->intrinsicKind()) {
+        case Intrinsic::UNKNOWN: /* FALLTHROUGH */
+        case Intrinsic::UNDEFINED: {
+            value->setAbstractValue(AbstractValue(term->size(), -1, -1));
             value->makeNotStackOffset();
             value->makeNotProduct();
             value->makeNotReturnAddress();
-            return value;
+            break;
         }
-        case Term::INTRINSIC: {
-            auto intrinsic = term->asIntrinsic();
-            Value *value = dataflow().getValue(intrinsic);
-
-            switch (intrinsic->intrinsicKind()) {
-                case Intrinsic::UNKNOWN: /* FALLTHROUGH */
-                case Intrinsic::UNDEFINED: {
-                    value->setAbstractValue(AbstractValue(term->size(), -1, -1));
-                    value->makeNotStackOffset();
-                    value->makeNotProduct();
-                    value->makeNotReturnAddress();
-                    break;
-                }
-                case Intrinsic::ZERO_STACK_OFFSET: {
-                    value->setAbstractValue(AbstractValue(term->size(), -1, -1));
-                    value->makeStackOffset(0);
-                    value->makeNotProduct();
-                    value->makeNotReturnAddress();
-                    break;
-                }
-                case Intrinsic::RETURN_ADDRESS: {
-                    value->setAbstractValue(AbstractValue(term->size(), -1, -1));
-                    value->makeNotStackOffset();
-                    value->makeNotProduct();
-                    value->makeReturnAddress();
-                    break;
-                }
-                default: {
-                    log_.warning(tr("%1: Unknown kind of intrinsic: %2.").arg(Q_FUNC_INFO).arg(intrinsic->intrinsicKind()));
-                    break;
-                }
-            }
-            return value;
+        case Intrinsic::ZERO_STACK_OFFSET: {
+            value->setAbstractValue(AbstractValue(term->size(), -1, -1));
+            value->makeStackOffset(0);
+            value->makeNotProduct();
+            value->makeNotReturnAddress();
+            break;
         }
-        case Term::MEMORY_LOCATION_ACCESS: /* FALLTHROUGH */
-        case Term::DEREFERENCE: {
-            const auto &memoryLocation = computeMemoryLocation(term, definitions);
-            const auto &reachingDefinitions = computeReachingDefinitions(term, memoryLocation, definitions);
-            return computeValue(term, memoryLocation, reachingDefinitions);
+        case Intrinsic::RETURN_ADDRESS: {
+            value->setAbstractValue(AbstractValue(term->size(), -1, -1));
+            value->makeNotStackOffset();
+            value->makeNotProduct();
+            value->makeReturnAddress();
+            break;
         }
-        case Term::UNARY_OPERATOR:
-            return computeValue(term->asUnaryOperator(), definitions);
-        case Term::BINARY_OPERATOR:
-            return computeValue(term->asBinaryOperator(), definitions);
         default: {
-            log_.warning(tr("%1: Unknown term kind: %2.").arg(Q_FUNC_INFO).arg(term->kind()));
-            return dataflow().getValue(term);
+            log_.warning(tr("%1: Unknown kind of intrinsic: %2.").arg(Q_FUNC_INFO).arg(intrinsic->intrinsicKind()));
+            break;
         }
+        }
+        return value;
+    }
+    case Term::MEMORY_LOCATION_ACCESS: /* FALLTHROUGH */
+    case Term::DEREFERENCE: {
+        const auto &memoryLocation = computeMemoryLocation(term, definitions);
+        const auto &reachingDefinitions = computeReachingDefinitions(term, memoryLocation, definitions);
+        return computeValue(term, memoryLocation, reachingDefinitions);
+    }
+    case Term::UNARY_OPERATOR:
+        return computeValue(term->asUnaryOperator(), definitions);
+    case Term::BINARY_OPERATOR:
+        return computeValue(term->asBinaryOperator(), definitions);
+    default: {
+        log_.warning(tr("%1: Unknown term kind: %2.").arg(Q_FUNC_INFO).arg(term->kind()));
+        return dataflow().getValue(term);
+    }
     }
 }
 
-const MemoryLocation &DataflowAnalyzer::computeMemoryLocation(const Term *term, const ReachingDefinitions &definitions) {
+const MemoryLocation &DataflowAnalyzer::computeMemoryLocation(const Term *term,
+                                                              const ReachingDefinitions &definitions) {
     return dataflow().setMemoryLocation(term, [&]() -> MemoryLocation {
         switch (term->kind()) {
-            case Term::MEMORY_LOCATION_ACCESS: {
-                return term->asMemoryLocationAccess()->memoryLocation();
-            }
-            case Term::DEREFERENCE: {
-                auto dereference = term->asDereference();
-                auto addressValue = computeValue(dereference->address(), definitions);
+        case Term::MEMORY_LOCATION_ACCESS: {
+            return term->asMemoryLocationAccess()->memoryLocation();
+        }
+        case Term::DEREFERENCE: {
+            auto dereference = term->asDereference();
+            auto addressValue = computeValue(dereference->address(), definitions);
 
-                if (addressValue->abstractValue().isConcrete()) {
-                    if (dereference->domain() == MemoryDomain::MEMORY) {
-                        return MemoryLocation(
-                            dereference->domain(),
-                            addressValue->abstractValue().asConcrete().value() * CHAR_BIT,
-                            dereference->size());
-                    } else {
-                        return MemoryLocation(
-                            dereference->domain(),
-                            addressValue->abstractValue().asConcrete().value(),
-                            dereference->size());
-                    }
-                } else if (addressValue->isStackOffset()) {
-                    return MemoryLocation(MemoryDomain::STACK, addressValue->stackOffset() * CHAR_BIT, dereference->size());
+            if (addressValue->abstractValue().isConcrete()) {
+                if (dereference->domain() == MemoryDomain::MEMORY) {
+                    return MemoryLocation(dereference->domain(),
+                                          addressValue->abstractValue().asConcrete().value() * CHAR_BIT,
+                                          dereference->size());
                 } else {
-                    return MemoryLocation();
+                    return MemoryLocation(dereference->domain(), addressValue->abstractValue().asConcrete().value(),
+                                          dereference->size());
                 }
-                break;
-            }
-            default: {
-                log_.warning(tr("%1: Term kind %2 cannot have a memory location.").arg(Q_FUNC_INFO).arg(term->kind()));
+            } else if (addressValue->isStackOffset()) {
+                return MemoryLocation(MemoryDomain::STACK, addressValue->stackOffset() * CHAR_BIT, dereference->size());
+            } else {
                 return MemoryLocation();
             }
+            break;
+        }
+        default: {
+            log_.warning(tr("%1: Term kind %2 cannot have a memory location.").arg(Q_FUNC_INFO).arg(term->kind()));
+            return MemoryLocation();
+        }
         }
     }());
 }
@@ -376,9 +375,9 @@ Value *DataflowAnalyzer::computeValue(const Term *term, const MemoryLocation &me
             definitionAbstractValue.project(mask);
 
             /* Update the new abstract value. */
-            abstractValue = AbstractValue(abstractValue.size(),
-                abstractValue.zeroBits() | definitionAbstractValue.zeroBits(),
-                abstractValue.oneBits() | definitionAbstractValue.oneBits());
+            abstractValue =
+                AbstractValue(abstractValue.size(), abstractValue.zeroBits() | definitionAbstractValue.zeroBits(),
+                              abstractValue.oneBits() | definitionAbstractValue.oneBits());
         }
     }
 
@@ -443,24 +442,24 @@ Value *DataflowAnalyzer::computeValue(const UnaryOperator *unary, const Reaching
     value->setAbstractValue(apply(unary, operandValue->abstractValue()));
 
     switch (unary->operatorKind()) {
-        case UnaryOperator::SIGN_EXTEND:
-        case UnaryOperator::ZERO_EXTEND:
-        case UnaryOperator::TRUNCATE:
-            if (operandValue->isNotStackOffset()) {
-                value->makeNotStackOffset();
-            } else if (operandValue->isStackOffset()) {
-                value->makeStackOffset(operandValue->stackOffset());
-            }
-            if (operandValue->isNotProduct()) {
-                value->makeNotProduct();
-            } else if (operandValue->isProduct()) {
-                value->makeProduct();
-            }
-            break;
-        default:
+    case UnaryOperator::SIGN_EXTEND:
+    case UnaryOperator::ZERO_EXTEND:
+    case UnaryOperator::TRUNCATE:
+        if (operandValue->isNotStackOffset()) {
             value->makeNotStackOffset();
+        } else if (operandValue->isStackOffset()) {
+            value->makeStackOffset(operandValue->stackOffset());
+        }
+        if (operandValue->isNotProduct()) {
             value->makeNotProduct();
-            break;
+        } else if (operandValue->isProduct()) {
+            value->makeProduct();
+        }
+        break;
+    default:
+        value->makeNotStackOffset();
+        value->makeNotProduct();
+        break;
     }
 
     value->makeNotReturnAddress();
@@ -477,61 +476,63 @@ Value *DataflowAnalyzer::computeValue(const BinaryOperator *binary, const Reachi
 
     /* Compute stack offset. */
     switch (binary->operatorKind()) {
-        case BinaryOperator::ADD: {
-            if (leftValue->isStackOffset()) {
-                if (rightValue->abstractValue().isConcrete()) {
-                    value->makeStackOffset(leftValue->stackOffset() + rightValue->abstractValue().asConcrete().signedValue());
-                } else if (rightValue->abstractValue().isNondeterministic()) {
-                    value->makeNotStackOffset();
-                }
-            }
-            if (rightValue->isStackOffset()) {
-                if (leftValue->abstractValue().isConcrete()) {
-                    value->makeStackOffset(rightValue->stackOffset() + leftValue->abstractValue().asConcrete().signedValue());
-                } else if (leftValue->abstractValue().isNondeterministic()) {
-                    value->makeNotStackOffset();
-                }
-            }
-            if (leftValue->isNotStackOffset() && rightValue->isNotStackOffset()) {
+    case BinaryOperator::ADD: {
+        if (leftValue->isStackOffset()) {
+            if (rightValue->abstractValue().isConcrete()) {
+                value->makeStackOffset(leftValue->stackOffset() +
+                                       rightValue->abstractValue().asConcrete().signedValue());
+            } else if (rightValue->abstractValue().isNondeterministic()) {
                 value->makeNotStackOffset();
             }
-            break;
         }
-        case BinaryOperator::SUB: {
-            if (leftValue->isStackOffset() && rightValue->abstractValue().isConcrete()) {
-                value->makeStackOffset(leftValue->stackOffset() - rightValue->abstractValue().asConcrete().signedValue());
-            } else if (leftValue->isNotStackOffset() || rightValue->abstractValue().isNondeterministic()) {
+        if (rightValue->isStackOffset()) {
+            if (leftValue->abstractValue().isConcrete()) {
+                value->makeStackOffset(rightValue->stackOffset() +
+                                       leftValue->abstractValue().asConcrete().signedValue());
+            } else if (leftValue->abstractValue().isNondeterministic()) {
                 value->makeNotStackOffset();
             }
-            break;
         }
-        case BinaryOperator::AND: {
-            /* Sometimes used for getting aligned stack pointer values. */
-            if (leftValue->isStackOffset() && rightValue->abstractValue().isConcrete()) {
-                value->makeStackOffset(leftValue->stackOffset() & rightValue->abstractValue().asConcrete().value());
-            } else if (rightValue->isStackOffset() && leftValue->abstractValue().isConcrete()) {
-                value->makeStackOffset(rightValue->stackOffset() & leftValue->abstractValue().asConcrete().value());
-            } else if ((leftValue->abstractValue().isNondeterministic() && leftValue->isNotStackOffset()) ||
-                       (rightValue->abstractValue().isNondeterministic() && rightValue->isNotStackOffset())) {
-                value->makeNotStackOffset();
-            }
-            break;
-        }
-        default: {
+        if (leftValue->isNotStackOffset() && rightValue->isNotStackOffset()) {
             value->makeNotStackOffset();
-            break;
         }
+        break;
+    }
+    case BinaryOperator::SUB: {
+        if (leftValue->isStackOffset() && rightValue->abstractValue().isConcrete()) {
+            value->makeStackOffset(leftValue->stackOffset() - rightValue->abstractValue().asConcrete().signedValue());
+        } else if (leftValue->isNotStackOffset() || rightValue->abstractValue().isNondeterministic()) {
+            value->makeNotStackOffset();
+        }
+        break;
+    }
+    case BinaryOperator::AND: {
+        /* Sometimes used for getting aligned stack pointer values. */
+        if (leftValue->isStackOffset() && rightValue->abstractValue().isConcrete()) {
+            value->makeStackOffset(leftValue->stackOffset() & rightValue->abstractValue().asConcrete().value());
+        } else if (rightValue->isStackOffset() && leftValue->abstractValue().isConcrete()) {
+            value->makeStackOffset(rightValue->stackOffset() & leftValue->abstractValue().asConcrete().value());
+        } else if ((leftValue->abstractValue().isNondeterministic() && leftValue->isNotStackOffset()) ||
+                   (rightValue->abstractValue().isNondeterministic() && rightValue->isNotStackOffset())) {
+            value->makeNotStackOffset();
+        }
+        break;
+    }
+    default: {
+        value->makeNotStackOffset();
+        break;
+    }
     }
 
     /* Compute product flag. */
     switch (binary->operatorKind()) {
-        case BinaryOperator::MUL:
-        case BinaryOperator::SHL:
-            value->makeProduct();
-            break;
-        default:
-            value->makeNotProduct();
-            break;
+    case BinaryOperator::MUL:
+    case BinaryOperator::SHL:
+        value->makeProduct();
+        break;
+    default:
+        value->makeNotProduct();
+        break;
     }
 
     value->makeNotReturnAddress();
@@ -541,72 +542,70 @@ Value *DataflowAnalyzer::computeValue(const BinaryOperator *binary, const Reachi
 
 AbstractValue DataflowAnalyzer::apply(const UnaryOperator *unary, const AbstractValue &a) {
     switch (unary->operatorKind()) {
-        case UnaryOperator::NOT:
-            return ~a;
-        case UnaryOperator::NEGATION:
-            return -a;
-        case UnaryOperator::SIGN_EXTEND:
-            return dflow::AbstractValue(a).signExtend(unary->size());
-        case UnaryOperator::ZERO_EXTEND:
-            return dflow::AbstractValue(a).zeroExtend(unary->size());
-        case UnaryOperator::TRUNCATE:
-            return dflow::AbstractValue(a).resize(unary->size());
-        default:
-            log_.warning(tr("%1: Unknown unary operator kind: %2.").arg(Q_FUNC_INFO).arg(unary->operatorKind()));
-            return dflow::AbstractValue();
+    case UnaryOperator::NOT:
+        return ~a;
+    case UnaryOperator::NEGATION:
+        return -a;
+    case UnaryOperator::SIGN_EXTEND:
+        return dflow::AbstractValue(a).signExtend(unary->size());
+    case UnaryOperator::ZERO_EXTEND:
+        return dflow::AbstractValue(a).zeroExtend(unary->size());
+    case UnaryOperator::TRUNCATE:
+        return dflow::AbstractValue(a).resize(unary->size());
+    default:
+        log_.warning(tr("%1: Unknown unary operator kind: %2.").arg(Q_FUNC_INFO).arg(unary->operatorKind()));
+        return dflow::AbstractValue();
     }
 }
 
 AbstractValue DataflowAnalyzer::apply(const BinaryOperator *binary, const AbstractValue &a, const AbstractValue &b) {
     switch (binary->operatorKind()) {
-        case BinaryOperator::AND:
-            return a & b;
-        case BinaryOperator::OR:
-            return a | b;
-        case BinaryOperator::XOR:
-            return a ^ b;
-        case BinaryOperator::SHL:
-            return a << b;
-        case BinaryOperator::SHR:
-            return a.asUnsigned() >> b;
-        case BinaryOperator::SAR:
-            return a.asSigned() >> b;
-        case BinaryOperator::ADD:
-            return a + b;
-        case BinaryOperator::SUB:
-            return a - b;
-        case BinaryOperator::MUL:
-            return a * b;
-        case BinaryOperator::SIGNED_DIV:
-            return a.asSigned() / b;
-        case BinaryOperator::SIGNED_REM:
-            return a.asSigned() % b;
-        case BinaryOperator::UNSIGNED_DIV:
-            return a.asUnsigned() / b;
-        case BinaryOperator::UNSIGNED_REM:
-            return a.asUnsigned() % b;
-        case BinaryOperator::EQUAL:
-            return a == b;
-        case BinaryOperator::SIGNED_LESS:
-            return a.asSigned() < b;
-        case BinaryOperator::SIGNED_LESS_OR_EQUAL:
-            return a.asSigned() <= b;
-        case BinaryOperator::UNSIGNED_LESS:
-            return a.asUnsigned() < b;
-        case BinaryOperator::UNSIGNED_LESS_OR_EQUAL:
-            return a.asUnsigned() <= b;
-        default:
-            log_.warning(tr("%1: Unknown binary operator kind: %2.").arg(Q_FUNC_INFO).arg(binary->operatorKind()));
-            return dflow::AbstractValue();
+    case BinaryOperator::AND:
+        return a & b;
+    case BinaryOperator::OR:
+        return a | b;
+    case BinaryOperator::XOR:
+        return a ^ b;
+    case BinaryOperator::SHL:
+        return a << b;
+    case BinaryOperator::SHR:
+        return a.asUnsigned() >> b;
+    case BinaryOperator::SAR:
+        return a.asSigned() >> b;
+    case BinaryOperator::ADD:
+        return a + b;
+    case BinaryOperator::SUB:
+        return a - b;
+    case BinaryOperator::MUL:
+        return a * b;
+    case BinaryOperator::SIGNED_DIV:
+        return a.asSigned() / b;
+    case BinaryOperator::SIGNED_REM:
+        return a.asSigned() % b;
+    case BinaryOperator::UNSIGNED_DIV:
+        return a.asUnsigned() / b;
+    case BinaryOperator::UNSIGNED_REM:
+        return a.asUnsigned() % b;
+    case BinaryOperator::EQUAL:
+        return a == b;
+    case BinaryOperator::SIGNED_LESS:
+        return a.asSigned() < b;
+    case BinaryOperator::SIGNED_LESS_OR_EQUAL:
+        return a.asSigned() <= b;
+    case BinaryOperator::UNSIGNED_LESS:
+        return a.asUnsigned() < b;
+    case BinaryOperator::UNSIGNED_LESS_OR_EQUAL:
+        return a.asUnsigned() <= b;
+    default:
+        log_.warning(tr("%1: Unknown binary operator kind: %2.").arg(Q_FUNC_INFO).arg(binary->operatorKind()));
+        return dflow::AbstractValue();
     }
 }
 
-void DataflowAnalyzer::handleWrite(const Term *term, const MemoryLocation &memoryLocation, ReachingDefinitions &definitions) {
+void DataflowAnalyzer::handleWrite(const Term *term, const MemoryLocation &memoryLocation,
+                                   ReachingDefinitions &definitions) {
     definitions.filterOut(
-        [term](const MemoryLocation &, const Term *definition) -> bool {
-            return definition == term;
-        }
-    );
+        [term](const MemoryLocation &, const Term *definition) -> bool { return definition == term; });
 
     if (isTracked(memoryLocation)) {
         definitions.addDefinition(memoryLocation, term);

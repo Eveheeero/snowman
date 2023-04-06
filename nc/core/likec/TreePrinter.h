@@ -54,10 +54,10 @@ class While;
  * This class can print tree nodes into a stream.
  */
 class TreePrinter {
-    QTextStream &out_; ///< Output stream.
+    QTextStream &out_;                          ///< Output stream.
     PrintCallback<const TreeNode *> *callback_; ///< Print callback.
-    int indentStep_; ///< Size of a single indentation step.
-    int indent_; ///< Current indentation.
+    int indentStep_;                            ///< Size of a single indentation step.
+    int indent_;                                ///< Current indentation.
 
 public:
     /**

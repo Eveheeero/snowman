@@ -38,17 +38,13 @@
 
 #include "Colors.h"
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
-enum InstructionsModelColumns {
-    IMC_INSTRUCTION,
-    IMC_COUNT
-};
+enum InstructionsModelColumns { IMC_INSTRUCTION, IMC_COUNT };
 
-InstructionsModel::InstructionsModel(QObject *parent, std::shared_ptr<const core::arch::Instructions> instructions):
-    QAbstractItemModel(parent),
-    instructions_(std::move(instructions))
-{
+InstructionsModel::InstructionsModel(QObject *parent, std::shared_ptr<const core::arch::Instructions> instructions)
+    : QAbstractItemModel(parent), instructions_(std::move(instructions)) {
     std::vector<const core::arch::Instruction *> vector;
 
     if (instructions_) {
@@ -76,7 +72,8 @@ const core::arch::Instruction *InstructionsModel::getInstruction(const QModelInd
 QModelIndex InstructionsModel::getIndex(const core::arch::Instruction *instruction) const {
     assert(instruction);
 
-    auto i = std::lower_bound(instructionsVector_.begin(), instructionsVector_.end(), instruction,
+    auto i = std::lower_bound(
+        instructionsVector_.begin(), instructionsVector_.end(), instruction,
         [](const core::arch::Instruction *a, const core::arch::Instruction *b) { return a->addr() < b->addr(); });
 
     if (i != instructionsVector_.end() && *i == instruction) {
@@ -116,8 +113,10 @@ QVariant InstructionsModel::data(const QModelIndex &index, int role) const {
         assert(instruction);
 
         switch (index.column()) {
-            case IMC_INSTRUCTION: return tr("%1:\t%2").arg(instruction->addr(), 0, 16).arg(instruction->toString());
-            default: unreachable();
+        case IMC_INSTRUCTION:
+            return tr("%1:\t%2").arg(instruction->addr(), 0, 16).arg(instruction->toString());
+        default:
+            unreachable();
         }
     } else if (role == Qt::BackgroundRole) {
         auto instruction = getInstruction(index);
@@ -130,6 +129,7 @@ QVariant InstructionsModel::data(const QModelIndex &index, int role) const {
     return QVariant();
 }
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

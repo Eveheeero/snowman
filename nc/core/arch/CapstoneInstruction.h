@@ -16,8 +16,8 @@ namespace nc {
 namespace core {
 namespace arch {
 
-template<cs_arch csArchitecture_, SmallByteSize maxSize_>
-class CapstoneInstruction: public Instruction {
+template <cs_arch csArchitecture_, SmallByteSize maxSize_>
+class CapstoneInstruction : public Instruction {
     /** Encoding mode of this instruction, as denoted in Capstone. */
     int csMode_;
 
@@ -33,9 +33,8 @@ public:
      * \param[in] size Instruction size in bytes.
      * \param[in] bytes Valid pointer to the bytes of the instruction.
      */
-    CapstoneInstruction(int csMode, ByteAddr addr, SmallByteSize size, const void *bytes):
-        Instruction(addr, size), csMode_(csMode)
-    {
+    CapstoneInstruction(int csMode, ByteAddr addr, SmallByteSize size, const void *bytes)
+        : Instruction(addr, size), csMode_(csMode) {
         assert(size > 0);
         assert(size <= maxSize_);
         memcpy(bytes_.data(), bytes, size);
@@ -69,7 +68,6 @@ public:
         out << instr->mnemonic << " " << instr->op_str;
     }
 };
-
 
 } // namespace arch
 } // namespace core

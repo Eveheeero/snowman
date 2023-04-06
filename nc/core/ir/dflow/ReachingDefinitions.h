@@ -45,26 +45,24 @@ namespace dflow {
 /**
  * Reaching definitions.
  */
-class ReachingDefinitions: public PrintableBase<ReachingDefinitions> {
+class ReachingDefinitions : public PrintableBase<ReachingDefinitions> {
 public:
     /*
      * Memory location and the list of terms defining this memory location.
      */
     class Chunk {
-        MemoryLocation location_; ///< Memory location.
+        MemoryLocation location_;               ///< Memory location.
         std::vector<const Term *> definitions_; ///< Terms defining this memory location.
 
-        public:
-
+    public:
         /*
          * Constructor.
          *
          * \param location      Valid memory location.
          * \param definitions   List of terms defining this memory location.
          */
-        Chunk(const MemoryLocation &location, std::vector<const Term *> definitions):
-            location_(location), definitions_(std::move(definitions))
-        {
+        Chunk(const MemoryLocation &location, std::vector<const Term *> definitions)
+            : location_(location), definitions_(std::move(definitions)) {
             assert(location);
         }
 
@@ -193,19 +191,18 @@ public:
      *             and a valid pointer to a term covering this location.
      * \tparam T Predicate functor type.
      */
-    template<class T>
+    template <class T>
     void filterOut(const T &pred) {
         selfTest();
         foreach (auto &chunk, chunks_) {
             chunk.definitions().erase(
                 std::remove_if(chunk.definitions().begin(), chunk.definitions().end(),
-                    [&](const Term *term) -> bool { return pred(chunk.location(), term); }),
+                               [&](const Term *term) -> bool { return pred(chunk.location(), term); }),
                 chunk.definitions().end());
         }
-        chunks_.erase(
-            std::remove_if(chunks_.begin(), chunks_.end(),
-                [](const Chunk &chunk) -> bool { return chunk.definitions().empty(); }),
-            chunks_.end());
+        chunks_.erase(std::remove_if(chunks_.begin(), chunks_.end(),
+                                     [](const Chunk &chunk) -> bool { return chunk.definitions().empty(); }),
+                      chunks_.end());
         selfTest();
     }
 
@@ -219,7 +216,7 @@ private:
     void selfTest() const {
 #ifndef NDEBUG
         for (std::size_t i = 1; i < chunks_.size(); ++i) {
-            assert(chunks_[i-1].location() < chunks_[i].location());
+            assert(chunks_[i - 1].location() < chunks_[i].location());
         }
 #endif
     }

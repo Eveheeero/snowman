@@ -13,9 +13,9 @@ namespace nc {
 namespace core {
 
 namespace image {
-    class Section;
-    class ByteSource;
-}
+class Section;
+class ByteSource;
+} // namespace image
 
 class Context;
 

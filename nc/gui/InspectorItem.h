@@ -33,20 +33,20 @@
 namespace nc {
 
 namespace core {
-    namespace arch {
-        class Instruction;
-    }
-
-    namespace ir {
-        class Statement;
-        class Term;
-    }
-
-    namespace likec {
-        class TreeNode;
-        class Type;
-    }
+namespace arch {
+class Instruction;
 }
+
+namespace ir {
+class Statement;
+class Term;
+} // namespace ir
+
+namespace likec {
+class TreeNode;
+class Type;
+} // namespace likec
+} // namespace core
 
 namespace gui {
 
@@ -54,37 +54,28 @@ namespace gui {
  * An item in the TreeInspector's tree model.
  */
 class InspectorItem {
-    QString text_; ///< Item's text.
-    const core::likec::TreeNode *node_; ///< Associated LikeC tree node.
-    const core::ir::Term *term_; ///< Associated IR term.
-    const core::ir::Statement *statement_; ///< Associated IR statement.
+    QString text_;                               ///< Item's text.
+    const core::likec::TreeNode *node_;          ///< Associated LikeC tree node.
+    const core::ir::Term *term_;                 ///< Associated IR term.
+    const core::ir::Statement *statement_;       ///< Associated IR statement.
     const core::arch::Instruction *instruction_; ///< Associated instruction.
-    const core::likec::Type *type_; ///< LikeC type.
-    bool expanded_; ///< True iff children of the node have already been computed.
+    const core::likec::Type *type_;              ///< LikeC type.
+    bool expanded_;                              ///< True iff children of the node have already been computed.
 
     InspectorItem *parent_; ///< Parent item.
-    int row_; ///< Index of this item in parent's children list.
+    int row_;               ///< Index of this item in parent's children list.
 
     std::vector<std::unique_ptr<InspectorItem>> children_; ///< Children of the item.
 
-    public:
-
+public:
     /**
      * Constructor.
      *
      * \param[in] text Item's text.
      */
-    explicit InspectorItem(const QString &text):
-        text_(text),
-        node_(nullptr),
-        term_(nullptr),
-        statement_(nullptr),
-        instruction_(nullptr),
-        type_(nullptr),
-        expanded_(false),
-        parent_(nullptr),
-        row_(-1)
-    {}
+    explicit InspectorItem(const QString &text)
+        : text_(text), node_(nullptr), term_(nullptr), statement_(nullptr), instruction_(nullptr), type_(nullptr),
+          expanded_(false), parent_(nullptr), row_(-1) {}
 
     /**
      * \return Item's text.
@@ -253,6 +244,7 @@ class InspectorItem {
     const std::vector<std::unique_ptr<InspectorItem>> &children() const { return children_; }
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

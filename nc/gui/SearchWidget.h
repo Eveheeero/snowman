@@ -36,18 +36,18 @@ class QLineEdit;
 class QStringListModel;
 QT_END_NAMESPACE
 
-namespace nc { namespace gui {
+namespace nc {
+namespace gui {
 
 class Searcher;
 
 /**
  * Widget providing a text search functionality.
  */
-class SearchWidget: public QWidget {
+class SearchWidget : public QWidget {
     Q_OBJECT
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -66,7 +66,7 @@ class SearchWidget: public QWidget {
      */
     Searcher *searcher() const { return searcher_.get(); }
 
-    public Q_SLOTS:
+public Q_SLOTS:
 
     /**
      * Shows the widget and sets input focus into it.
@@ -88,7 +88,7 @@ class SearchWidget: public QWidget {
      */
     void findPrevious();
 
-    private Q_SLOTS:
+private Q_SLOTS:
 
     /**
      * Schedules incremental search.
@@ -105,8 +105,7 @@ class SearchWidget: public QWidget {
      */
     void rememberCompletion();
 
-    private:
-
+private:
     /** Associated searcher. */
     std::unique_ptr<Searcher> searcher_;
 
@@ -153,6 +152,7 @@ class SearchWidget: public QWidget {
     void indicateFailure();
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

@@ -34,29 +34,22 @@ namespace nc {
 namespace core {
 namespace ir {
 
-JumpTarget::JumpTarget(): basicBlock_(nullptr) {}
+JumpTarget::JumpTarget() : basicBlock_(nullptr) {}
 
-JumpTarget::JumpTarget(std::unique_ptr<Term> address):
-    address_(std::move(address)), basicBlock_(nullptr)
-{
+JumpTarget::JumpTarget(std::unique_ptr<Term> address) : address_(std::move(address)), basicBlock_(nullptr) {
     assert(address_ != nullptr);
 }
 
-JumpTarget::JumpTarget(BasicBlock *basicBlock):
-    basicBlock_(basicBlock)
-{
+JumpTarget::JumpTarget(BasicBlock *basicBlock) : basicBlock_(basicBlock) {
     assert(basicBlock != nullptr);
 }
 
-JumpTarget::JumpTarget(const JumpTarget &other):
-    address_(other.address_ ? other.address_->clone() : nullptr),
-    basicBlock_(other.basicBlock_),
-    table_(other.table_ ? new JumpTable(*other.table_) : nullptr)
-{}
+JumpTarget::JumpTarget(const JumpTarget &other)
+    : address_(other.address_ ? other.address_->clone() : nullptr), basicBlock_(other.basicBlock_),
+      table_(other.table_ ? new JumpTable(*other.table_) : nullptr) {}
 
-JumpTarget::JumpTarget(JumpTarget &&other):
-    address_(std::move(other.address_)), basicBlock_(other.basicBlock_), table_(std::move(other.table_))
-{}
+JumpTarget::JumpTarget(JumpTarget &&other)
+    : address_(std::move(other.address_)), basicBlock_(other.basicBlock_), table_(std::move(other.table_)) {}
 
 JumpTarget::~JumpTarget() {}
 

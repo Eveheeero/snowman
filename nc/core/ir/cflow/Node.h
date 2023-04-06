@@ -47,7 +47,7 @@ class Region;
 /**
  * Graph node.
  */
-class Node: public Printable {
+class Node : public Printable {
     NC_BASE_CLASS(Node, nodeKind)
     friend class Edge;
 
@@ -61,15 +61,15 @@ public:
     };
 
 private:
-    Region *parent_; ///< Parent region.
-    std::vector<Edge *> inEdges_; ///< Incoming edges.
+    Region *parent_;               ///< Parent region.
+    std::vector<Edge *> inEdges_;  ///< Incoming edges.
     std::vector<Edge *> outEdges_; ///< Outgoing edges.
 
 public:
     /**
      * \param kind Kind of the node.
      */
-    Node(NodeKind kind): nodeKind_(kind), parent_(nullptr) {}
+    Node(NodeKind kind) : nodeKind_(kind), parent_(nullptr) {}
 
     /**
      * Virtual destructor.
@@ -142,6 +142,6 @@ public:
 } // namespace nc
 
 NC_SUBCLASS(nc::core::ir::cflow::Node, nc::core::ir::cflow::BasicNode, nc::core::ir::cflow::Node::BASIC)
-NC_SUBCLASS(nc::core::ir::cflow::Node, nc::core::ir::cflow::Region,    nc::core::ir::cflow::Node::REGION)
+NC_SUBCLASS(nc::core::ir::cflow::Node, nc::core::ir::cflow::Region, nc::core::ir::cflow::Node::REGION)
 
 /* vim:set et sts=4 sw=4: */

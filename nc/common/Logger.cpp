@@ -9,14 +9,14 @@ namespace nc {
 
 QString LogLevel::getName(Level level) {
     switch (level) {
-        case DEBUG:
-            return tr("Debug");
-        case INFO:
-            return tr("Info");
-        case WARNING:
-            return tr("Warning");
-        case ERROR:
-            return tr("Error");
+    case DEBUG:
+        return tr("Debug");
+    case INFO:
+        return tr("Info");
+    case WARNING:
+        return tr("Warning");
+    case ERROR:
+        return tr("Error");
     }
     return QString();
 }

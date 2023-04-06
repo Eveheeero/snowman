@@ -21,13 +21,12 @@ class Symbol;
  * offset).
  */
 class Relocation {
-    ByteAddr address_; ///< Virtual address to be patched.
+    ByteAddr address_;     ///< Virtual address to be patched.
     const Symbol *symbol_; ///< Symbol with whose address to patch.
-    ByteSize size_; ///< Size of the patched value.
-    ByteSize addend_; ///< Displacement to add to the symbol's address.
+    ByteSize size_;        ///< Size of the patched value.
+    ByteSize addend_;      ///< Displacement to add to the symbol's address.
 
 public:
-
     /**
      * Constructor.
      *
@@ -36,9 +35,8 @@ public:
      * \param size Size of the patched value.
      * \param addend Displacement to add to the symbol's address.
      */
-    Relocation(ByteAddr address, const Symbol *symbol, ByteSize size, ByteSize addend = 0):
-        address_(address), symbol_(symbol), size_(size), addend_(addend)
-    {
+    Relocation(ByteAddr address, const Symbol *symbol, ByteSize size, ByteSize addend = 0)
+        : address_(address), symbol_(symbol), size_(size), addend_(addend) {
         assert(symbol != nullptr);
     }
 

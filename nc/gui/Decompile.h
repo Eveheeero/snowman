@@ -30,10 +30,10 @@
 namespace nc {
 
 namespace core {
-    namespace arch {
-        class Instructions;
-    }
+namespace arch {
+class Instructions;
 }
+} // namespace core
 
 namespace gui {
 
@@ -42,7 +42,7 @@ class Project;
 /**
  * 'Decompile' command.
  */
-class Decompile: public Command {
+class Decompile : public Command {
     Q_OBJECT
 
     /** Project. */
@@ -51,8 +51,7 @@ class Decompile: public Command {
     /** Instructions to be decompiled. */
     std::shared_ptr<const core::arch::Instructions> instructions_;
 
-    public:
-
+public:
     /**
      * Constructor.
      *
@@ -61,11 +60,11 @@ class Decompile: public Command {
      */
     Decompile(Project *project, const std::shared_ptr<const core::arch::Instructions> &instructions);
 
-    protected:
-
+protected:
     void work() override;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

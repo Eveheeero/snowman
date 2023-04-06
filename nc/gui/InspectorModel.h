@@ -34,12 +34,12 @@
 namespace nc {
 
 namespace core {
-    class Context;
+class Context;
 
-    namespace likec {
-        class TreeNode;
-    }
+namespace likec {
+class TreeNode;
 }
+} // namespace core
 
 namespace gui {
 
@@ -48,7 +48,7 @@ class InspectorItem;
 /**
  * Item model for TreeInspector.
  */
-class InspectorModel: public QAbstractItemModel {
+class InspectorModel : public QAbstractItemModel {
     Q_OBJECT
 
     /** Associated immutable context instance. */
@@ -114,6 +114,7 @@ public:
     void expand(InspectorItem *item) const;
 };
 
-}} // namespace nc::gui
+} // namespace gui
+} // namespace nc
 
 /* vim:set et sts=4 sw=4: */

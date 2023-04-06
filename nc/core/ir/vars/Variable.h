@@ -48,7 +48,7 @@ public:
      */
     enum Scope {
         GLOBAL, ///< Global variable (declared in a compilation unit).
-        LOCAL ///< Local variable (declared in a function).
+        LOCAL   ///< Local variable (declared in a function).
     };
 
     /**
@@ -58,7 +58,7 @@ public:
         const Term *term;
         MemoryLocation location;
 
-        TermAndLocation(const Term *term, const MemoryLocation &location): term(term), location(location) {}
+        TermAndLocation(const Term *term, const MemoryLocation &location) : term(term), location(location) {}
     };
 
 private:
@@ -80,9 +80,8 @@ public:
      *                              locations belonging to the variable.
      * \param[in] memoryLocation Valid memory location of the variable.
      */
-    Variable(Scope scope, std::vector<TermAndLocation> termsAndLocations, const MemoryLocation &memoryLocation):
-        scope_(scope), termsAndLocations_(std::move(termsAndLocations)), memoryLocation_(memoryLocation)
-    {
+    Variable(Scope scope, std::vector<TermAndLocation> termsAndLocations, const MemoryLocation &memoryLocation)
+        : scope_(scope), termsAndLocations_(std::move(termsAndLocations)), memoryLocation_(memoryLocation) {
         assert(memoryLocation);
     }
 

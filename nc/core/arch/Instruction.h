@@ -37,7 +37,7 @@ namespace arch {
 /**
  * Base class for instructions.
  */
-class Instruction: public Printable {
+class Instruction : public Printable {
     /** Instruction's address in bytes. */
     ByteAddr addr_;
 
@@ -51,11 +51,7 @@ public:
      * \param[in] addr  Instruction's address in bytes.
      * \param[in] size  Instruction's size in bytes.
      */
-    Instruction(ByteAddr addr = 0, SmallByteSize size = 0):
-        addr_(addr), size_(size)
-    {
-        assert(size >= 0);
-    }
+    Instruction(ByteAddr addr = 0, SmallByteSize size = 0) : addr_(addr), size_(size) { assert(size >= 0); }
 
     /**
      * Virtual destructor.
@@ -84,7 +80,10 @@ public:
      *
      * \param[in] size Size in bytes.
      */
-    void setSize(SmallByteSize size) { assert(size > 0); size_ = size; }
+    void setSize(SmallByteSize size) {
+        assert(size > 0);
+        size_ = size;
+    }
 
     /**
      * \return Address of the next instruction in memory.

@@ -36,13 +36,12 @@ namespace likec {
 /**
  * Erroneous type.
  */
-class ErroneousType: public Type {
-    public:
-
+class ErroneousType : public Type {
+public:
     /**
      * Class constructor.
      */
-    ErroneousType(): Type(-1, ERRONEOUS) {}
+    ErroneousType() : Type(-1, ERRONEOUS) {}
 
     virtual void print(QTextStream &out) const override;
 };
@@ -50,13 +49,12 @@ class ErroneousType: public Type {
 /**
  * Void type.
  */
-class VoidType: public Type {
-    public:
-
+class VoidType : public Type {
+public:
     /**
      * Class constructor.
      */
-    VoidType(): Type(0, VOID) {}
+    VoidType() : Type(0, VOID) {}
 
     virtual bool isVoid() const override { return true; }
 
@@ -66,18 +64,17 @@ class VoidType: public Type {
 /**
  * Integer type (signed or unsigned).
  */
-class IntegerType: public Type {
+class IntegerType : public Type {
     bool isUnsigned_; ///< Whether this type is unsigned.
 
-    public:
-
+public:
     /**
      * Class constructor.
      *
      * \param[in] size Type size.
      * \param[in] isUnsigned Whether this type is unsigned.
      */
-    IntegerType(BitSize size, bool isUnsigned): Type(size, INTEGER), isUnsigned_(isUnsigned) {}
+    IntegerType(BitSize size, bool isUnsigned) : Type(size, INTEGER), isUnsigned_(isUnsigned) {}
 
     /**
      * \return True, if the type is signed.
@@ -97,15 +94,14 @@ class IntegerType: public Type {
 /**
  * Floating point type.
  */
-class FloatType: public Type {
-    public:
-
+class FloatType : public Type {
+public:
     /**
      * Class constructor.
      *
      * \param[in] size Type size.
      */
-    FloatType(BitSize size): Type(size, FLOAT) {}
+    FloatType(BitSize size) : Type(size, FLOAT) {}
 
     virtual bool isFloat() const override { return true; }
 
@@ -115,13 +111,12 @@ class FloatType: public Type {
 /**
  * Pointer type.
  */
-class PointerType: public Type {
+class PointerType : public Type {
     NC_BASE_CLASS(Type, pointerKind)
 
     const Type *pointeeType_; ///< Type this one points to.
 
-    public:
-
+public:
     /**
      * Pointer kind.
      */
@@ -137,14 +132,12 @@ class PointerType: public Type {
      * \param[in] size Type size.
      * \param[in] pointeeType Pointee type.
      */
-    PointerType(BitSize size, const Type *pointeeType):
-        Type(size, POINTER), pointerKind_(PLAIN_PTR), pointeeType_(pointeeType)
-    {
+    PointerType(BitSize size, const Type *pointeeType)
+        : Type(size, POINTER), pointerKind_(PLAIN_PTR), pointeeType_(pointeeType) {
         assert(pointeeType);
     }
 
-    protected:
-
+protected:
     /**
      * Class constructor.
      *
@@ -152,14 +145,12 @@ class PointerType: public Type {
      * \param[in] pointeeType Pointee type.
      * \param[in] pointerKind Pointer kind.
      */
-    PointerType(BitSize size, const Type *pointeeType, int pointerKind):
-        Type(size, POINTER), pointerKind_(pointerKind), pointeeType_(pointeeType)
-    {
+    PointerType(BitSize size, const Type *pointeeType, int pointerKind)
+        : Type(size, POINTER), pointerKind_(pointerKind), pointeeType_(pointeeType) {
         assert(pointeeType);
     }
 
-    public:
-
+public:
     /**
      * \return Type this one points to.
      */
@@ -175,11 +166,10 @@ class PointerType: public Type {
 /**
  * Array type = pointer type + number of elements.
  */
-class ArrayType: public PointerType {
+class ArrayType : public PointerType {
     std::size_t length_; ///< Number of elements in the array.
-    
-    public:
 
+public:
     /**
      * Class constructor.
      *
@@ -187,8 +177,8 @@ class ArrayType: public PointerType {
      * \param[in] elementType Type of elements.
      * \param[in] length Length of the array.
      */
-    ArrayType(BitSize size, const Type *elementType, std::size_t length):
-        PointerType(size, elementType, ARRAY_PTR), length_(length) {}
+    ArrayType(BitSize size, const Type *elementType, std::size_t length)
+        : PointerType(size, elementType, ARRAY_PTR), length_(length) {}
 
     /**
      * \return Type of elements.
@@ -219,12 +209,12 @@ class ArrayType: public PointerType {
 } // namespace nc
 
 NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::ErroneousType, nc::core::likec::Type::ERRONEOUS)
-NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::VoidType,      nc::core::likec::Type::VOID)
-NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::IntegerType,   nc::core::likec::Type::INTEGER)
-NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::FloatType,     nc::core::likec::Type::FLOAT)
-NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::PointerType,   nc::core::likec::Type::POINTER)
+NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::VoidType, nc::core::likec::Type::VOID)
+NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::IntegerType, nc::core::likec::Type::INTEGER)
+NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::FloatType, nc::core::likec::Type::FLOAT)
+NC_SUBCLASS(nc::core::likec::Type, nc::core::likec::PointerType, nc::core::likec::Type::POINTER)
 
 NC_SUBCLASS(nc::core::likec::PointerType, nc::core::likec::PointerType, nc::core::likec::PointerType::PLAIN_PTR)
-NC_SUBCLASS(nc::core::likec::PointerType, nc::core::likec::ArrayType,   nc::core::likec::PointerType::ARRAY_PTR)
+NC_SUBCLASS(nc::core::likec::PointerType, nc::core::likec::ArrayType, nc::core::likec::PointerType::ARRAY_PTR)
 
 /* vim:set et sts=4 sw=4: */
