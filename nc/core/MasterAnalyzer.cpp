@@ -94,13 +94,19 @@ void MasterAnalyzer::createFunctions(Context &context) const {
     context.setFunctions(std::move(functions));
 }
 
+/**
+ * @brief 다른 데이터를 저장하기 위한 기본 데이터 설정
+ */
 void MasterAnalyzer::createHooks(Context &context) const {
     context.logToken().info(tr("Creating hooks."));
 
+    // 이름 관련 빈 구조체 생성 (주소별 시그니처, 함수별 시그니처, 호출별 시그니처)
     context.setSignatures(std::make_unique<ir::calling::Signatures>());
+    // 주소 별 컨벤션과 인자 크기 저장공간 생성
     context.setConventions(std::make_unique<ir::calling::Conventions>());
     context.setHooks(std::make_unique<ir::calling::Hooks>(*context.conventions(), *context.signatures()));
 
+    // 컨벤션 감지 시 기본값을 지정하기 위한 훜 설정
     context.hooks()->setConventionDetector(
         [this, &context](const ir::calling::CalleeId &calleeId) { this->detectCallingConvention(context, calleeId); });
 }
@@ -110,26 +116,34 @@ void MasterAnalyzer::detectCallingConventions(Context &) const {
 }
 
 void MasterAnalyzer::detectCallingConvention(Context &context, const ir::calling::CalleeId &calleeId) const {
+    // 컨벤션이 설정되어있지 않으면 모든컨벤션을 운영체제별 기본값으로 설정
     if (!context.image()->platform().architecture()->conventions().empty()) {
         context.conventions()->setConvention(calleeId,
                                              context.image()->platform().architecture()->conventions().front());
     }
 }
 
+/**
+ * @brief 모든 함수에 대한 데이터 흐름 분석
+ */
 void MasterAnalyzer::dataflowAnalysis(Context &context) const {
     context.logToken().info(tr("Dataflow analysis."));
 
+    // 함수 별 데이터 흐름 분석 맵 생성
     context.setDataflows(std::make_unique<ir::dflow::Dataflows>());
 
     foreach (auto function, context.functions()->list()) {
         dataflowAnalysis(context, function);
-        context.cancellationToken().poll();
     }
 }
 
+/**
+ * @brief 한 함수에 대한 데이터 흐름 분석
+ */
 void MasterAnalyzer::dataflowAnalysis(Context &context, ir::Function *function) const {
     context.logToken().info(tr("Dataflow analysis of %1.").arg(getFunctionName(context, function)));
 
+    // 해당 함수에 대한 데이터 흐름 구조체 생성
     std::unique_ptr<ir::dflow::Dataflow> dataflow(new ir::dflow::Dataflow());
 
     context.hooks()->instrument(function, dataflow.get());
@@ -141,6 +155,9 @@ void MasterAnalyzer::dataflowAnalysis(Context &context, ir::Function *function) 
     context.dataflows()->emplace(function, std::move(dataflow));
 }
 
+/**
+ * @brief 프로그램 전체의, 함수의 인자나 반환값 시그니처 지정
+ */
 void MasterAnalyzer::reconstructSignatures(Context &context) const {
     context.logToken().info(tr("Reconstructing function signatures."));
 
@@ -202,7 +219,6 @@ void MasterAnalyzer::structuralAnalysis(Context &context) const {
 
     foreach (auto function, context.functions()->list()) {
         structuralAnalysis(context, function);
-        context.cancellationToken().poll();
     }
 }
 
@@ -248,7 +264,7 @@ void MasterAnalyzer::decompile(Context &context) const {
     dataflowAnalysis(context);
     // 실행 흐름 분석
     livenessAnalysis(context);
-    // 시그니처 재작성
+    // 시그니처 재작성 (함수의 반환값 및 인자 지정)
     reconstructSignatures(context);
     // 데이터 흐름 분석 2
     dataflowAnalysis(context);
