@@ -43,7 +43,7 @@ class Jump;
 class Statement;
 
 /**
- * Basic block.
+ * 함수 하나에 대한 IR 명령어 블럭, 내부에 여러 IR 명령이 들어있다.
  */
 class BasicBlock : public PrintableBase<BasicBlock>, public nc::ilist_item, boost::noncopyable {
 public:

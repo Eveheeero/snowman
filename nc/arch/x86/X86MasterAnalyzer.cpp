@@ -57,20 +57,25 @@ void X86MasterAnalyzer::createProgram(core::Context &context) const {
      * Patch the IR to implement x86-64 implicit zero extend.
      */
     if (context.image()->platform().architecture()->bitness() == 64) {
+        // IR 내부 레지스터의 첫 위치
         auto minDomain = X86Registers::rax()->memoryLocation().domain();
+        // IR 내부 x86 레지스터의 마지막 위치 (simd제외)
         auto maxDomain = X86Registers::r15()->memoryLocation().domain();
 
         auto program = const_cast<core::ir::Program *>(context.program());
 
+        // 각 함수의 IR인스트럭션들로 아래 작업을 수행한다.
         foreach (auto *basicBlock, program->basicBlocks()) {
-            context.cancellationToken().poll();
-
+            // IR의 각 명령에 대해 (레지스터를 옮겨라, 메모리에 접근해라 등)
             foreach (auto statement, basicBlock->statements()) {
                 if (auto assignment = statement->asAssignment()) {
+                    // 접근하는 영역이
                     if (auto access = assignment->left()->asMemoryLocationAccess()) {
+                        // RAX ~ r15까지의 영역이면 (최대 64비트 사이즈의 레지스터면)
                         if (minDomain <= access->memoryLocation().domain() &&
                             access->memoryLocation().domain() <= maxDomain && access->memoryLocation().addr() == 0 &&
                             access->memoryLocation().size() == 32) {
+                            // 비트 수를 64비트로 확장해서 저장한다.
                             auto patch = std::make_unique<core::ir::Assignment>(
                                 std::make_unique<core::ir::MemoryLocationAccess>(access->memoryLocation().shifted(32)),
                                 std::make_unique<core::ir::Constant>(SizedValue(32, 0)));

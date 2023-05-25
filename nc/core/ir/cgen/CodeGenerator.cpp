@@ -55,16 +55,24 @@ namespace core {
 namespace ir {
 namespace cgen {
 
+/**
+ * C코드로 변환한다.
+ */
 void CodeGenerator::makeCompilationUnit() {
+    // usize 지정
     tree().setPointerSize(image().platform().architecture()->bitness());
+    // int 지정 (uint32등을 쓰면 필요 없다)
     tree().setIntSize(image().platform().intSize());
+    // 시작객체 설정
     tree().setRoot(std::make_unique<likec::CompilationUnit>());
 
+    // 모든 함수에 대해
     foreach (const Function *function, functions().list()) {
+        // 함수 생성
         makeFunctionDefinition(function);
-        cancellationToken().poll();
     }
 
+    // 생성한 함수 적용
     tree().rewriteRoot();
 }
 
@@ -238,6 +246,7 @@ likec::FunctionDeclaration *CodeGenerator::makeFunctionDeclaration(ByteAddr addr
 
 likec::FunctionDefinition *CodeGenerator::makeFunctionDefinition(const Function *function) {
     DefinitionGenerator generator(*this, function, cancellationToken());
+    // DefinitionGenerator.cpp 에서 함수 코드 생성
     tree().root()->addDeclaration(generator.createDefinition());
     return generator.definition();
 }

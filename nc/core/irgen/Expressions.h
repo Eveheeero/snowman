@@ -1082,15 +1082,23 @@ public:
     ir::BasicBlock *basicBlock() const { return mBasicBlock; }
 
     /**
-     * \param statement                 Call statement to create IR statement from.
-     *                                  Created statement will be added to the basic block.
+     * \param statement                 IR 명령들이 들어옵니다.
+     *                                  IR 명령 구조체에 대해, 어떤 인스트럭션으로부터 왔는지 저장하고, BasicBlock에
+     * 명령기록을 추가해줍니다.
      */
     template <class E>
     void operator[](StatementBase<E> &&statement) const {
+        // derived()는 내부 E데이터를 반환하는것이다.
+        // 여러 명령이 들어있으면 아래 doCallback에서 분리를 해준다.
         doCallback(statement.derived());
     }
 
+    /**
+     * @brief 명령 하나 전용 콜백 적용 (모든 명령에 대해 해당 함수 실행된다)
+     */
     void operator()(std::unique_ptr<ir::Statement> statement) const {
+        // 해당 명령이 어떤 인스트럭션으로부터 왔는지 지정해주고
+        // BasicBlock에 추가해준다.
         statement->setInstruction(mInstruction);
         mBasicBlock->pushBack(std::move(statement));
     }
@@ -1103,6 +1111,13 @@ protected:
         this->operator()(mFactory.createStatement(statement));
     }
 
+    /**
+     * @brief 여러 명령이 들어왔으면 분리해서 다시 실행해준다.
+     *
+     * @tparam L
+     * @tparam R
+     * @param statement
+     */
     template <class L, class R>
     void doCallback(SequenceStatement<L, R> &statement) const {
         this->operator[](std::move(statement.left()));

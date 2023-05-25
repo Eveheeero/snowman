@@ -62,12 +62,17 @@ namespace core {
 
 MasterAnalyzer::~MasterAnalyzer() {}
 
+/**
+ * @brief 프로그램 소스코드를 받아와서 IR로 변환 후, 인스트럭션 별 점프트리, 함수 별 점프트리를 만들어 저장한다.
+ * 인스트럭션 -> IR변환작업이 이루어지며, 점프관계의존도를 이곳에서 찾는다.
+ * BasicBlock은 한 함수에서 수행하는 작업들의 IR명령셋
+ */
 void MasterAnalyzer::createProgram(Context &context) const {
     context.logToken().info(tr("Creating intermediate representation of the program."));
 
     std::unique_ptr<ir::Program> program(new ir::Program());
 
-    /* 프로그램 소스코드를 받아와서  */
+    /* 프로그램 소스코드를 받아와서 IR로 변환 후, 인스트럭션 별 점프트리, 함수 별 점프트리를 만들어줌 */
     core::irgen::IRGenerator(context.image().get(), context.instructions().get(), program.get(),
                              context.cancellationToken(), context.logToken())
         .generate();

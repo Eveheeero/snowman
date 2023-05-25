@@ -56,9 +56,8 @@ namespace core {
 namespace irgen {
 
 IRGenerator::IRGenerator(const image::Image *image, const arch::Instructions *instructions, ir::Program *program,
-    const CancellationToken &canceled, const LogToken &log):
-    image_(image), instructions_(instructions), program_(program), canceled_(canceled), log_(log)
-{
+                         const CancellationToken &canceled, const LogToken &log)
+    : image_(image), instructions_(instructions), program_(program), canceled_(canceled), log_(log) {
     assert(image);
     assert(instructions);
     assert(program);
@@ -66,8 +65,14 @@ IRGenerator::IRGenerator(const image::Image *image, const arch::Instructions *in
 
 IRGenerator::~IRGenerator() {}
 
+/**
+ * @brief 인스트럭션 기반 IR 생성 및 블럭 파싱
+ */
 void IRGenerator::generate() {
-    image_->platform().architecture()->createInstructionAnalyzer()->createStatements(instructions_, program_, canceled_, log_);
+    // ! 아래 코드 한 줄에서 인스트럭션 -> IR변환 및 BasicBlock 생성이 완료된다.
+    // BasicBlock - IR행동이 들어있는 명령 블럭 (함수별 한개, blocks는 함수들의 집합)
+    image_->platform().architecture()->createInstructionAnalyzer()->createStatements(instructions_, program_, canceled_,
+                                                                                     log_);
 
 #ifndef NDEBUG
     /*
@@ -81,10 +86,9 @@ void IRGenerator::generate() {
     }
 #endif
 
-    /* Compute jump targets. */
+    /* 점프 연관관계 설정 (대상블럭은 어디에서 점프했는지, 점프하는블럭은 어디로 점프하는지) */
     foreach (auto basicBlock, program_->basicBlocks()) {
         computeJumpTargets(basicBlock);
-        canceled_.poll();
     }
 
 #ifndef NDEBUG
@@ -100,7 +104,7 @@ void IRGenerator::generate() {
     }
 #endif
 
-    /* Add jumps to direct successors where necessary. */
+    /* 한 함수가 어떤 다른 함수들로 이동하는지 설정 */
     foreach (auto basicBlock, program_->basicBlocks()) {
         addJumpToDirectSuccessor(basicBlock);
         canceled_.poll();
@@ -119,47 +123,47 @@ void IRGenerator::computeJumpTargets(ir::BasicBlock *basicBlock) {
         analyzer.execute(statement, definitions);
 
         switch (statement->kind()) {
-            case ir::Statement::INLINE_ASSEMBLY: {
-                /*
-                 * Inline assembly can do unpredictable things.
-                 * Therefore, clear the reaching definitions.
-                 */
-                definitions.clear();
-                break;
-            }
-            case ir::Statement::CALL: {
-                auto call = statement->asCall();
-                auto addressValue = dataflow.getValue(call->target());
+        case ir::Statement::INLINE_ASSEMBLY: {
+            /*
+             * Inline assembly can do unpredictable things.
+             * Therefore, clear the reaching definitions.
+             */
+            definitions.clear();
+            break;
+        }
+        case ir::Statement::CALL: {
+            auto call = statement->asCall();
+            auto addressValue = dataflow.getValue(call->target());
 
-                /* Record information about the function entry. */
-                if (addressValue->abstractValue().isConcrete()) {
-                    ByteAddr address = addressValue->abstractValue().asConcrete().value();
+            /* Record information about the function entry. */
+            if (addressValue->abstractValue().isConcrete()) {
+                ByteAddr address = addressValue->abstractValue().asConcrete().value();
 
+                program_->addCalledAddress(address);
+                program_->createBasicBlock(address);
+            } else {
+                foreach (ByteAddr address, getJumpTableEntries(call->target(), dataflow)) {
                     program_->addCalledAddress(address);
                     program_->createBasicBlock(address);
-                } else {
-                    foreach (ByteAddr address, getJumpTableEntries(call->target(), dataflow)) {
-                        program_->addCalledAddress(address);
-                        program_->createBasicBlock(address);
-                    }
                 }
-
-                /*
-                 * A call can do unpredictable things.
-                 * Therefore, clear the reaching definitions.
-                 */
-                definitions.clear();
-                break;
             }
-            case ir::Statement::JUMP: {
-                auto jump = statement->as<ir::Jump>();
 
-                /* If the target basic block is unknown, try to guess it. */
-                computeJumpTarget(jump->thenTarget(), dataflow);
-                computeJumpTarget(jump->elseTarget(), dataflow);
+            /*
+             * A call can do unpredictable things.
+             * Therefore, clear the reaching definitions.
+             */
+            definitions.clear();
+            break;
+        }
+        case ir::Statement::JUMP: {
+            auto jump = statement->as<ir::Jump>();
 
-                break;
-            }
+            /* If the target basic block is unknown, try to guess it. */
+            computeJumpTarget(jump->thenTarget(), dataflow);
+            computeJumpTarget(jump->elseTarget(), dataflow);
+
+            break;
+        }
         }
 
         if (statement->isTerminator() && statement->basicBlock()->address() && statement->instruction()) {
@@ -214,7 +218,8 @@ std::vector<ByteAddr> IRGenerator::getJumpTableEntries(const ir::Term *target, c
         address += arrayAccess.stride();
 
         if (result.size() > maxTableEntries) {
-            log_.warning(tr("Jump table at address %1 seems to have more than %2 entries.").arg(address).arg(maxTableEntries));
+            log_.warning(
+                tr("Jump table at address %1 seems to have more than %2 entries.").arg(address).arg(maxTableEntries));
             break;
         }
     }
@@ -242,8 +247,11 @@ bool IRGenerator::isInstructionAddress(ByteAddr address) {
 void IRGenerator::addJumpToDirectSuccessor(ir::BasicBlock *basicBlock) {
     assert(basicBlock != nullptr);
 
+    // ret이 아니면? 프로그램 종료하는 exit이 아니면?
     if (!basicBlock->getTerminator()) {
+        // 이동 대상 주소가 있으면서, 이동 대상 주소가 자기 함수가 아니면
         if (basicBlock->successorAddress() && basicBlock->successorAddress() != basicBlock->address()) {
+            // A함수에서 B함수(처음)으로 갈 수 있다고 설정
             if (auto directSuccessor = program_->getBasicBlockStartingAt(*basicBlock->successorAddress())) {
                 basicBlock->pushBack(std::make_unique<ir::Jump>(ir::JumpTarget(directSuccessor)));
             }

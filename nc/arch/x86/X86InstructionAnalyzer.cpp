@@ -99,6 +99,10 @@ public:
         ud_set_mode(&ud_obj_, architecture_->bitness());
     }
 
+    /**
+     * @brief 각 인스트럭션을 디스어셈블하여 IR로 변환 후 저장
+     * MasterAnalyzer/createProgram에서 호출한 IRGenerator/generate()에 의해 반복적으로 실행된다.
+     */
     void createStatements(const X86Instruction *instr, core::ir::Program *program) {
         // operand(0)이나 operand(1)등은 명령어의 첫번째, 두번째 값을 가져옴
         assert(instr != nullptr);
@@ -126,7 +130,8 @@ public:
 
         using namespace core::irgen::expressions;
 
-        /* Describing semantics */
+        /* 각 x86_64 인스트럭션에 대해, IR로 변환해줌 (레지스터를 움직이는지, 메모리를 접근하는지 등등의 명령셋으로
+         * 변환) */
         switch (ud_obj_.mnemonic) {
         case UD_Iadc: {
             _[temporary(operand(0).size()) ^= operand(0) + operand(1) + zero_extend(cf),
