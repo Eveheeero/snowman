@@ -51,7 +51,9 @@ void dfs(const CFG &cfg, const BasicBlock *basicBlock, boost::unordered_set<cons
     visited.insert(basicBlock);
     trace.push_back(basicBlock);
 
+    // A코드블럭에서 다른 코드블록으로 이동하는 명령을 찾아 가지처럼 연결함
     foreach (const BasicBlock *successor, cfg.getSuccessors(basicBlock)) {
+        // 이전에 분석했던 블록이면 무시함
         if (visited.find(successor) == visited.end()) {
             dfs(cfg, successor, visited, trace);
         }
@@ -60,6 +62,9 @@ void dfs(const CFG &cfg, const BasicBlock *basicBlock, boost::unordered_set<cons
 
 } // anonymous namespace
 
+/**
+ * @brief 여러 블럭 이동 패턴을 이용해, 어떤 것이 함수인지 생성한다
+ */
 void FunctionsGenerator::makeFunctions(const Program &program, Functions &functions) const {
     boost::unordered_set<const BasicBlock *> processed;
 
@@ -76,6 +81,7 @@ void FunctionsGenerator::makeFunctions(const Program &program, Functions &functi
          * entry's address to the first meaningful instruction, unless somebody
          * calls it using current address.
          */
+        // 0x90 0x90으로 시작하면 알맞는 인스트럭션을 만날때까지 이동하는듯하다?
         if (function->entry() && function->entry()->address() && function->entry()->statements().front() &&
             function->entry()->statements().front()->instruction() &&
             *function->entry()->address() != function->entry()->statements().front()->instruction()->addr()) {
@@ -88,20 +94,23 @@ void FunctionsGenerator::makeFunctions(const Program &program, Functions &functi
         functions.addFunction(std::move(function));
     };
 
-    /* Generate all functions being called. */
+    /* jump나 call의 목적지부터 함수를 생성한다 */
     foreach (const BasicBlock *basicBlock, program.basicBlocks()) {
+        // 블럭의 시작이 call에 의해 불러지고 있으면
         if (basicBlock->address() && program.isCalledAddress(*basicBlock->address())) {
             boost::unordered_set<const BasicBlock *> visited;
             std::vector<const BasicBlock *> trace;
 
             dfs(cfg, basicBlock, visited, trace);
+            // 해당 함수를 타게 되면 어떤 순서대로 함수를 타는지 분석 (trace가 어떤 순서대로 함수를 타는지 기록한 것)
             addFunction(trace, basicBlock);
             processed.insert(trace.begin(), trace.end());
         }
     }
 
-    /* Single out all other possible functions. */
+    /* 독립된 함수들 분석 */
     foreach (const BasicBlock *basicBlock, program.basicBlocks()) {
+        // 어디에서도 해당 함수에 온 적 없으면서, 분석도 한 적 없으면 분석한다. (외부호출?)
         if (basicBlock->address() && cfg.getPredecessors(basicBlock).empty() && !contains(processed, basicBlock)) {
             std::vector<const BasicBlock *> trace;
 
@@ -110,7 +119,7 @@ void FunctionsGenerator::makeFunctions(const Program &program, Functions &functi
         }
     }
 
-    /* Single out remaining weird strongly connected components. */
+    /* 다른데서 해당 함수를 참조했지만 분석한 적 없으면 분석 */
     foreach (const BasicBlock *basicBlock, program.basicBlocks()) {
         if (basicBlock->address() && !contains(processed, basicBlock)) {
             std::vector<const BasicBlock *> trace;
@@ -121,6 +130,10 @@ void FunctionsGenerator::makeFunctions(const Program &program, Functions &functi
     }
 }
 
+/**
+ * @param basicBlocks 해당 함수는 내부적으로 어떤 어셈블리 블럭을 타는지
+ * @param entry 시작 함수블럭
+ */
 std::unique_ptr<Function> FunctionsGenerator::makeFunction(const std::vector<const BasicBlock *> &basicBlocks,
                                                            const BasicBlock *entry) const {
     assert(!basicBlocks.empty());
@@ -128,10 +141,10 @@ std::unique_ptr<Function> FunctionsGenerator::makeFunction(const std::vector<con
     /* Create a new function. */
     std::unique_ptr<Function> function(new Function);
 
-    /* Clone basic blocks into it. */
+    /* 해당 함수가 어떤 인스트럭션 블럭을 거쳐가는지 파악 */
     auto clones = cloneIntoFunction(basicBlocks, function.get());
 
-    /* Set the entry basic block. */
+    /* 함수의 시작 블럭 설정 */
     if (entry) {
         BasicBlock *clonedEntry = nc::find(clones, entry);
         assert(clonedEntry != nullptr && "Entry must have been cloned.");

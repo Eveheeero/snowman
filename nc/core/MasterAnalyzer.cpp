@@ -80,11 +80,15 @@ void MasterAnalyzer::createProgram(Context &context) const {
     context.setProgram(std::move(program));
 }
 
+/**
+ * @brief 호출되는 함수 및, 가능성이 있는 함수들에 대해, 어떤 인스트럭션 블럭을 수행하는지 분석하여 함수를 생성한다.
+ */
 void MasterAnalyzer::createFunctions(Context &context) const {
     context.logToken().info(tr("Creating functions."));
 
     std::unique_ptr<ir::Functions> functions(new ir::Functions);
 
+    // call되는 함수들이 어떤 순서로 블럭들을 이동하는지 분석 후 함수 생성
     ir::FunctionsGenerator().makeFunctions(*context.program(), *functions);
 
     context.setFunctions(std::move(functions));
