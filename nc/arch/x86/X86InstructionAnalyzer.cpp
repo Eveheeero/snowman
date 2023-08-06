@@ -108,14 +108,21 @@ public:
         assert(instr != nullptr);
         assert(program != nullptr);
 
+        // 현재 인스트럭션 저장
         currentInstruction_ = instr;
 
+        // ud 디스어셈블러 지정
         ud_set_pc(&ud_obj_, instr->addr());
-        ud_set_input_buffer(&ud_obj_, const_cast<uint8_t *>(instr->bytes()), checked_cast<std::size_t>(instr->size()));
+        // 원본 바이트 지정
+        ud_set_input_buffer(&ud_obj_, const_cast<uint8_t *>(instr->bytes()) /* 원본 바이트 */,
+                            checked_cast<std::size_t>(instr->size()) /* 인스트럭션 사이즈 */);
+        // 디스어셈블 진행
         ud_disassemble(&ud_obj_);
 
+        // 오류나면 실패
         assert(ud_obj_.mnemonic != UD_Iinvalid);
 
+        // 다음 인스트럭션의 주소를 블럭으로 가져옴 (jcc구문에 맞지 않았을때를 위해)
         core::ir::BasicBlock *cachedDirectSuccessor = nullptr;
         auto directSuccessor = [&]() -> core::ir::BasicBlock * {
             // 분기문을 만났을 때, 현재 주소를 기준으로 블록을 만들고, 바로 다음 주소를 가져옴
@@ -126,7 +133,11 @@ public:
         };
 
         X86ExpressionFactory factory(architecture_);
-        X86ExpressionFactoryCallback _(factory, program->getBasicBlockForInstruction(instr), instr);
+        X86ExpressionFactoryCallback _(
+            factory /* IR 생성기 */,
+            program->getBasicBlockForInstruction(
+                instr) /* 해당 인스트럭션에 대한 IR 모음인 BasicBlock을 생성함 (없다면), 이후 주소를 가져옴 */,
+            instr /* 인스트럭션 */);
 
         using namespace core::irgen::expressions;
 
@@ -134,7 +145,8 @@ public:
          * 변환) */
         switch (ud_obj_.mnemonic) {
         case UD_Iadc: {
-            _[temporary(operand(0).size()) ^= operand(0) + operand(1) + zero_extend(cf),
+            _[temporary(operand(0) /* 첫번째인자의 */.size() /* 사이즈만큼의 */) /* 임시변수를 */ ^=
+              operand(0) /* 첫번째인자 더하기 */ + operand(1) /* 두번째인자더하기 */ + zero_extend(cf),
               cf ^= unsigned_(temporary(operand(0).size())) < unsigned_(operand(0)),
               operand(0) ^= temporary(operand(0).size()), pf ^= intrinsic(), zf ^= operand(0) == constant(0),
               sf ^= signed_(operand(0)) < constant(0), of ^= intrinsic(), af ^= intrinsic(), less ^= ~(sf == of),

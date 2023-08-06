@@ -43,6 +43,7 @@ void InstructionAnalyzer::createStatements(const arch::Instructions *instruction
                                            const CancellationToken &canceled, const LogToken &log) {
     assert(instructions);
     assert(program);
+    // 검사 이후 모든 인스트럭션에 대한 IR 생성 진행
     doCreateStatements(instructions, program, canceled, log);
 }
 
@@ -50,6 +51,7 @@ void InstructionAnalyzer::doCreateStatements(const arch::Instructions *instructi
                                              const CancellationToken &canceled, const LogToken &log) {
     foreach (const auto &instr, instructions->all()) {
         try {
+            // 각각 인스트럭션에 대한 IR 생성 진행
             createStatements(instr.get(), program);
         } catch (const InvalidInstructionException &e) {
             /* Note: this is an AntiIdiom: http://c2.com/cgi/wiki?LoggingDiscussion */
@@ -63,6 +65,7 @@ void InstructionAnalyzer::createStatements(const arch::Instruction *instruction,
     assert(instruction);
 
     try {
+        // assert 이후 IR생성 -> X86InstructionAnalyzer의 doCreateStatements
         doCreateStatements(instruction, program);
     } catch (nc::Exception &e) {
         if (!boost::get_error_info<ExceptionInstruction>(e)) {
