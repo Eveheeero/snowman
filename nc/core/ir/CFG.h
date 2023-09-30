@@ -43,6 +43,7 @@ class JumpTarget;
 
 /**
  * Control flow graph.
+ * 특정 함수에 대한 컨트롤 플로우 정보 클래스
  *
  * Objects of this class can be constructed from a set of basic blocks
  * and contain information about the successors and predecessors of the
@@ -56,10 +57,10 @@ private:
     /** References to the set of basic blocks passed to the constructor. */
     const BasicBlocks &basicBlocks_;
 
-    /** Mapping from a basic block to the list of its successors. */
+    /** 해당 블럭에서 이동하는 블럭 */
     boost::unordered_map<const BasicBlock *, std::vector<const BasicBlock *>> successors_;
 
-    /** Mapping from a basic block to the list of its predecessors. */
+    /** 해당 블럭에 도달하는 블럭 */
     boost::unordered_map<const BasicBlock *, std::vector<const BasicBlock *>> predecessors_;
 
 public:

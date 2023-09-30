@@ -65,8 +65,11 @@ void remove_if(Map &map, Pred pred) {
 } // anonymous namespace
 
 void DataflowAnalyzer::analyze(const CFG &cfg) {
+    // cfg - 컨트롤 플로우 그래프
+
     /*
      * Returns true if the given term does not cover given memory location.
+     * 명령어의 표현식이 현재 블록 내의 범위가 아니면 true를 반환한다.
      */
     auto notCovered = [this](const MemoryLocation &mloc, const Term *term) -> bool {
         return !dataflow().getMemoryLocation(term).covers(mloc);
@@ -88,20 +91,25 @@ void DataflowAnalyzer::analyze(const CFG &cfg) {
         foreach (auto basicBlock, cfg.basicBlocks()) {
             ReachingDefinitions definitions;
 
-            /* Merge reaching definitions from predecessors. */
+            /* Merge reaching definitions from predecessors.
+            해당 블럭을 실행하기 위해선 predecessor를 반드시 실행해야 하므로, 전 블록에서 접근한 메모리 영역을 계승한다.
+          */
             foreach (const BasicBlock *predecessor, cfg.getPredecessors(basicBlock)) {
                 definitions.merge(outDefinitions[predecessor]);
             }
 
-            /* Remove definitions that do not cover the memory location that they define. */
+            /* Remove definitions that do not cover the memory location that they define.
+            현재 블록 범위 안이 아닌 메모리 영역들을 제거한다. */
             definitions.filterOut(notCovered);
 
-            /* Execute all the statements in the basic block. */
+            /* Execute all the statements in the basic block.
+            블록 내부 명령어 실행 */
             foreach (auto statement, basicBlock->statements()) {
                 execute(statement, definitions);
             }
 
-            /* Something has changed? */
+            /* Something has changed?
+            메모리 접근이 바뀐게있으면 저장 */
             ReachingDefinitions &oldDefinitions(outDefinitions[basicBlock]);
             if (oldDefinitions != definitions) {
                 oldDefinitions = std::move(definitions);
@@ -150,11 +158,15 @@ void DataflowAnalyzer::execute(const Statement *statement, ReachingDefinitions &
         /*
          * To be completely correct, one should clear reaching definitions.
          * However, not doing this usually leads to better code.
+         *
+         * 알 수 없음(파싱불가)
          */
         break;
     case Statement::ASSIGNMENT: {
         auto assignment = statement->asAssignment();
+        // 오른쪽 값으로부터 연산한다.
         computeValue(assignment->right(), definitions);
+        // 왼쪽 값에 저장한다.
         handleWrite(assignment->left(), computeMemoryLocation(assignment->left(), definitions), definitions);
         break;
     }
@@ -162,18 +174,22 @@ void DataflowAnalyzer::execute(const Statement *statement, ReachingDefinitions &
         auto jump = statement->asJump();
 
         if (jump->condition()) {
+            // 조건 없는 점프면 주소를 읽음
             computeValue(jump->condition(), definitions);
         }
         if (jump->thenTarget().address()) {
+            // 점프할 주소를 읽음
             computeValue(jump->thenTarget().address(), definitions);
         }
         if (jump->elseTarget().address()) {
+            // 점프할 주소를 읽음
             computeValue(jump->elseTarget().address(), definitions);
         }
         break;
     }
     case Statement::CALL: {
         auto call = statement->asCall();
+        // 대상 주소를 읽음
         computeValue(call->target(), definitions);
         break;
     }
@@ -184,9 +200,11 @@ void DataflowAnalyzer::execute(const Statement *statement, ReachingDefinitions &
         auto touch = statement->asTouch();
         switch (touch->accessType()) {
         case Term::READ:
+            // 읽을 경우
             computeValue(touch->term(), definitions);
             break;
         case Term::WRITE:
+            // 쓸 경우
             handleWrite(touch->term(), computeMemoryLocation(touch->term(), definitions), definitions);
             break;
         default:
