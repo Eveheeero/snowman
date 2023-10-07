@@ -48,11 +48,11 @@ namespace dflow {
 class ReachingDefinitions : public PrintableBase<ReachingDefinitions> {
 public:
     /*
-     * Memory location and the list of terms defining this memory location.
+     * 메모리와, 해당 메모리를 정의하고 있는 데이터
      */
     class Chunk {
-        MemoryLocation location_;               ///< Memory location.
-        std::vector<const Term *> definitions_; ///< Terms defining this memory location.
+        MemoryLocation location_;               ///< 메모리 (타입, 주소, 길이)
+        std::vector<const Term *> definitions_; ///< 해당 메모리를 참조하고 있는(정의하고 있는) 명령들
 
     public:
         /*
@@ -94,9 +94,7 @@ public:
 
 private:
     /**
-     * Pairs of memory locations and terms defining them.
-     * The pairs are sorted by memory location.
-     * Terms are sorted using default comparator.
+     * 메모리와 메모리를 정의하고 있는 명령 쌍, 정렬되어있다.
      */
     std::vector<Chunk> chunks_;
 

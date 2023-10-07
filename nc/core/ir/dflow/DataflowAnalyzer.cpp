@@ -360,7 +360,7 @@ Value *DataflowAnalyzer::computeValue(const Term *term, const MemoryLocation &me
      */
     AbstractValue abstractValue(value->abstractValue().size(), 0, 0);
 
-    foreach (const auto &chunk, definitions.chunks()) {
+    foreach (const auto &chunk, definitions.chunks()) { // 메모리와 메모리를 정의하고 있는 명령들
         assert(memoryLocation.covers(chunk.location()));
 
         /*
@@ -373,12 +373,13 @@ Value *DataflowAnalyzer::computeValue(const Term *term, const MemoryLocation &me
             mask = bitShift(mask, memoryLocation.endAddr() - chunk.location().endAddr());
         }
 
-        foreach (auto definition, chunk.definitions()) {
-            auto definitionLocation = dataflow().getMemoryLocation(definition);
-            assert(definitionLocation.covers(chunk.location()));
+        foreach (auto definition, chunk.definitions()) { // 해당 메모리를 정의하고 있는 명령들
+            auto definitionLocation = dataflow().getMemoryLocation(
+                definition); // 분석된 데이터흐름에서 명령에 대한 사용하고 있는 메모리를 가져와서
+            assert(definitionLocation.covers(chunk.location())); // 올바른지 확인
 
-            auto definitionValue = dataflow().getValue(definition);
-            auto definitionAbstractValue = definitionValue->abstractValue();
+            auto definitionValue = dataflow().getValue(definition); // 해당 명령(term)이 어떤 연산을 하고 있는지 가져옴
+            auto definitionAbstractValue = definitionValue->abstractValue(); // 추정된 실제 값을 가져옴
 
             /*
              * Shift definition's abstract value to match term's location.
