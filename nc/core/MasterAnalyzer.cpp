@@ -146,6 +146,7 @@ void MasterAnalyzer::dataflowAnalysis(Context &context, ir::Function *function) 
     // 해당 함수에 대한 데이터 흐름 구조체 생성
     std::unique_ptr<ir::dflow::Dataflow> dataflow(new ir::dflow::Dataflow());
 
+    // 각 함수나 jmp, call등에 EntryHook등의 후크 설정해서 해당 분석시에 특정 명령 수행하도록 적용
     context.hooks()->instrument(function, dataflow.get());
 
     ir::dflow::DataflowAnalyzer(*dataflow, context.image()->platform().architecture(), context.cancellationToken(),

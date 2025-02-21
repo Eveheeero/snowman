@@ -90,13 +90,16 @@ void Hooks::instrument(Function *function, const dflow::Dataflow *dataflow) {
     assert(function != nullptr);
     assert(dataflow != nullptr);
 
+    // 함수나 call, jmp등의 인스트럭션에 있는 콜백 삭제
     deinstrument(function);
 
+    // 엔트리 함수에 콜백 생성
     if (function->entry()) {
         function2callback_[function] =
             function->entry()->pushFront(std::make_unique<Callback>([=]() { instrumentEntry(function); }));
     }
 
+    // 각 인스트럭션별 call 및 jmp에 콜백 생성성
     foreach (auto basicBlock, function->basicBlocks()) {
         foreach (auto statement, basicBlock->statements()) {
             if (auto call = statement->as<Call>()) {
@@ -118,12 +121,14 @@ void Hooks::instrument(Function *function, const dflow::Dataflow *dataflow) {
 void Hooks::deinstrument(Function *function) {
     assert(function != nullptr);
 
+    // 함수에 있는 콜백 삭제
     if (auto callback = nc::find(function2callback_, function)) {
         deinstrumentEntry(function);
         callback->basicBlock()->erase(callback);
         function2callback_.erase(function);
     }
 
+    // jump나 call에 있는 콜백 삭제제
     foreach (auto basicBlock, function->basicBlocks()) {
         foreach (auto statement, basicBlock->statements()) {
             if (auto call = statement->as<Call>()) {
