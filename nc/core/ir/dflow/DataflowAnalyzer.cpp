@@ -68,14 +68,13 @@ void DataflowAnalyzer::analyze(const CFG &cfg) {
     // cfg - 컨트롤 플로우 그래프
 
     /*
-     * Returns true if the given term does not cover given memory location.
-     * 명령어의 표현식이 현재 블록 내의 범위가 아니면 true를 반환한다.
+     * term이 주어진 메모리 영역에 들어가는지 여부 반환
      */
     auto notCovered = [this](const MemoryLocation &mloc, const Term *term) -> bool {
         return !dataflow().getMemoryLocation(term).covers(mloc);
     };
 
-    /* Mapping of a basic block to the definitions reaching its end. */
+    /* 인스트럭션별 접근하는 메모리 */
     boost::unordered_map<const BasicBlock *, ReachingDefinitions> outDefinitions;
 
     /*
@@ -86,7 +85,7 @@ void DataflowAnalyzer::analyze(const CFG &cfg) {
 
     while (nfixpoints++ < 3) {
         /*
-         * Run abstract interpretation on all basic blocks.
+         * 모든 인스트럭션에 대해 접근하는 메모리 영역 계산
          */
         foreach (auto basicBlock, cfg.basicBlocks()) {
             ReachingDefinitions definitions;
@@ -103,7 +102,7 @@ void DataflowAnalyzer::analyze(const CFG &cfg) {
             definitions.filterOut(notCovered);
 
             /* Execute all the statements in the basic block.
-            블록 내부 명령어 실행 */
+            블록 내부 인스트럭션에 대해 메모리 접근 계산 실행 */
             foreach (auto statement, basicBlock->statements()) {
                 execute(statement, definitions);
             }
